@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_260sdp"
+    android:layout_height="@dimen/_140sdp"
+    android:layout_gravity="center"
+    android:id="@+id/root"
+    android:background="@drawable/main_card_bg"
+    android:paddingBottom="@dimen/_15sdp">
+
+    <TextView
+        android:id="@+id/dia_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_70sdp"
+        android:layout_alignParentTop="true"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:fontFamily="@font/quicksand_bold"
+        android:gravity="center"
+        android:paddingHorizontal="@dimen/_7sdp"
+        android:text="@string/what_do_you_want_to_do"
+        android:textSize="@dimen/_20sdp"
+        android:textStyle="bold|italic" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/dia_btn_restart"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_margin="@dimen/_5sdp"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_effect"
+            android:elevation="5dp"
+            android:text="@string/restart"
+            android:textSize="@dimen/_12sdp" />
+
+        <Button
+            android:id="@+id/dia_btn_exit"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_margin="@dimen/_5sdp"
+            android:layout_weight="1"
+
+            android:background="@drawable/ripple_effect"
+            android:elevation="5dp"
+            android:text="@string/exit"
+            android:textSize="@dimen/_12sdp" />
+
+        <Button
+            android:id="@+id/dia_btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_margin="@dimen/_5sdp"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_effect"
+            android:elevation="5dp"
+            android:text="@string/cancel"
+            android:textSize="@dimen/_12sdp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/exit_ib"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_alignParentRight="true"
+        android:padding="@dimen/_3sdp"
+        android:scaleType="fitCenter"
+        android:visibility="gone" />
+
+
+</RelativeLayout>

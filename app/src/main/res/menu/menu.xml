@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_Subject"
+        android:title="@string/subjects" />
+    <item
+        android:id="@+id/menu_certificate"
+        android:title="@string/certificate" />
+
+    <item
+        android:id="@+id/menu_language"
+        android:title="@string/language" />
+
+    <item
+        android:id="@+id/menu_download_offline_language"
+        android:title="@string/download_offline_languages" />
+
+    <!-- <item
+         android:id="@+id/menu_video_monitoring"
+         android:title="Video monitoring" />-->
+    <item
+        android:id="@+id/menu_push_data"
+        android:title="@string/push_data" />
+</menu>

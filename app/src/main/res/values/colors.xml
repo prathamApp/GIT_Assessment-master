@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#344955</color>
+    <color name="colorPrimaryDark">#232F34</color>
+    <color name="colorAccent">#FFD54F</color>
+    <color name="colorAccentDark">#FFB300</color>
+    <color name="text_icon">#212121</color>
+    <color name="primaryText">#212121</color>
+    <color name="secondaryText">#757575</color>
+    <color name="colorGreen">#AED581</color>
+    <color name="colorGreenLight">#C5DFA7</color>
+    <color name="colorBlack">#000</color>
+    <color name="colorWhiteDark">#d4d4d4</color>
+    <color name="color_bg">#F0F0F0</color>
+    <color name="colorWhiteLight">#fafafa</color>
+    <color name="colorBlackTransparentDark">#e8000000</color>
+    <color name="whiteButtonPressedBg">#b5999999</color>
+    <color name="colorBlue">#0bdcff</color>
+    <color name="transparent_white_btn">#c8ffffff</color>
+    <color name="gradiance_start">#3F51B5</color>
+    <color name="gradiance_end">#03A9F4</color>
+    <color name="colorRed">#EF5350</color>
+    <color name="colorRedLight">#ff908e</color>
+    <color name="colorRedLightnew">#FFBBBB</color>
+    <color name="colorButtonPressedBg">#dedede</color>
+    <color name="light_red">#FFCDD2</color>
+    <color name="light_green">#D0F8DB</color>
+    <color name="green">#07992F</color>
+    <color name="colorBtnRedLight">#e57373</color>
+    <color name="colorBtnRedDark">#e53935</color>
+
+
+    <color name="colorProgress">#FDA520</color>
+    <color name="colorProgress50">#FF8832</color>
+    <color name="colorProgress25">#FF3A16</color>
+    <color name="colorProgress15">#FF270E</color>
+
+    <color name="transparent">#05000000</color>
+
+
+    <color name="proswipebtn_translucent_white">#33ffffff</color>
+    <color name="proswipebtn_red">#F15824</color>
+    <color name="proswipebtn_disabled_grey">#939393</color>
+
+
+
+    <color name="spark_primary_color">#FFFFC107</color>
+    <color name="spark_secondary_color">#FFFF5722</color>
+    <color name="spark_image_tint">#00000000</color>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</resources>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
