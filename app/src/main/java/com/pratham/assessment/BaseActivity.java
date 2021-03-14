@@ -64,7 +64,7 @@ import static com.pratham.assessment.constants.Assessment_Constants.TransferredI
 
 
 /**
- * Created by Ameya on 15-Mar-18.
+ * Created by Ankita on 15-Mar-18.
  */
 
 public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener/*, PermissionResult*/ {
