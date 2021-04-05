@@ -26,6 +26,7 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.location.Address;
 import android.location.Geocoder;
@@ -40,6 +41,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.IntRange;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
@@ -64,16 +66,22 @@ import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
+import com.pratham.assessment.custom.gif_viewer.GifView;
+import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.StorageInfo;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.result.ResultActivity;
@@ -172,6 +180,54 @@ public class Assessment_Utility {
     public static int dpToPx(int dp, Context context) {
         Resources r = context.getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    public static String getQuestionLocalPath(ScienceQuestion scienceQuestion) {
+        final String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
+//                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+        if (scienceQuestion.getIsQuestionFromSDCard())
+            return scienceQuestion.getPhotourl();
+        else
+            return AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+
+    }
+
+    public static void setQuestionImageToImageView(ScienceQuestion scienceQuestion, ImageView questionImage, GifView questionGif, String localPath, Context context) {
+        String path = scienceQuestion.getPhotourl();
+        String[] imgPath = path.split("\\.");
+        int len;
+        if (imgPath.length > 0)
+            len = imgPath.length - 1;
+        else len = 0;
+        if (imgPath[len].equalsIgnoreCase("gif")) {
+            try {
+                InputStream gif;
+                 /*   if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                        Glide.with(getActivity()).asGif()
+                                .load(path)
+                                .apply(new RequestOptions()
+                                        .placeholder(Drawable.createFromPath(localPath)))
+                                .into(questionImage);
+//                    zoomImg.setVisibility(View.VISIBLE);
+
+                    } else {*/
+                gif = new FileInputStream(localPath);
+                questionImage.setVisibility(View.GONE);
+                questionGif.setVisibility(View.VISIBLE);
+                questionGif.setGifResource(gif);
+//                    }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            Glide.with(context)
+                    .load(localPath)
+                    .apply(new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .placeholder(Drawable.createFromPath(localPath)))
+                    .into(questionImage);
+        }
     }
 
     public boolean getSdCardPath(Context context) {
@@ -2089,10 +2145,10 @@ public class Assessment_Utility {
         return fileName;
     }*/
 
-   public static String getFileName(String qid, String photoUrl) {
-       String[] splittedName = photoUrl.split("/");
-       String FName = splittedName[splittedName.length - 1];
-       return FName;
+    public static String getFileName(String qid, String photoUrl) {
+        String[] splittedName = photoUrl.split("/");
+        String FName = splittedName[splittedName.length - 1];
+        return FName;
     }
 
     public static Date stringToDate(String date) {

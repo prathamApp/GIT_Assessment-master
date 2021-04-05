@@ -143,7 +143,7 @@ public class SupervisedAssessmentActivity extends BaseActivity {
                     SupervisorData supervisorData = new SupervisorData();
                     supervisorData.setSupervisorId(supervisorID);
                     supervisorData.setSupervisorName(sName);
-                    String currentSession = FastSave.getInstance().getString("currentSession", "");
+                    String currentSession = FastSave.getInstance().getString("CurrentSession", "");
 
 //                    supervisorData.setAssessmentSessionId(assessmentSession);
                     supervisorData.setAssessmentSessionId(currentSession);
@@ -152,7 +152,7 @@ public class SupervisedAssessmentActivity extends BaseActivity {
                     AppDatabase.getDatabaseInstance(SupervisedAssessmentActivity.this).getSupervisorDataDao().insert(supervisorData);
                     BackupDatabase.backup(SupervisedAssessmentActivity.this);
 
-                    AppDatabase.getDatabaseInstance(SupervisedAssessmentActivity.this).getStatusDao().updateValue("currentSession", "" + currentSession);
+                    AppDatabase.getDatabaseInstance(SupervisedAssessmentActivity.this).getStatusDao().updateValue("CurrentSession", "" + currentSession);
 //                    Assessment_Constants.assessmentFlag = true;
 
                 /*    String AppStartDateTime = AppDatabase.getDatabaseInstance(SupervisedAssessmentActivity.this).getStatusDao().getValue("AppStartDateTime");

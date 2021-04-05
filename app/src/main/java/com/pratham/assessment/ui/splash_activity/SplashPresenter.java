@@ -379,6 +379,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
             new AsyncTask<Void, Integer, Void>() {
                 ProgressDialog progressDialog;
                 boolean copySuccessful;
+                int tableCopyCount = 0;
 
                 @Override
                 protected void onPreExecute() {
@@ -428,6 +429,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                 }
                                 AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().insertAllPapersPatterns(paperPatternList);
                                 content_cursor.close();
+                                tableCopyCount++;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -459,6 +461,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                 }
                                 AppDatabase.getDatabaseInstance(context).getAssessmentPatternDetailsDao().insertAllPatternDetails(assessmentPatternDetailsList);
                                 content_cursor.close();
+                                tableCopyCount++;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -482,6 +485,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                 }
                                 AppDatabase.getDatabaseInstance(context).getCertificateTopicListDao().insertAllCertificateTopicQuestions(certificateTopicLists);
                                 content_cursor.close();
+                                tableCopyCount++;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -557,6 +561,8 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                 AppDatabase.getDatabaseInstance(context).getScienceQuestionDao().replaceNewLineForQuestions();
                                 AppDatabase.getDatabaseInstance(context).getScienceQuestionDao().replaceNewLineForQuestions2();
                                 content_cursor.close();
+                                tableCopyCount++;
+
                               /*  if (DownloadMediaList.size() > 0) {
                                     AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().insertAllMedia(DownloadMediaList);
                                 }*/
@@ -609,7 +615,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                 AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().insertAllQuestionChoices(scienceQuestionChoiceList);
                                 content_cursor.close();
 //                                FastSave.getInstance().saveBoolean(Assessment_Constants.SDCARD_OFFLINE_PATH_SAVED, true);
-                                copySuccessful = true;
+                                tableCopyCount++;
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -632,6 +638,8 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                 }
                                 AppDatabase.getDatabaseInstance(context).getLanguageDao().insertAllLanguages(languages);
                                 content_cursor.close();
+                                tableCopyCount++;
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -653,6 +661,8 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                 }
                                 AppDatabase.getDatabaseInstance(context).getSubjectDao().insertAllSubjects(subjects);
                                 content_cursor.close();
+                                tableCopyCount++;
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -677,29 +687,11 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                 }
                                 AppDatabase.getDatabaseInstance(context).getTestDao().insertAllTest(assessmentTests);
                                 content_cursor.close();
+                                tableCopyCount++;
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                          /*  try {
-                                Cursor content_cursor;
-                                content_cursor = db.rawQuery("SELECT * FROM CertificateTopicList", null);
-                                List<CertificateTopicList> certificateTopicLists = new ArrayList<>();
-                                if (content_cursor.moveToFirst()) {
-                                    while (!content_cursor.isAfterLast()) {
-                                        CertificateTopicList certificateTopic = new CertificateTopicList();
-                                        certificateTopic.setTopicid(content_cursor.getString(content_cursor.getColumnIndex("topicid")));
-                                        certificateTopic.setCertificatequestion(content_cursor.getString(content_cursor.getColumnIndex("certificatequestion")));
-                                        certificateTopicLists.add(certificateTopic);
-//                                        AppDatabase.getDatabaseInstance(context).getSubjectDao().deleteSubjectsByLangIdSubId(certificateTopic.getSubjectid(), certificateTopic.getLanguageid());
-
-                                        content_cursor.moveToNext();
-                                    }
-                                }
-                                AppDatabase.getDatabaseInstance(context).getCertificateTopicListDao().insertAllCertificateTopicQuestions(certificateTopicLists);
-                                content_cursor.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }*/
                             BackupDatabase.backup(context);
                         }
                     } catch (Exception e) {
@@ -716,9 +708,10 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                 protected void onPostExecute(Void aVoid) {
                     //addStartTime();
                     super.onPostExecute(aVoid);
-                    FastSave.getInstance().saveBoolean(SDCARD_OFFLINE_PATH_SAVED, true);
                     splashView.dismissProgressDialog();
                     BackupDatabase.backup(context);
+                    if (tableCopyCount > 7)
+                        FastSave.getInstance().saveBoolean(SDCARD_OFFLINE_PATH_SAVED, true);
                     splashView.showButton();
                 }
 

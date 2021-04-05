@@ -62,7 +62,7 @@
                 <EditText
                     android:id="@+id/et_studentName"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_40sdp"
+                    android:layout_height="@dimen/_35sdp"
                     android:layout_marginBottom="@dimen/_7sdp"
                     android:background="@drawable/custom_edit_text"
                     android:clickable="true"
@@ -76,11 +76,29 @@
                     android:textColorHint="@color/light_gray"
                     android:textSize="@dimen/_18sdp" />
 
+                <EditText
+                    android:id="@+id/et_school"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_below="@+id/et_studentName"
+                    android:layout_marginBottom="@dimen/_7sdp"
+                    android:background="@drawable/custom_edit_text"
+                    android:clickable="true"
+                    android:focusableInTouchMode="true"
+                    android:fontFamily="@font/quicksand_bold"
+                    android:hint="Enter school name"
+                    android:paddingVertical="@dimen/_1sdp"
+                    android:paddingLeft="@dimen/_8sdp"
+                    android:singleLine="true"
+                    android:textColor="@color/colorBlack"
+                    android:textColorHint="@color/light_gray"
+                    android:textSize="@dimen/_18sdp" />
+
                 <LinearLayout
                     android:id="@+id/ll_age"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
-                    android:layout_below="@id/et_studentName"
+                    android:layout_below="@id/et_school"
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/main_card_bg"
                     android:orientation="horizontal">
@@ -114,7 +132,7 @@
                     android:layout_height="@dimen/_40sdp"
                     android:layout_below="@id/ll_age"
                     android:layout_gravity="center"
-                    android:layout_marginVertical="@dimen/_6sdp"
+                    android:layout_marginVertical="@dimen/_4sdp"
                     android:background="@drawable/main_card_bg"
                     android:gravity="center_vertical">
 
@@ -166,6 +184,7 @@
                     android:layout_height="@dimen/_40sdp"
                     android:layout_below="@id/ll_gender"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginVertical="@dimen/_4sdp"
                     android:background="@drawable/main_card_bg"
                     android:orientation="horizontal">
 
@@ -190,19 +209,119 @@
 
 
                 </LinearLayout>
-
-               <!-- <Spinner
-                    android:id="@+id/spinner_app_lang"
+                <!--<LinearLayout
+                    android:id="@+id/ll_new_info"
+                    android:layout_below="@+id/ll_lang"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_30sdp"
-                    android:layout_below="@+id/ll_gender"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:background="@drawable/gradient_spinner" />
--->
+                    android:layout_height="@dimen/_230sdp"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical"
+                    android:padding="20dp">-->
+                <LinearLayout
+                    android:id="@+id/ll_program"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_below="@id/ll_lang"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginVertical="@dimen/_4sdp"
+                    android:background="@drawable/main_card_bg"
+                    android:orientation="horizontal">
+
+                    <com.pratham.assessment.custom.customFont.SansTextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2.5"
+                        android:gravity="center_vertical"
+                        android:text="Program :"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/_15sdp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/programSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5"
+                        android:background="@drawable/custom_spinner"
+                        android:popupBackground="@drawable/main_card_bg" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_below="@id/ll_program"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginVertical="@dimen/_4sdp"
+                    android:background="@drawable/main_card_bg"
+                    android:orientation="horizontal">
+
+                    <com.pratham.assessment.custom.customFont.SansTextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2.5"
+                        android:gravity="center_vertical"
+                        android:text="State :"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/_15sdp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/stateSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5"
+                        android:background="@drawable/custom_spinner"
+                        android:popupBackground="@drawable/main_card_bg" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_block"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_below="@id/ll_state"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginVertical="@dimen/_4sdp"
+                    android:background="@drawable/main_card_bg"
+                    android:orientation="horizontal">
+
+                    <com.pratham.assessment.custom.customFont.SansTextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2.5"
+                        android:gravity="center_vertical"
+                        android:text="Block :"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/_15sdp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/blockSpinner"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5"
+                        android:background="@drawable/custom_spinner"
+                        android:popupBackground="@drawable/main_card_bg" />
+                </LinearLayout>
+                <!--                </LinearLayout>-->
+                <!-- <Spinner
+                     android:id="@+id/spinner_app_lang"
+                     android:layout_width="match_parent"
+                     android:layout_height="@dimen/_30sdp"
+                     android:layout_below="@+id/ll_gender"
+                     android:layout_margin="@dimen/_5sdp"
+                     android:background="@drawable/gradient_spinner" />
+ -->
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/ll_block">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@+id/ll_lang"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/_5sdp"
                     android:background="@drawable/main_card_bg"
@@ -231,7 +350,7 @@
                         android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
 
                 </RelativeLayout>
-
+                </ScrollView>
             </RelativeLayout>
 
         </LinearLayout>

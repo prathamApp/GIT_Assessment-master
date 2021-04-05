@@ -544,7 +544,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                 @Override
                 protected Object doInBackground(Object[] objects) {
                     try {
-                        String currentSession = FastSave.getInstance().getString("currentSession", "");
+                        String currentSession = FastSave.getInstance().getString("CurrentSession", "");
 
 //                        String toDateTemp = appDatabase.getSessionDao().getToDate(Assessment_Constants.currentSession);
                         String toDateTemp = appDatabase.getSessionDao().getToDate(currentSession);

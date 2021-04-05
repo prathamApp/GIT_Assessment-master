@@ -247,7 +247,7 @@ public class JSInterface implements RecognitionListener {
                     String deviceId = appDatabase.getStatusDao().getValue("DeviceId");
 
                     Score score = new Score();
-                    String currentSession = FastSave.getInstance().getString("currentSession", "");
+                    String currentSession = FastSave.getInstance().getString("CurrentSession", "");
 //                    score.setSessionID(Assessment_Constants.currentSession);
                     score.setSessionID(currentSession);
                     score.setResourceID(WebViewActivity.webResId);
@@ -336,7 +336,7 @@ public class JSInterface implements RecognitionListener {
                     String deviceId = appDatabase.getStatusDao().getValue("DeviceId");
 
                     Score score = new Score();
-                    String currentSession = FastSave.getInstance().getString("currentSession", "");
+                    String currentSession = FastSave.getInstance().getString("CurrentSession", "");
 //                    score.setSessionID(Assessment_Constants.currentSession);
                     score.setSessionID(currentSession);
                     score.setResourceID(WebViewActivity.webResId);

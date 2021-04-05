@@ -13,6 +13,7 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.async.PushDataToServer;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.constants.Assessment_Constants;
+import com.pratham.assessment.interfaces.DataPushListener;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -24,7 +25,7 @@ import org.androidannotations.annotations.ViewById;
 import butterknife.OnClick;*/
 
 @EFragment(R.layout.fragment_push_or_assign)
-public class PushOrAssignFragment extends Fragment {
+public class PushOrAssignFragment extends Fragment implements DataPushListener {
     @ViewById(R.id.btn_assign)
     Button assign;
     @ViewById(R.id.btn_push)
@@ -132,6 +133,11 @@ public class PushOrAssignFragment extends Fragment {
             Assessment_Constants.VIDEOMONITORING = false;
 
         }
+
+    }
+
+    @Override
+    public void onResponseGet() {
 
     }
 

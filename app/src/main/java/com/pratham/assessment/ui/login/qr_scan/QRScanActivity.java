@@ -331,7 +331,7 @@ public class QRScanActivity extends BaseActivity implements ZXingScannerView.Res
                     currentSession = "" + UUID.randomUUID().toString();
 
                     Assessment_Constants.currentSession = currentSession;
-                    FastSave.getInstance().saveString("currentSession", currentSession);
+                    FastSave.getInstance().saveString("CurrentSession", currentSession);
 
                     statusDao.updateValue("CurrentSession", "" + currentSession);
 

@@ -236,7 +236,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
                     StatusDao statusDao = AppDatabase.getDatabaseInstance(getContext()).getStatusDao();
                     currentSession = "" + UUID.randomUUID().toString();
                     Assessment_Constants.currentSession = currentSession;
-                    FastSave.getInstance().saveString("currentSession", currentSession);
+                    FastSave.getInstance().saveString("CurrentSession", currentSession);
 
                     statusDao.updateValue("CurrentSession", "" + currentSession);
 
@@ -372,7 +372,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
         ArrayList<Attendance> attendances = new ArrayList<>();
         for (Student stu : stud) {
             Attendance attendance = new Attendance();
-            attendance.setSessionID(FastSave.getInstance().getString("currentSession", ""));
+            attendance.setSessionID(FastSave.getInstance().getString("CurrentSession", ""));
             attendance.setStudentID(stu.getStudentID());
             attendance.setDate(AssessmentApplication.getCurrentDateTime());
             attendance.GroupID = groupID;
@@ -387,7 +387,7 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
         //BaseActivity.attendanceDao.insertAttendance(attendances);
         AppDatabase.getDatabaseInstance(getActivity()).getAttendanceDao().insertAll(attendances);
         Session s = new Session();
-        s.setSessionID(FastSave.getInstance().getString("currentSession", ""));
+        s.setSessionID(FastSave.getInstance().getString("CurrentSession", ""));
         s.setFromDate(AssessmentApplication.getCurrentDateTime());
         s.setToDate("NA");
         AppDatabase.getDatabaseInstance(getActivity()).getSessionDao().insert(s);

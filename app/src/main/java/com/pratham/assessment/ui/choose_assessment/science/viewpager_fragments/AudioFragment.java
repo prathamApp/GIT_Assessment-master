@@ -37,6 +37,7 @@ import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActi
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ImageListDialog_;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlayerInterface;
+import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.AudioUtil;
 import com.pratham.assessment.utilities.PermissionUtils;
 import com.pratham.assessment.utilities.RealPathUtil;
@@ -222,13 +223,15 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
 
             fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //            path = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Downloaded" + "/" + fileName;
-            final String localPath;
-            if (scienceQuestion.getIsQuestionFromSDCard())
+            final String localPath = Assessment_Utility.getQuestionLocalPath(scienceQuestion);
+         /*   if (scienceQuestion.getIsQuestionFromSDCard())
                 localPath = scienceQuestion.getPhotourl();
             else
                 localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+*/
+            Assessment_Utility.setQuestionImageToImageView(scienceQuestion,questionImage,questionGif,localPath,getActivity());
 
-            String path = scienceQuestion.getPhotourl();
+      /*      String path = scienceQuestion.getPhotourl();
             String[] imgPath = path.split("\\.");
             int len;
             if (imgPath.length > 0)
@@ -237,13 +240,13 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
             if (imgPath[len].equalsIgnoreCase("gif")) {
                 try {
                     InputStream gif;
-/*                    if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+*//*                    if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                         Glide.with(getActivity()).asGif()
                                 .load(path)
                                 .apply(new RequestOptions()
                                         .placeholder(Drawable.createFromPath(localPath)))
                                 .into(questionImage);
-                    } else {*/
+                    } else {*//*
                     gif = new FileInputStream(localPath);
                     questionImage.setVisibility(View.GONE);
                     questionGif.setVisibility(View.VISIBLE);
@@ -253,11 +256,11 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
                     e.printStackTrace();
                 }
 
-           /*     Glide.with(getActivity()).asGif()
+           *//*     Glide.with(getActivity()).asGif()
                         .load(path)
                         .apply(new RequestOptions()
                                 .placeholder(Drawable.createFromPath(localPath)))
-                        .into(questionImage);*/
+                        .into(questionImage);*//*
 //                    zoomImg.setVisibility(View.VISIBLE);
             } else {
                 Glide.with(getActivity())
@@ -267,7 +270,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
                                 .skipMemoryCache(true)
                                 .placeholder(Drawable.createFromPath(localPath)))
                         .into(questionImage);
-            }
+            }*/
 
             questionImage.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -389,7 +392,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface {
         if (imageList.size() > 0) {
             showImageThumbnailDialog(imageList, false);
         } else {
-            Toast.makeText(getActivity(),"Nothing to show.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Nothing to show.", Toast.LENGTH_SHORT).show();
         }
     }
 

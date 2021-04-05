@@ -134,16 +134,17 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment
                 .split(" ")
                 .length];
 
-        if (scienceQuestion.getPhotourl() != null &&  !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
+        if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
             String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
-            final String localPath;
-            if (scienceQuestion.getIsQuestionFromSDCard())
+            final String localPath = Assessment_Utility.getQuestionLocalPath(scienceQuestion);
+          /*  if (scienceQuestion.getIsQuestionFromSDCard())
                 localPath = scienceQuestion.getPhotourl();
             else
                 localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-
-            String path = scienceQuestion.getPhotourl();
+*/
+            Assessment_Utility.setQuestionImageToImageView(scienceQuestion,questionImage,questionGif,localPath,getActivity());
+   /*         String path = scienceQuestion.getPhotourl();
             String[] imgPath = path.split("\\.");
             int len = 0;
             if (imgPath.length > 0)
@@ -151,17 +152,17 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment
             if (imgPath[len].equalsIgnoreCase("gif")) {
                 try {
                     InputStream gif;
- /*                   if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+ *//*                   if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                         Glide.with(Objects.requireNonNull(getActivity())).asGif()
                                 .load(path)
                                 .apply(new RequestOptions()
                                         .placeholder(Drawable.createFromPath(localPath)))
                                 .into(questionImage);
-                    } else {*/
-                        gif = new FileInputStream(localPath);
-                        questionImage.setVisibility(View.GONE);
-                        questionGif.setVisibility(View.VISIBLE);
-                        questionGif.setGifResource(gif);
+                    } else {*//*
+                    gif = new FileInputStream(localPath);
+                    questionImage.setVisibility(View.GONE);
+                    questionGif.setVisibility(View.VISIBLE);
+                    questionGif.setGifResource(gif);
 //                    }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -174,7 +175,7 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment
                                 .skipMemoryCache(true)
                                 .placeholder(Drawable.createFromPath(localPath)))
                         .into(questionImage);
-            }
+            }*/
         } else questionImage.setVisibility(View.GONE);
 
         etAnswer.addTextChangedListener(new TextWatcher() {

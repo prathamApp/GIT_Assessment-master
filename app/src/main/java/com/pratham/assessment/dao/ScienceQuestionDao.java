@@ -1,9 +1,11 @@
 package com.pratham.assessment.dao;
 
+import android.arch.persistence.db.SupportSQLiteQuery;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.RawQuery;
 
 import com.pratham.assessment.domain.ScienceQuestion;
 
@@ -20,7 +22,7 @@ public interface ScienceQuestionDao {
     @Query("UPDATE ScienceQuestion SET qname = replace( qname, '\n', '<br/>' ) WHERE qname LIKE '%\n%'")
     public void replaceNewLineForQuestions();
 
-@Query("UPDATE ScienceQuestion SET qname = replace( qname, '/n', '<br/>' ) WHERE qname LIKE '%/n%'")
+    @Query("UPDATE ScienceQuestion SET qname = replace( qname, '/n', '<br/>' ) WHERE qname LIKE '%/n%'")
     public void replaceNewLineForQuestions2();
 
 
@@ -51,7 +53,8 @@ public interface ScienceQuestionDao {
 
     @Query("SELECT * FROM ScienceQuestion WHERE qtid=:qtid  and languageid=:selectedLanguage and subjectid=:subjectId and topicid=:topicid and qlevel=:level and ansdesc like :keyword")
     public ScienceQuestion getParagraphs(String selectedLanguage, String subjectId, String topicid, String level, String qtid, String keyword);
- @Query("SELECT * FROM ScienceQuestion WHERE qtid=:qtid  and languageid=:selectedLanguage and subjectid=:subjectId and topicid=:topicid and qlevel=:level")
+
+    @Query("SELECT * FROM ScienceQuestion WHERE qtid=:qtid  and languageid=:selectedLanguage and subjectid=:subjectId and topicid=:topicid and qlevel=:level")
     public ScienceQuestion getParagraphsWithoutKeywords(String selectedLanguage, String subjectId, String topicid, String level, String qtid);
 
     @Query("SELECT * FROM ScienceQuestion WHERE qtid=:qtid  and languageid=:selectedLanguage and subjectid=:subjectId and topicid=:topicid and qlevel=:level and ansdesc like :keyword order by random() limit 1")
@@ -77,12 +80,14 @@ public interface ScienceQuestionDao {
 
     @Query("select * from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId and qlevel=:qlevel and IsParaQuestion=0 and ansdesc like :keyword and qtid!='14' order by random() limit :noOfQues")
     public List<ScienceQuestion> getQuestionListByPatternRandomly(String langId, String subId, String topicId, String qtid, String qlevel, int noOfQues, String keyword);
-@Query("select * from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId and qlevel=:qlevel and IsParaQuestion=0 and qtid!='14' order by random() limit :noOfQues")
+
+    @Query("select * from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId and qlevel=:qlevel and IsParaQuestion=0 and qtid!='14' order by random() limit :noOfQues")
     public List<ScienceQuestion> getQuestionListByPatternRandomlyWithoutKeywords(String langId, String subId, String topicId, String qtid, String qlevel, int noOfQues);
 
     @Query("select * from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId and qlevel=:qlevel and IsParaQuestion=0 and ansdesc like :keyword and qtid!='14' limit :noOfQues")
     public List<ScienceQuestion> getQuestionListByPattern(String langId, String subId, String topicId, String qtid, String qlevel, int noOfQues, String keyword);
-@Query("select * from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId and qlevel=:qlevel and IsParaQuestion=0  and qtid!='14' limit :noOfQues")
+
+    @Query("select * from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId and qlevel=:qlevel and IsParaQuestion=0  and qtid!='14' limit :noOfQues")
     public List<ScienceQuestion> getQuestionListByPatternWithoutKeywords(String langId, String subId, String topicId, String qtid, String qlevel, int noOfQues);
 
     @Query("delete from ScienceQuestion where topicid=:topicId and subjectid=:subId and languageid=:langId")
@@ -91,7 +96,9 @@ public interface ScienceQuestionDao {
     @Query("select distinct qid from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId order by random() limit :noOfQues")
     public String getQuestionListByPatternOld(String langId, String subId, String topicId, String qtid, int noOfQues);
 
-      /*  @Query("select * from Groups WHERE DeviceID = 'deleted'")
-        public List<Groups> GetAllDeletedGroups();
-    */
+    @RawQuery
+    ScienceQuestion getParaQueryResult(SupportSQLiteQuery query);
+
+    @RawQuery
+    List<ScienceQuestion> getQuestionQueryResult(SupportSQLiteQuery query);
 }

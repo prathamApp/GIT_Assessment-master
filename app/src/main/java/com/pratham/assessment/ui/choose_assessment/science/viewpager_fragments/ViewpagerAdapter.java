@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import com.pratham.assessment.domain.ScienceQuestion;
+import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.multiple_select.MultipleSelectFragment;
+import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.text_paragraph.TextParagraphFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,7 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
                     fragmentList.add(McqFillInTheBlanksFragment.newInstance(i, scienceQuestion));
                     break;
                 case "2":
-                    fragmentList.add(MultipleSelectFragment.newInstance(i, scienceQuestion));
+                    fragmentList.add(com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.multiple_select.MultipleSelectFragment.newInstance(i, scienceQuestion));
                     break;
                 case "3":
                     fragmentList.add(com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.true_false.TrueFalseFragment.newInstance(i, scienceQuestion));
@@ -63,7 +65,7 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
                     fragmentList.add(ImageAnswerFragment.newInstance(i, scienceQuestion));
                     break;
                  case "13":
-                    fragmentList.add(TextParagraphFragment.newInstance(i, scienceQuestion));
+                    fragmentList.add(com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.text_paragraph.TextParagraphFragment.newInstance(i, scienceQuestion));
                     break;
                  case "14":
                     fragmentList.add(ParagraphBasedQuestionsFragment.newInstance(i, scienceQuestion));

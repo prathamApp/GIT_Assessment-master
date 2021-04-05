@@ -130,19 +130,19 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
         String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-        final String localPath;
-        if (scienceQuestion.getIsQuestionFromSDCard())
+        final String localPath = Assessment_Utility.getQuestionLocalPath(scienceQuestion);
+      /*  if (scienceQuestion.getIsQuestionFromSDCard())
             localPath = scienceQuestion.getPhotourl();
         else
             localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-
+*/
         if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
 //            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+            Assessment_Utility.setQuestionImageToImageView(scienceQuestion,questionImage,questionGif,localPath,getActivity());
 
 
-
-            String path = scienceQuestion.getPhotourl();
+          /*  String path = scienceQuestion.getPhotourl();
             String[] imgPath = path.split("\\.");
             int len;
             if (imgPath.length > 0)
@@ -151,18 +151,18 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
             if (imgPath[len].equalsIgnoreCase("gif")) {
                 try {
                     InputStream gif;
-                    /*if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                    *//*if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                         Glide.with(getActivity()).asGif()
                                 .load(path)
                                 .apply(new RequestOptions()
                                         .placeholder(Drawable.createFromPath(localPath)))
                                 .into(questionImage);
 //                    zoomImg.setVisibility(View.VISIBLE);
-                    } else {*/
-                        gif = new FileInputStream(localPath);
-                        questionImage.setVisibility(View.GONE);
-                        questionGif.setVisibility(View.VISIBLE);
-                        questionGif.setGifResource(gif);
+                    } else {*//*
+                    gif = new FileInputStream(localPath);
+                    questionImage.setVisibility(View.GONE);
+                    questionGif.setVisibility(View.VISIBLE);
+                    questionGif.setGifResource(gif);
 //                    }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -175,7 +175,7 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .skipMemoryCache(true))
                         .into(questionImage);
-            }
+            }*/
 /*            } else {
                 String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
@@ -198,7 +198,6 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
                 showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
             }
         });
-
 
 
         options.clear();

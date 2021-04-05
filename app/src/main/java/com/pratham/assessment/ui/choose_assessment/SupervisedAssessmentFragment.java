@@ -73,7 +73,7 @@ public class SupervisedAssessmentFragment extends Fragment {
 //        supervisorId = getIntent().getStringExtra("crlId");
         supervisorId = "" + AssessmentApplication.getUniqueID();
         context = getActivity();
-        currentSession = FastSave.getInstance().getString("currentSession", "");
+        currentSession = FastSave.getInstance().getString("CurrentSession", "");
 
         assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
         paperId = getArguments().getString("paperId");
@@ -215,7 +215,7 @@ public class SupervisedAssessmentFragment extends Fragment {
                     AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().insert(supervisorData);
                     BackupDatabase.backup(context);
 
-                    AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("currentSession", "" + currentSession);
+                    AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue("CurrentSession", "" + currentSession);
 //                    Assessment_Constants.assessmentFlag = true;
 
                 /*    String AppStartDateTime = AppDatabase.getDatabaseInstance(SupervisedAssessmentActivity.this).getStatusDao().getValue("AppStartDateTime");

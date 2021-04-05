@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.arch.persistence.db.SimpleSQLiteQuery;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -336,6 +337,22 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     + appName + "\nStudentName : " + studName + "\nSubject : " + subject + "\nLanguage : " + language
                     + "\nLevel : " + subLevel, Toast.LENGTH_LONG).show();
        */
+            String currentSession = "" + UUID.randomUUID().toString();
+            String AppStartDateTime = AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("AppStartDateTime");
+            Session startSession = new Session();
+            startSession.setSessionID("" + context);
+            String timerTime = AssessmentApplication.getCurrentDateTime(false, AppStartDateTime);
+            startSession.setFromDate(timerTime);
+            startSession.setToDate("NA");
+            startSession.setSentFlag(0);
+            AppDatabase.getDatabaseInstance(context).getSessionDao().insert(startSession);
+            Assessment_Constants.currentSession = currentSession;
+            FastSave.getInstance().saveString("CurrentSession", currentSession);
+            String key = "CurrentSession";
+            String value = currentSession;
+            Status status = new Status();
+            SplashPresenter.setStatusTableEntries(status, key, value, context);
+
             String langCode = "1";
             if (!language.equalsIgnoreCase("")) {
                 switch (language.toLowerCase()) {
@@ -1670,21 +1687,86 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     for (int j = 0; j < assessmentPatternDetails.size(); j++) {
                         int noOfQues = Integer.parseInt(assessmentPatternDetails.get(j).getNoofquestion());
 
-
                         List<ScienceQuestion> scienceQuestions;
+                        List<String> keywords = new ArrayList<>();
 
+                        if (assessmentPatternDetails.get(j).getKeyworddetail() != null
+                                && !assessmentPatternDetails.get(j).getKeyworddetail().equalsIgnoreCase("")) {
+                            keywords = Arrays.asList(assessmentPatternDetails.get(j).getKeyworddetail().split("\\|"));
+                        }
+
+                        String key = "%";
+                        String query = "SELECT * FROM ScienceQuestion WHERE qtid=\'" + PARAGRAPH_BASED_QUESTION + "\' and languageid=\'"
+                                + selectedLang + "\' and subjectid=\'" + subjectId + "\' and topicid=\'" + assessmentPatternDetails.get(j).getTopicid()
+                                + "\' and qlevel=\'" + assessmentPatternDetails.get(j).getParalevel() + "\'";
+                        if (keywords.size() > 0) {
+                            query += " and (ansdesc like ";
+                            for (int k = 0; k < keywords.size(); k++) {
+                                if (keywords.size() > 0) {
+                                    key = "%" + keywords.get(k).trim() + "%";
+                                    key = key.replace("\'", "\'\'");
+                                }
+                                query += "'" + key + "'";
+                                if (k < keywords.size() - 1) query += " or ansdesc like ";
+                            }
+                            query += ")";
+                        } else {
+//                            query += ")";
+                        }
                         if (assessmentPaperPatterns.getIsRandom())
-                            para = AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().getParagraphsRandomly(selectedLang,
+                            query += "order by random() limit 1";
+
+                        SimpleSQLiteQuery qu = new SimpleSQLiteQuery(query);
+                        para = AppDatabase.getDatabaseInstance(context).getScienceQuestionDao().getParaQueryResult(qu);
+                        if (para != null)
+                            Log.d("qcreatePaperPatten", query);
+
+
+                            /*para = AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().getParagraphsRandomly(selectedLang,
                                     subjectId, assessmentPatternDetails.get(j).getTopicid(),
                                     assessmentPatternDetails.get(j).getParalevel(),
-                                    PARAGRAPH_BASED_QUESTION, "%");
-                        else
-                            para = AppDatabase.getDatabaseInstance(this).getScienceQuestionDao()
+                                    PARAGRAPH_BASED_QUESTION, "%");*/
+
+
+                    /*}
+                else*/
+                            /*para = AppDatabase.getDatabaseInstance(this).getScienceQuestionDao()
                                     .getParagraphs(selectedLang,
                                             subjectId, assessmentPatternDetails.get(j).getTopicid(),
                                             assessmentPatternDetails.get(j).getParalevel(),
-                                            PARAGRAPH_BASED_QUESTION, "%");
-                        if (!assessmentPaperPatterns.getIsRandom()) {
+                                            PARAGRAPH_BASED_QUESTION, "%");*/
+
+                        key = "%";
+                        String qQuery = "select * from ScienceQuestion where qtId=\'"
+                                + assessmentPatternDetails.get(j).getQtid() + "\' and topicid=\'" +
+                                assessmentPatternDetails.get(j).getTopicid() + "\' and subjectid=\'" +
+                                subjectId + "\' and languageid=\'" + selectedLang + "\' and qlevel=\'" + assessmentPatternDetails.get(j).getQlevel() +
+                                "\' and qtid!=\'14\' and IsParaQuestion=\'0\'";
+                        if (keywords.size() > 0) {
+                            qQuery += " and (ansdesc like ";
+                            for (int k = 0; k < keywords.size(); k++) {
+                                if (keywords.size() > 0) {
+                                    key = "%" + keywords.get(k).trim() + "%";
+                                    key = key.replace("\'", "\'\'");
+                                }
+                                qQuery += "'" + key + "'";
+                                if (k < keywords.size() - 1) qQuery += " or ansdesc like ";
+                            }
+                            qQuery += ")";
+                        } else {
+//                            qQuery += ")";
+                        }
+                        if (assessmentPaperPatterns.getIsRandom())
+                            qQuery += "order by random()";
+
+                        qQuery += " limit \'" + noOfQues + "\'";
+
+                        SimpleSQLiteQuery questionQuery = new SimpleSQLiteQuery(qQuery);
+                        scienceQuestions = AppDatabase.getDatabaseInstance(context).getScienceQuestionDao().getQuestionQueryResult(questionQuery);
+                        if (scienceQuestions.size() > 0)
+                            Log.d("qQuery", "createPaperPatten: " + qQuery);
+
+                      /*  if (!assessmentPaperPatterns.getIsRandom()) {
                             scienceQuestions = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
                                     getScienceQuestionDao().getQuestionListByPattern(selectedLang,
                                     subjectId, assessmentPatternDetails.get(j).getTopicid(),
@@ -1697,7 +1779,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                     assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(),
                                     noOfQues, "%");
 
-                        }
+                        }*/
                         if (assessmentPaperPatterns.getIsRandom()) {
                             Collections.shuffle(scienceQuestions);
                         }
@@ -1714,9 +1796,38 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         if (para != null) {
                             if (para.getQtid().equalsIgnoreCase(PARAGRAPH_BASED_QUESTION)) {
 
-                                paraQuestionList = AppDatabase.getDatabaseInstance(this)
-                                        .getScienceQuestionDao().getParaQuestionByQidAndLevel(para.getQid(), assessmentPatternDetails.get(j).getQlevel());
+                                //SELECT * FROM ScienceQuestion WHERE RefParaID=:qid and IsParaQuestion and qlevel=:level
 
+                                key = "%";
+                                String pqQuery = "select * from ScienceQuestion where RefParaID=\'"
+                                        + para.getQid() + "\' and qlevel=\'" + assessmentPatternDetails.get(j).getQlevel() + "\'";
+                                if (keywords.size() > 0) {
+                                    pqQuery += " and (ansdesc like ";
+                                    for (int k = 0; k < keywords.size(); k++) {
+                                        if (keywords.size() > 0) {
+                                            key = "%" + keywords.get(k).trim() + "%";
+                                            key = key.replace("\'", "\'\'");
+                                        }
+                                        pqQuery += "'" + key + "'";
+                                        if (k < keywords.size() - 1) pqQuery += " or ansdesc like ";
+                                    }
+                                    pqQuery += ")";
+
+                                } else {
+//                                    pqQuery += ")";
+                                }
+
+                                SimpleSQLiteQuery parQuestionQuery = new SimpleSQLiteQuery(pqQuery);
+                                paraQuestionList = AppDatabase.getDatabaseInstance(context).getScienceQuestionDao().getQuestionQueryResult(parQuestionQuery);
+                                if (scienceQuestions.size() > 0)
+                                    Log.d("pqQuery", "createPaperPatten: " + pqQuery);
+
+
+
+
+                               /* paraQuestionList = AppDatabase.getDatabaseInstance(this)
+                                        .getScienceQuestionDao().getParaQuestionByQidAndLevel(para.getQid(), assessmentPatternDetails.get(j).getQlevel());
+*/
                                 if (paraQuestionList.size() > 0) {
                                     for (int k = 0; k < assessmentPatternDetails.size(); k++) {
                                         if (assessmentPatternDetails.get(k).getQtid()
@@ -1766,9 +1877,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     showSupervisedPracticeExam();
                 }
             }
-        } catch (NumberFormatException e) {
+        } catch (
+                NumberFormatException e) {
             e.printStackTrace();
         }
+
     }
 
     private void checkQuestionExists(List<ScienceQuestion> keywordQuestions) {
@@ -3165,7 +3278,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     private void updateTempList(int queCnt) {
         try {
 //        List<TempScienceQuestion> tempList = new ArrayList<>();
-            String currentSession = FastSave.getInstance().getString("currentSession", "");
+            String currentSession = FastSave.getInstance().getString("CurrentSession", "");
             String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
             calculateMarks();
 //        for (int i = 0; i < scienceQuestionList.size(); i++) {
@@ -3469,7 +3582,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             paper.setCorrectCnt(correctAnsCnt);
             paper.setWrongCnt(wrongAnsCnt);
             paper.setSkipCnt(skippedCnt);
-            String currentSession = FastSave.getInstance().getString("currentSession", "");
+            String currentSession = FastSave.getInstance().getString("CurrentSession", "");
 //        paper.setSessionID(Assessment_Constants.currentSession);
             paper.setSessionID(currentSession);
             String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
@@ -3692,7 +3805,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             calculateMarks();
             calculateCorrectWrongCount();
             AssessmentPaperForPush paper = createPaperToSave(scienceQuestionList);
-            String currentSession = FastSave.getInstance().getString("currentSession", "");
+            String currentSession = FastSave.getInstance().getString("CurrentSession", "");
             String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
 
         /*AssessmentPaperForPush paper = new AssessmentPaperForPush();
@@ -3952,7 +4065,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 @Override
                 protected Object doInBackground(Object[] objects) {
                     try {
-                        String currentSession = FastSave.getInstance().getString("currentSession", "");
+                        String currentSession = FastSave.getInstance().getString("CurrentSession", "");
 
 //                        String toDateTemp = appDatabase.getSessionDao().getToDate(Assessment_Constants.currentSession);
                         String toDateTemp = appDatabase.getSessionDao().getToDate(currentSession);
@@ -4067,8 +4180,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     sd.mkdir();
                 File offlineDB = new File(Environment.getExternalStorageDirectory()
                         + "/PrathamBackups/offline_assessment_database.db");
-
-                copySDCardDB(f, offlineDB);
+                if (!FastSave.getInstance().getBoolean(SDCARD_OFFLINE_PATH_SAVED, false))
+                    copySDCardDB(f, offlineDB);
+                else startFetchingData();
             } else {
                 startFetchingData();
 //                    checkPermissions();
@@ -4556,6 +4670,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             new AsyncTask<Void, Integer, Void>() {
                 ProgressDialog progressDialog;
                 boolean copySuccessful;
+                int tableCopyCount = 0;
 
                 @Override
                 protected void onPreExecute() {
@@ -4615,6 +4730,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 }
                                 AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().insertAllPapersPatterns(paperPatternList);
                                 content_cursor.close();
+                                tableCopyCount++;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -4646,6 +4762,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 }
                                 AppDatabase.getDatabaseInstance(context).getAssessmentPatternDetailsDao().insertAllPatternDetails(assessmentPatternDetailsList);
                                 content_cursor.close();
+                                tableCopyCount++;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -4669,6 +4786,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 }
                                 AppDatabase.getDatabaseInstance(context).getCertificateTopicListDao().insertAllCertificateTopicQuestions(certificateTopicLists);
                                 content_cursor.close();
+                                tableCopyCount++;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -4745,7 +4863,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 AppDatabase.getDatabaseInstance(context).getScienceQuestionDao().replaceNewLineForQuestions2();
 
                                 content_cursor.close();
-                              /*  if (DownloadMediaList.size() > 0) {
+                                tableCopyCount++;
+/*  if (DownloadMediaList.size() > 0) {
                                     AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().insertAllMedia(DownloadMediaList);
                                 }*/
                             } catch (Exception e) {
@@ -4798,7 +4917,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 content_cursor.close();
 //                                FastSave.getInstance().saveBoolean(Assessment_Constants.SDCARD_OFFLINE_PATH_SAVED, true);
                                 copySuccessful = true;
-
+                                tableCopyCount++;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -4820,6 +4939,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 }
                                 AppDatabase.getDatabaseInstance(context).getLanguageDao().insertAllLanguages(languages);
                                 content_cursor.close();
+                                tableCopyCount++;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -4841,6 +4961,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 }
                                 AppDatabase.getDatabaseInstance(context).getSubjectDao().insertAllSubjects(subjects);
                                 content_cursor.close();
+                                tableCopyCount++;
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -4865,29 +4986,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 }
                                 AppDatabase.getDatabaseInstance(context).getTestDao().insertAllTest(assessmentTests);
                                 content_cursor.close();
+                                tableCopyCount++;
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                          /*  try {
-                                Cursor content_cursor;
-                                content_cursor = db.rawQuery("SELECT * FROM CertificateTopicList", null);
-                                List<CertificateTopicList> certificateTopicLists = new ArrayList<>();
-                                if (content_cursor.moveToFirst()) {
-                                    while (!content_cursor.isAfterLast()) {
-                                        CertificateTopicList certificateTopic = new CertificateTopicList();
-                                        certificateTopic.setTopicid(content_cursor.getString(content_cursor.getColumnIndex("topicid")));
-                                        certificateTopic.setCertificatequestion(content_cursor.getString(content_cursor.getColumnIndex("certificatequestion")));
-                                        certificateTopicLists.add(certificateTopic);
-//                                        AppDatabase.getDatabaseInstance(context).getSubjectDao().deleteSubjectsByLangIdSubId(certificateTopic.getSubjectid(), certificateTopic.getLanguageid());
-
-                                        content_cursor.moveToNext();
-                                    }
-                                }
-                                AppDatabase.getDatabaseInstance(context).getCertificateTopicListDao().insertAllCertificateTopicQuestions(certificateTopicLists);
-                                content_cursor.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }*/
                             BackupDatabase.backup(context);
                         }
                     } catch (Exception e) {
@@ -4904,7 +5007,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 protected void onPostExecute(Void aVoid) {
                     //addStartTime();
                     super.onPostExecute(aVoid);
-                    if (copySuccessful)
+                    if (tableCopyCount > 7)
                         FastSave.getInstance().saveBoolean(SDCARD_OFFLINE_PATH_SAVED, true);
                     progressDialog.dismiss();
                     BackupDatabase.backup(context);

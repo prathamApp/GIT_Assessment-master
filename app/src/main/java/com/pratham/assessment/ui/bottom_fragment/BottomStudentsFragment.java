@@ -1405,7 +1405,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
                     AppDatabase.getDatabaseInstance(getActivity()).getAttendanceDao().insert(attendance);
                     Assessment_Constants.currentSession = currentSession;
-                    FastSave.getInstance().saveString("currentSession", currentSession);
+                    FastSave.getInstance().saveString("CurrentSession", currentSession);
 
 
                     Session startSesion = new Session();

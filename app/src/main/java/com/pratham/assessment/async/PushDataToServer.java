@@ -1,5 +1,6 @@
 package com.pratham.assessment.async;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -36,6 +37,7 @@ import com.pratham.assessment.domain.Score;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.domain.SupervisorData;
+import com.pratham.assessment.interfaces.DataPushListener;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.login.MainActivity;
 import com.pratham.assessment.utilities.Assessment_Utility;
@@ -105,7 +107,7 @@ public class PushDataToServer {
 //    JSONArray assessmentScienceData;
     JSONArray logsData;
     Boolean isConnectedToRasp = false;
-
+    DataPushListener dataPushListener;
     String programID = "";
 
     boolean dataPushed = false;
@@ -119,7 +121,6 @@ public class PushDataToServer {
     private int totalVideoMonCnt = 0, totalSupervisorCnt = 0, totalAnswerMediaCnt = 0;
     //    ProgressDialog progressDialog;
     JSONObject requestJsonObjectScience;
-    AlertDialog.Builder alertDialog;
     LottieAnimationView push_lottie;
     TextView txt_push_dialog_msg;
     TextView txt_push_cnt;
@@ -128,57 +129,45 @@ public class PushDataToServer {
     private int BUFFER = 10000;
 
     public PushDataToServer(Context context) {
+        dataPushListener = (DataPushListener) context;
         this.context = context;
     }
 
     public void setValue(Context context, boolean autoPush) {
-
+        dataPushListener = (DataPushListener) context;
         this.context = context;
         this.autoPush = autoPush;
         eceScoreData = new JSONArray();
         attendanceData = new JSONArray();
-//        crlData = new JSONArray();
         sessionData = new JSONArray();
-//        learntWords = new JSONArray();
         supervisorData = new JSONArray();
-//        groupsData = new JSONArray();
         logsData = new JSONArray();
         studentData = new JSONArray();
-//        assessmentData = new JSONArray();
-//        assessmentScienceData = new JSONArray();
-//        progressDialog = new ProgressDialog(context);
     }
 
     @UiThread
     protected void onPreExecute() {
-     /*   progressDialog.setCancelable(false);
-        progressDialog.setMessage("Pushing data..");*/
-        if (isTablet || !autoPush)
-//            progressDialog.show();
-        {
-            PushDataDialog pushDialog = new PushDataDialog(context);
+
+        PushDataDialog pushDialog = new PushDataDialog(context);
 //            pushDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            pushDialog.setContentView(R.layout.app_push_data_dialog);
-            Objects.requireNonNull(pushDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            pushDialog.setCancelable(false);
-            pushDialog.setCanceledOnTouchOutside(false);
+        pushDialog.setContentView(R.layout.app_push_data_dialog);
+        Objects.requireNonNull(pushDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        pushDialog.setCancelable(false);
+        pushDialog.setCanceledOnTouchOutside(false);
+        if (!autoPush)
             pushDialog.show();
 
-            push_lottie = pushDialog.findViewById(R.id.push_lottie);
-            txt_push_dialog_msg = pushDialog.findViewById(R.id.txt_push_dialog_msg);
-            txt_push_cnt = pushDialog.findViewById(R.id.txt_push_cnt);
-            rl_btn = pushDialog.findViewById(R.id.rl_btn);
-            ok_btn = pushDialog.findViewById(R.id.ok_btn);
-            ok_btn.setOnClickListener(view -> {
-
-                pushDialog.dismiss();
-                if (context instanceof MainActivity)
-                    ((MainActivity) context).onResponseGet();
-                if (context instanceof ScienceAssessmentActivity)
-                    ((ScienceAssessmentActivity) context).onResponseGet();
-            });
-        }
+        push_lottie = pushDialog.findViewById(R.id.push_lottie);
+        txt_push_dialog_msg = pushDialog.findViewById(R.id.txt_push_dialog_msg);
+        txt_push_cnt = pushDialog.findViewById(R.id.txt_push_cnt);
+        rl_btn = pushDialog.findViewById(R.id.rl_btn);
+        ok_btn = pushDialog.findViewById(R.id.ok_btn);
+        ok_btn.setOnClickListener(view -> {
+            pushDialog.dismiss();
+            dataPushListener.onResponseGet();
+        });
     }
+
 
     @Background
     public void doInBackground() {
@@ -191,8 +180,7 @@ public class PushDataToServer {
         attendanceData = fillAttendanceData(attendanceList);
         List<Student> studentList = AppDatabase.getDatabaseInstance(context).getStudentDao().getAllNewStudents();
         studentData = fillStudentData(studentList);
-     /*   List<Crl> crlList = AppDatabase.getDatabaseInstance(context).getCrlDao().getAllCrls();
-        crlData = fillCrlData(crlList);*/
+
         List<Session> sessionList = AppDatabase.getDatabaseInstance(context).getSessionDao().getAllNewSessions();
         sessionData = fillSessionData(sessionList);
 
@@ -200,19 +188,9 @@ public class PushDataToServer {
         supervisorData = fillSupervisorData(supervisorDataList);
         List<Modal_Log> logsList = AppDatabase.getDatabaseInstance(context).getLogsDao().getPushAllLogs();
         logsData = fillLogsData(logsList);
-     /*   List<Assessment> assessmentList = AppDatabase.getDatabaseInstance(context).getAssessmentDao().getAllECEAssessment();
-        assessmentData = fillAssessmentData(assessmentList);
-       List<Assessment> scienceAssessmentList = AppDatabase.getDatabaseInstance(context).getAssessmentDao().getAllScienceAssessment();
-        assessmentScienceData = fillAssessmentData(scienceAssessmentList);
-*/
-       /* List<Groups> groupsList = AppDatabase.getDatabaseInstance(context).getGroupsDao().getAllGroups();
-        groupsData = fillGroupsData(groupsList);
-*/
-        JSONObject rootJson = new JSONObject();
 
         try {
 
-//        JSONObject requestJsonObject = generateRequestString(scoreData, attendanceData, sessionData, learntWords, supervisorData, logsData, assessmentData, studentData);
             requestJsonObjectScience = generateRequestString(eceScoreData, assessmentScoreData, attendanceData, sessionData,/* learntWords, */supervisorData, logsData, /*assessmentScienceData,*/ studentData);
 
 
@@ -364,9 +342,7 @@ public class PushDataToServer {
             for (int i = 0; i < pushList.size(); i++) {
                 String file[] = pushList.get(i).getPhotoUrl().split("/");
                 fileName = file[file.length - 1];
-//                        fileName = downloadMediaList.get(i).getqId() + "_" + downloadMediaList.get(i).getPaperId() + "_" + type;
                 String extension = getFileExtension(pushList.get(i).getPhotoUrl());
-//                    String fileWithExt = fileName + "." + extension;
                 File f = new File(pushList.get(i).getPhotoUrl());
                 if (f.exists()) {
                     MediaType mediaType = MEDIA_TYPE_PNG;
@@ -385,19 +361,7 @@ public class PushDataToServer {
                     builderNew.addFormDataPart(fileName, fileName, RequestBody.create(mediaType, f));
                 }
             }
-           /* } else {
-                for (int i = 0; i < videoRecordingList.size(); i++) {
-//                    String fileName = DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING + "_" + videoRecordingList.get(i).getPaperId();
-                    String fileName = DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING + "_" + videoRecordingList.get(i).getPaperId() + "_" + Assessment_Utility.getCurrentDateTime() + "_" + i;
-                    fileName = fileName.replaceAll("[\\\\/:*?\"<>|]", "_");
-                    String extension = getFileExtension(videoRecordingList.get(i).getPhotoUrl());
-                    String fileWithExt = fileName + "." + extension;
-                    File f = new File(videoRecordingList.get(i).getPhotoUrl());
-                    if (f.exists()) {
-                        builderNew.addFormDataPart(fileName, fileWithExt, RequestBody.create(MEDIA_TYPE_JPG, f));
-                    }
-                }
-            }*/
+
             MultipartBody requestBody = builderNew.build();
             final Request request = new Request.Builder()
                     .url(url)
@@ -490,15 +454,16 @@ public class PushDataToServer {
             metaDataObj.put("Model", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("Model"));
             metaDataObj.put("ApiLevel", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("ApiLevel"));
             metaDataObj.put("InternalStorageSize", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("InternalStorageSize"));
+            metaDataObj.put("CurrentSession", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("CurrentSession"));
+            metaDataObj.put("SdCardPath", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("SdCardPath"));
+            metaDataObj.put("AppStartDateTime", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("AppStartDateTime"));
 
 
             sessionObj.put("scoreData", assessmentScoreData);
             sessionObj.put("eceScoreData", eceScoreData);
             sessionObj.put("attendanceData", attendanceData);
             sessionObj.put("sessionsData", sessionData);
-//            sessionObj.put("learntWordsData", learntWordsData);
             sessionObj.put("logsData", logsData);
-//            sessionObj.put("assessmentData", assessmentData);
             sessionObj.put("supervisor", supervisorData);
             if (!isTablet)
                 sessionObj.put("studentData", studentData);
@@ -534,34 +499,6 @@ public class PushDataToServer {
         }
         return newSessionsData;
     }
-
-   /* private JSONArray fillCrlData(List<Crl> crlsList) {
-
-        JSONArray crlsData = new JSONArray();
-        JSONObject _crlObj;
-        try {
-            for (int i = 0; i < crlsList.size(); i++) {
-                _crlObj = new JSONObject();
-                _crlObj.put("CRLId", crlsList.get(i).getCRLId());
-                _crlObj.put("FirstName", crlsList.get(i).getFirstName());
-                _crlObj.put("LastName", crlsList.get(i).getLastName());
-                _crlObj.put("UserName", crlsList.get(i).getUserName());
-                _crlObj.put("UserName", crlsList.get(i).getUserName());
-                _crlObj.put("Password", crlsList.get(i).getPassword());
-                _crlObj.put("ProgramId", crlsList.get(i).getProgramId());
-                _crlObj.put("Mobile", crlsList.get(i).getMobile());
-                _crlObj.put("State", crlsList.get(i).getState());
-                _crlObj.put("Email", crlsList.get(i).getEmail());
-                _crlObj.put("CreatedBy", crlsList.get(i).getCreatedBy());
-                _crlObj.put("newCrl", !crlsList.get(i).isNewCrl());
-                crlsData.put(_crlObj);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return crlsData;
-    }*/
 
     private JSONArray fillStudentData(List<Student> studentList) {
         JSONArray studentData = new JSONArray();
@@ -782,61 +719,6 @@ public class PushDataToServer {
         return logsData;
     }
 
-   /* private JSONArray fillAssessmentData(List<Assessment> assessmentList) {
-        JSONArray assessmentData = new JSONArray();
-        JSONObject _assessmentobj;
-        try {
-            for (int i = 0; i < assessmentList.size(); i++) {
-                _assessmentobj = new JSONObject();
-                Assessment _Assessment = assessmentList.get(i);
-                _assessmentobj.put("DeviceIDa", Assessment_Utility.getDeviceId(context));
-                _assessmentobj.put("EndDateTimea", _Assessment.getEndDateTime());
-                _assessmentobj.put("Labela", _Assessment.getLabel());
-                _assessmentobj.put("Levela", _Assessment.getLevela());
-                _assessmentobj.put("QuestionIda", _Assessment.getQuestionIda());
-                _assessmentobj.put("ResourceIDa", _Assessment.getResourceIDa());
-                _assessmentobj.put("ScoredMarksa", _Assessment.getScoredMarksa());
-                _assessmentobj.put("ScoreIda", _Assessment.getScoreIda());
-                _assessmentobj.put("SessionIDa", _Assessment.getSessionIDa());
-                _assessmentobj.put("SessionIDm", _Assessment.getSessionIDm());
-                _assessmentobj.put("StartDateTimea", _Assessment.getStartDateTimea());
-                _assessmentobj.put("StudentIDa", _Assessment.getStudentIDa());
-                _assessmentobj.put("TotalMarksa", _Assessment.getTotalMarksa());
-
-
-                assessmentData.put(_assessmentobj);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return assessmentData;
-    }*/
-
-    /*private JSONArray fillGroupsData(List<Groups> groupsList) {
-        JSONArray groupsData = new JSONArray();
-        JSONObject _groupsObj;
-        try {
-            for (int i = 0; i < groupsList.size(); i++) {
-                _groupsObj = new JSONObject();
-                Groups group = groupsList.get(i);
-                _groupsObj.put("GroupId", group.getGroupId());
-                _groupsObj.put("DeviceId", group.getDeviceId());
-                _groupsObj.put("GroupCode", group.getGroupCode());
-                _groupsObj.put("GroupName", group.getGroupName());
-                _groupsObj.put("ProgramId", group.getProgramId());
-                _groupsObj.put("SchoolName", group.getSchoolName());
-                _groupsObj.put("VillageId", group.getVillageId());
-                _groupsObj.put("VIllageName", group.getVIllageName());
-
-                groupsData.put(_groupsObj);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return groupsData;
-    }*/
 
    /* private void pushDataToServer(final Context context, JSONObject requestJsonObject, String url) {
         try {
@@ -1095,11 +977,8 @@ public class PushDataToServer {
                     txt_push_dialog_msg.setText(msg1);
                     txt_push_cnt.setVisibility(View.VISIBLE);
                     txt_push_cnt.setText(msg2);
-
-
                 }
             }
-
             PUSH_DATA_FROM_DRAWER = false;
         } catch (Exception e) {
             e.printStackTrace();

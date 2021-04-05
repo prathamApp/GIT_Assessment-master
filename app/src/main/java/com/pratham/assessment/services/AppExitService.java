@@ -39,7 +39,7 @@ public class AppExitService extends Service {
                                 .build();*/
 
                         String EndTime = "" + AssessmentApplication.getCurrentDateTime();
-                        String currentSession = FastSave.getInstance().getString("currentSession", "");
+                        String currentSession = FastSave.getInstance().getString("CurrentSession", "");
 
 //                        String toDateTemp = appDatabase.getSessionDao().getToDate(Assessment_Constants.currentSession);
                         String toDateTemp = appDatabase.getSessionDao().getToDate(currentSession);

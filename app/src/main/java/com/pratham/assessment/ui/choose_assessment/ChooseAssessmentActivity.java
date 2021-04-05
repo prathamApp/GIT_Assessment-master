@@ -34,15 +34,18 @@ import android.widget.Toast;
 
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.BaseActivity;
+import com.pratham.assessment.CatchoActivity;
 import com.pratham.assessment.R;
 import com.pratham.assessment.async.PushDataToServer;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.GridSpacingItemDecoration;
+import com.pratham.assessment.custom.ProcessPhoenix;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.AssessmentTest;
 import com.pratham.assessment.domain.Crl;
+import com.pratham.assessment.interfaces.DataPushListener;
 import com.pratham.assessment.ui.choose_assessment.fragments.LanguageFragment_;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment_;
@@ -71,7 +74,7 @@ import static com.pratham.assessment.utilities.Assessment_Utility.dpToPx;
 
 @EActivity(R.layout.activity_choose_assessment)
 public class ChooseAssessmentActivity extends BaseActivity implements
-        ChoseAssessmentClicked, ChooseAssessmentContract.ChooseAssessmentView {
+        ChoseAssessmentClicked, ChooseAssessmentContract.ChooseAssessmentView , DataPushListener {
     @Bean(ChooseAssessmentPresenter.class)
     ChooseAssessmentContract.ChooseAssessmentPresenter presenter;
 
@@ -668,8 +671,13 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 VIDEOMONITORING = false;
-                finish();
-                startActivity(new Intent(ChooseAssessmentActivity.this, SplashActivity_.class));
+                finishAffinity();
+                try {
+                    ProcessPhoenix.triggerRebirth(ChooseAssessmentActivity.this);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+//                startActivity(new Intent(ChooseAssessmentActivity.this, SplashActivity_.class));
             }
         });
         restart_btn.setOnClickListener(new View.OnClickListener() {
@@ -834,6 +842,11 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         rlSubject.setVisibility(View.VISIBLE);
         frameLayout.setVisibility(View.GONE);
         tv_choose_assessment.setText("Choose subject");
+    }
+
+    @Override
+    public void onResponseGet() {
+
     }
 
 

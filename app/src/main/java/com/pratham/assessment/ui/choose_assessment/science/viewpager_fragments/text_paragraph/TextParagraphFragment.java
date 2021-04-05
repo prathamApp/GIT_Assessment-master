@@ -1,4 +1,4 @@
-package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments;
+package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.text_paragraph;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -25,6 +25,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.nex3z.flowlayout.FlowLayout;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.domain.ScienceQuestion;
@@ -32,10 +33,11 @@ import com.pratham.assessment.services.stt_service_new.ContinuousSpeechService_N
 import com.pratham.assessment.services.stt_service_new.STT_Result_New;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
-import com.pratham.assessment.constants.Assessment_Constants;
+import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.TextParagraphFragment_;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
@@ -55,7 +57,7 @@ import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(resName = "layout_text_paragraph_item")
-public class TextParagraphFragment extends Fragment implements STT_Result_New.sttView {
+public class TextParagraphFragment extends Fragment implements STT_Result_New.sttView, TextParagraphContract.TextParagraphView {
     @ViewById(R.id.tv_question)
     TextView question;
     @ViewById(R.id.iv_question_image)
@@ -70,8 +72,10 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
     FlowLayout wordFlowLayout;
     @ViewById(R.id.myScrollView)
     ScrollView myScrollView;
-/*    @ViewById(R.id.btn_view_hint)
-    Button btn_view_hint;*/
+    /*    @ViewById(R.id.btn_view_hint)
+        Button btn_view_hint;*/
+    @Bean(TextParagraphPresenter.class)
+    TextParagraphContract.TextParagraphPresenter textParagraphPresenter;
 
     AssessmentAnswerListener assessmentAnswerListener;
     Context context;
@@ -112,6 +116,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
             assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
 
         }
+        textParagraphPresenter.setView(TextParagraphFragment.this);
         continuousSpeechService = new ContinuousSpeechService_New(context, TextParagraphFragment.this, "");
         continuousSpeechService.resetSpeechRecognizer();
         if (question != null)
@@ -121,7 +126,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
     }
 
     public static TextParagraphFragment newInstance(int pos, ScienceQuestion scienceQuestion) {
-        TextParagraphFragment_ textParagraphFragment = new TextParagraphFragment_();
+        com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.text_paragraph.TextParagraphFragment_ textParagraphFragment = new com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.text_paragraph.TextParagraphFragment_();
         Bundle args = new Bundle();
         args.putInt("pos", pos);
         args.putSerializable("scienceQuestion", scienceQuestion);
@@ -166,15 +171,16 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
 
             String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-            final String localPath = Assessment_Utility.getQuestionLocalPath(scienceQuestion);
- /*           if (scienceQuestion.getIsQuestionFromSDCard())
+            final String localPath=Assessment_Utility.getQuestionLocalPath(scienceQuestion);
+      /*      if (scienceQuestion.getIsQuestionFromSDCard())
                 localPath = scienceQuestion.getPhotourl();
             else
                 localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-*/
-            Assessment_Utility.setQuestionImageToImageView(scienceQuestion, questionImage, questionGif, localPath, getActivity());
 
-           /* String path = scienceQuestion.getPhotourl();
+*/
+            Assessment_Utility.setQuestionImageToImageView(scienceQuestion,questionImage,questionGif,localPath,getActivity());
+
+   /*         String path = scienceQuestion.getPhotourl();
             String[] imgPath = path.split("\\.");
             int len;
             if (imgPath.length > 0)
@@ -191,10 +197,10 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
                                 .into(questionImage);
 //                    zoomImg.setVisibility(View.VISIBLE);
                     } else {*//*
-                        gif = new FileInputStream(localPath);
-                        questionImage.setVisibility(View.GONE);
-                        questionGif.setVisibility(View.VISIBLE);
-                        questionGif.setGifResource(gif);
+                    gif = new FileInputStream(localPath);
+                    questionImage.setVisibility(View.GONE);
+                    questionGif.setVisibility(View.VISIBLE);
+                    questionGif.setGifResource(gif);
 //                    }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -207,8 +213,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .skipMemoryCache(true))
                         .into(questionImage);
-            }
-*/
+            }*/
         } else questionImage.setVisibility(View.GONE);
 
     }
@@ -224,9 +229,8 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
 
     private void setWords() {
         splitWords = Arrays.asList(scienceQuestion.getQname().split(" "));
-
-        wordCount = new HashMap<>();
-        StringTokenizer para = new StringTokenizer(scienceQuestion.getQname().toLowerCase());
+         /* StringTokenizer para = new StringTokenizer(scienceQuestion.getQname().toLowerCase());
+      wordCount = new HashMap<>();
 //        int tokenCount = para.countTokens();
         while (para.hasMoreTokens()) {
             String word = para.nextToken();
@@ -240,8 +244,8 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
         for (String words : wordCount.keySet()) {
             Log.d("Word : " + words, " has count :" + wordCount.get(words));
         }
-
-
+*/
+        textParagraphPresenter.createCorrectArr(splitWords);
         correctArr = new boolean[splitWords.size()];
         for (int i = 0; i < splitWords.size(); i++) {
             correctArr[i] = false;
@@ -255,7 +259,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
             splitWordsPunct.add(myString);
             Log.d("setWords", "setWords: " + myString);
         }
-        setWordTOLayout();
+//        setWordTOLayout();
     }
 
     public void setWordTOLayout() {
@@ -334,7 +338,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
 //        }else {
 //
 //        }
-        sttResultProcess(sttResult, splitWordsPunct, wordsResIdList);
+        textParagraphPresenter.sttResultProcess(sttResult, splitWordsPunct, wordsResIdList, scienceQuestion, correctArr);
 
     }
 
@@ -510,8 +514,8 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
     }*/
 
 
-    public void sttResultProcess
-            (ArrayList<String> sttResult, List<String> splitWordsPunct, List<String> wordsResIdList) {
+    public void sttResultProcess(ArrayList<String> sttResult, List<String> splitWordsPunct,
+                                 List<String> wordsResIdList) {
 
         String sttRes = "";
         for (int i = 0; i < sttResult.size(); i++) {
@@ -548,10 +552,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
 
     }
 
-    private int calculateMarks() {
-        int marks = (getPercentage() * Integer.parseInt(scienceQuestion.getOutofmarks())) / 100;
-        return marks;
-    }
+
 
     public int getPercentage() {
         int corrCnt = getCorrectCounter();
@@ -588,159 +589,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
     }
 
 
-    /*public void startStoryReading(final int index) {
-        float wordDuration = 1;
-        handler = new Handler();
-        colorChangeHandler = new Handler();
-//        mp.start();
-        TextView myNextView = null;
 
-        if (index < wordsDurationList.size()) {
-            wordDuration = Float.parseFloat(wordsDurationList.get(index));
-            final TextView myView = (TextView) wordFlowLayout.getChildAt(index);
-            if (index < wordFlowLayout.getChildCount())
-                myNextView = (TextView) wordFlowLayout.getChildAt(index + 1);
-
-            if (myNextView != null)
-                isScrollBelowVisible(myNextView);
-            myView.setTextColor(getResources().getColor(R.color.colorRed));
-            myView.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-//            Animation animation = AnimationUtils.loadAnimation(context, R.anim.reading_zoom_in);
-//            myView.startAnimation(animation);
-//            wordPopUp(this, myView);
-            colorChangeHandler.postDelayed(() -> {
-                myView.setTextColor(getResources().getColor(R.color.white));
-                myView.setBackgroundColor(getResources().getColor(R.color.transparent));
-//                    wordPopDown(ReadingStoryActivity.this, myView);
-//                Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.reading_zoom_out);
-//                myView.startAnimation(animation1);
-            }, 350);
-            if (index == wordsDurationList.size() - 1) {
-                try {
-                    handler.postDelayed(() -> {
-                        try {
-                            playFlg = false;
-                            pauseFlg = true;
-                           *//* if (!contentType.equalsIgnoreCase(FC_Constants.RHYME_RESOURCE)) {
-                                btn_Mic.setVisibility(View.VISIBLE);
-                                btn_Stop.setVisibility(View.GONE);
-                                wordCounter = 0;
-                                quesReadHandler = new Handler();
-                                quesReadHandler.postDelayed(() -> {
-                                    Collections.shuffle(readSounds);
-                                    mPlayer = MediaPlayer.create(context, readSounds.get(0));
-                                    mPlayer.start();
-                                }, (long) (5000));
-                            }*//*
-//                            btn_Stop.performClick();
-//                            layout_mic_ripple.startRippleAnimation();
-//                            layout_ripplepulse_right.startRippleAnimation();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }, (long) (wordDuration * 1000));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                mediaPauseFlag = true;
-            }
-        } else
-            wordDuration = 1;
-
-        handler.postDelayed(() -> {
-            if (playFlg && !pauseFlg) {
-                if (index < wordFlowLayout.getChildCount()) {
-                    wordCounter += 1;
-                    if (!pauseFlg) {
-                        startStoryReading(wordCounter);
-                    }
-                } else {
-                    for (int i = 0; i < wordsDurationList.size(); i++) {
-                        TextView myView = (TextView) wordFlowLayout.getChildAt(i);
-                        myView.setBackgroundColor(Color.TRANSPARENT);
-                        myView.setTextColor(getResources().getColor(R.color.white));
-                    }
-                    wordCounter = 0;
-                }
-            }
-        }, (long) (wordDuration * 1000));
-
-    }
-*/
-
-    /*private void addSttResultDB(ArrayList<String> stt_Result) {
-     *//* String deviceId = AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("DeviceId");
-        StringBuilder strWord = new StringBuilder("STT_ALL_RESULT - ");
-        for(int i =0 ; i<stt_Result.size(); i++) {
-            strWord.append(stt_Result.get(i)).append(" - ");
-            stt_Result.size();
-            if(i > 0 && i < 3)
-                remainingResult.add(stt_Result.get(i));
-        }
-        try {
-            Score score = new Score();
-            score.setSessionID(FastSave.getInstance().getString(Assessment_Constants.CURRENT_SESSION, ""));
-            score.setResourceID(resId);
-            score.setQuestionId(0);
-            score.setScoredMarks(0);
-            score.setTotalMarks(0);
-            score.setStudentID(FastSave.getInstance().getString(FC_Constants.CURRENT_STUDENT_ID, ""));
-            score.setStartDateTime(resStartTime);
-            score.setDeviceID(deviceId.equals(null) ? "0000" : deviceId);
-            score.setEndDateTime(FC_Utility.getCurrentDateTime());
-            score.setLevel(0);
-            score.setLabel(""+strWord);
-            score.setSentFlag(0);
-            appDatabase.getScoreDao().insert(score);
-            BackupDatabase.backup(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*//*
-    }*/
-
-    /*   public void addScore(int wID, String Word, int scoredMarks, int totalMarks, String
-               resStartTime, String Label) {
-          *//* try {
-            String deviceId = appDatabase.getStatusDao().getValue("DeviceId");
-            Score score = new Score();
-            score.setSessionID(FastSave.getInstance().getString(FC_Constants.CURRENT_SESSION, ""));
-            score.setResourceID(resId);
-            score.setQuestionId(wID);
-            score.setScoredMarks(scoredMarks);
-            score.setTotalMarks(totalMarks);
-            score.setStudentID(FastSave.getInstance().getString(FC_Constants.CURRENT_STUDENT_ID, ""));
-            score.setStartDateTime(resStartTime);
-            score.setDeviceID(deviceId.equals(null) ? "0000" : deviceId);
-            score.setEndDateTime(FC_Utility.getCurrentDateTime());
-            score.setLevel(0);
-            score.setLabel(Word + " - " + Label);
-            score.setSentFlag(0);
-            appDatabase.getScoreDao().insert(score);
-
-            if (FastSave.getInstance().getString(APP_SECTION,"").equalsIgnoreCase(sec_Test)) {
-                Assessment assessment = new Assessment();
-                assessment.setResourceIDa(resId);
-                assessment.setSessionIDa(FastSave.getInstance().getString(FC_Constants.ASSESSMENT_SESSION, ""));
-                assessment.setSessionIDm(FastSave.getInstance().getString(FC_Constants.CURRENT_SESSION, ""));
-                assessment.setQuestionIda(wID);
-                assessment.setScoredMarksa(scoredMarks);
-                assessment.setTotalMarksa(totalMarks);
-                assessment.setStudentIDa(FastSave.getInstance().getString(FC_Constants.CURRENT_ASSESSMENT_STUDENT_ID, ""));
-                assessment.setStartDateTimea(resStartTime);
-                assessment.setDeviceIDa(deviceId.equals(null) ? "0000" : deviceId);
-                assessment.setEndDateTime(FC_Utility.getCurrentDateTime());
-                assessment.setLevela(FC_Constants.currentLevel);
-                assessment.setLabel("test: " + Label);
-                assessment.setSentFlag(0);
-                appDatabase.getAssessmentDao().insert(assessment);
-            }
-
-            BackupDatabase.backup(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*//*
-    }
-*/
     private void isScrollBelowVisible(View view) {
         Rect scrollBounds = new Rect();
         myScrollView.getDrawingRect(scrollBounds);
@@ -788,6 +637,52 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
 
     }
 
+    @Override
+    public void setResult(String sttRes) {
+        this.sttResult.append(" ").append(sttRes);
+        assessmentAnswerListener.setAnswerInActivity("" + calculateMarks(), this.sttResult.toString(), scienceQuestion.getQid(), null);
+
+    }
+
+    @Override
+    public void setWordsToLayout(List<String> splitWords) {
+        for (int i = 0; i < splitWords.size(); i++) {
+            if (splitWords.get(i).equalsIgnoreCase("#")) {
+                final TextView myTextView = new TextView(context);
+                myTextView.setWidth(2000);
+                wordFlowLayout.addView(myTextView);
+            } else {
+                final TextView myTextView = new TextView(context);
+                myTextView.setText(Html.fromHtml(splitWords.get(i)));
+                myTextView.setId(i);
+                myTextView.setTextSize(22);
+                myTextView.setTypeface(ResourcesCompat.getFont(context, R.font.quicksand_medium));
+                myTextView.setTextColor(getResources().getColor(R.color.white));
+                final int finalI = i;
+                myTextView.setOnClickListener(v -> {
+//                    if (!FastSave.getInstance().getString(FC_Constants.CURRENT_FOLDER_NAME, "").equalsIgnoreCase("maths"))
+                    if ((!playFlg || pauseFlg) && !voiceStart) {
+//                            setMute(0);
+                        myTextView.setTextColor(getResources().getColor(R.color.colorRed));
+                        Animation animation = AnimationUtils.loadAnimation(context, R.anim.zoom_in);
+                        myTextView.startAnimation(animation);
+                        if (colorChangeHandler == null)
+                            colorChangeHandler = new Handler();
+                        colorChangeHandler.postDelayed(() -> {
+                            myTextView.setTextColor(getResources().getColor(R.color.white));
+                            Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.zoom_out_new);
+                            myTextView.startAnimation(animation1);
+                        }, 350);
+                         /*   if (!storyAudio.equalsIgnoreCase("NA"))
+                                playClickedWord(finalI);*/
+//                        ttsService.play("" + linesStringList[finalI]);
+                    }
+                });
+                wordFlowLayout.addView(myTextView);
+            }
+        }
+    }
+
    /* @Click(R.id.btn_view_hint)
     public void showPara() {
         if (scienceQuestion != null) {
@@ -797,4 +692,8 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
             }
         }
     }*/
+   private int calculateMarks() {
+       int marks = (getPercentage() * Integer.parseInt(scienceQuestion.getOutofmarks())) / 100;
+       return marks;
+   }
 }

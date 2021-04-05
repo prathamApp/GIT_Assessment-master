@@ -28,6 +28,7 @@ import com.pratham.assessment.ui.choose_assessment.science.adapters.MatchPairAda
 import com.pratham.assessment.ui.choose_assessment.science.adapters.MatchPairDragDropAdapter;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
 import com.pratham.assessment.constants.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -46,7 +47,7 @@ import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_match_the_pair_row)
-public class MatchThePairFragment extends Fragment implements StartDragListener, MatchThePairContract.MatchThePairView{
+public class MatchThePairFragment extends Fragment implements StartDragListener, MatchThePairContract.MatchThePairView {
     @ViewById(R.id.tv_question)
     TextView question;
     @ViewById(R.id.iv_question_image)
@@ -125,18 +126,19 @@ public class MatchThePairFragment extends Fragment implements StartDragListener,
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
         final String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-        final String localPath;
-        if (scienceQuestion.getIsQuestionFromSDCard())
+        final String localPath= Assessment_Utility.getQuestionLocalPath(scienceQuestion);
+     /*   if (scienceQuestion.getIsQuestionFromSDCard())
             localPath = scienceQuestion.getPhotourl();
         else
             localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-
+*/
         if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
 //            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+            Assessment_Utility.setQuestionImageToImageView(scienceQuestion,questionImage,questionGif,localPath,getActivity());
 
 
-            String path = scienceQuestion.getPhotourl();
+          /*  String path = scienceQuestion.getPhotourl();
             String[] imgPath = path.split("\\.");
             int len;
             if (imgPath.length > 0)
@@ -145,18 +147,18 @@ public class MatchThePairFragment extends Fragment implements StartDragListener,
             if (imgPath[len].equalsIgnoreCase("gif")) {
                 try {
                     InputStream gif;
-                   /* if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                   *//* if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                         Glide.with(getActivity()).asGif()
                                 .load(path)
                                 .apply(new RequestOptions()
                                         .placeholder(Drawable.createFromPath(localPath)))
                                 .into(questionImage);
 //                    zoomImg.setVisibility(View.VISIBLE);
-                    } else {*/
-                        gif = new FileInputStream(localPath);
-                        questionImage.setVisibility(View.GONE);
-                        questionGif.setVisibility(View.VISIBLE);
-                        questionGif.setGifResource(gif);
+                    } else {*//*
+                    gif = new FileInputStream(localPath);
+                    questionImage.setVisibility(View.GONE);
+                    questionGif.setVisibility(View.VISIBLE);
+                    questionGif.setGifResource(gif);
 //                    }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -169,7 +171,7 @@ public class MatchThePairFragment extends Fragment implements StartDragListener,
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .skipMemoryCache(true))
                         .into(questionImage);
-            }
+            }*/
          /*   } else {
                 String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
@@ -212,6 +214,11 @@ public class MatchThePairFragment extends Fragment implements StartDragListener,
 //        pairList = AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
         pairList = scienceQuestion.getLstquestionchoice();
         Log.d("wwwwwwwwwww", pairList.size() + "");
+        if (pairList != null && pairList.size() > 0) {
+            recyclerView1.setVisibility(View.VISIBLE);
+        } else recyclerView1.setVisibility(View.GONE);
+
+
         if (!pairList.isEmpty()) {
           /*  for (int p = 0; p < pairList.size(); p++) {
                 list1.add(pairList.get(p).getChoicename());
@@ -236,6 +243,11 @@ public class MatchThePairFragment extends Fragment implements StartDragListener,
                 }
 
             }
+
+            if (shuffledList != null && shuffledList.size() > 0) {
+                recyclerView2.setVisibility(View.VISIBLE);
+            } else recyclerView2.setVisibility(View.GONE);
+
 
             matchPairDragDropAdapter = new MatchPairDragDropAdapter(this, shuffledList, getActivity());
             ItemTouchHelper.Callback callback =

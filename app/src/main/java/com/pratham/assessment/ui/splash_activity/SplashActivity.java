@@ -41,6 +41,7 @@ import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.Student;
+import com.pratham.assessment.interfaces.DataPushListener;
 import com.pratham.assessment.interfaces.Interface_copying;
 import com.pratham.assessment.interfaces.PermissionResult;
 import com.pratham.assessment.services.AppExitService;
@@ -68,10 +69,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
+import static com.pratham.assessment.constants.Assessment_Constants.SDCARD_OFFLINE_PATH_SAVED;
 import static com.pratham.assessment.utilities.Assessment_Utility.copyFileUsingStream;
 
 @EActivity(R.layout.activity_splash)
-public class SplashActivity extends SplashSupportActivity implements SplashContract.SplashView, PermissionResult, Interface_copying {
+public class SplashActivity extends SplashSupportActivity implements SplashContract.SplashView, PermissionResult, Interface_copying , DataPushListener {
 
     @ViewById(R.id.btn_start)
     Button btn_start_game;
@@ -542,7 +544,9 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 //                File off = new File(internalPath + "/offline_assessment_database.db");
 //                String offPath = internalPath + "/offline_assessment_database.db";
                 copyFileUsingStream(f, offlineDB);
-                splashPresenter.copySDCardDB();
+                if (!FastSave.getInstance().getBoolean(SDCARD_OFFLINE_PATH_SAVED, false))
+                    splashPresenter.copySDCardDB();
+                else showButton();
             } else {
                 showButton();
                 //populateMenu();
@@ -551,7 +555,6 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             e.printStackTrace();
         }
     }
-
 
 
     private boolean checkDataBase() {
@@ -887,5 +890,10 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                             | View.SYSTEM_UI_FLAG_FULLSCREEN
                             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         }
+    }
+
+    @Override
+    public void onResponseGet() {
+
     }
 }

@@ -95,47 +95,24 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
 
     }
 
-    /*  @Override
-      public void onCreate(Bundle savedInstanceState) {
-          super.onCreate(savedInstanceState);
-          if (getArguments() != null) {
-              pos = getArguments().getInt(POS, 0);
-              scienceQuestion = (ScienceQuestion) getArguments().getSerializable(SCIENCE_QUESTION);
-          }
-      }
-
-      @Override
-      public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                               Bundle savedInstanceState) {
-          // Inflate the layout for this fragment
-          return inflater.inflate(R.layout.layout_arrange_seq_row, container, false);
-      }
-
-      @Override
-      public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-          super.onViewCreated(view, savedInstanceState);
-          ButterKnife.bind(this, view);
-          setArrangeSeqQuestion();
-
-      }
-  */
     public void setArrangeSeqQuestion() {
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
         setOdiaFont(getActivity(), question);
 
         final String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
-        final String localPath;
-        if (scienceQuestion.getIsQuestionFromSDCard())
+        final String localPath = Assessment_Utility.getQuestionLocalPath(scienceQuestion);
+      /*  if (scienceQuestion.getIsQuestionFromSDCard())
             localPath = scienceQuestion.getPhotourl();
         else
             localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+     */
         if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
 
-
+            Assessment_Utility.setQuestionImageToImageView(scienceQuestion, questionImage, questionGif, localPath, getActivity());
 //            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
             //                    zoomImg.setVisibility(View.VISIBLE);
-            String path = scienceQuestion.getPhotourl();
+         /*   String path = scienceQuestion.getPhotourl();
             String[] imgPath = path.split("\\.");
             int len;
             if (imgPath.length > 0)
@@ -144,18 +121,18 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
             if (imgPath[len].equalsIgnoreCase("gif")) {
                 try {
                     InputStream gif;
-                    /*if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                    *//*if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                         Glide.with(getActivity()).asGif()
                                 .load(path)
                                 .apply(new RequestOptions()
                                         .placeholder(Drawable.createFromPath(localPath)))
                                 .into(questionImage);
 //                    zoomImg.setVisibility(View.VISIBLE);
-                    } else {*/
-                        gif = new FileInputStream(localPath);
-                        questionImage.setVisibility(View.GONE);
-                        questionGif.setVisibility(View.VISIBLE);
-                        questionGif.setGifResource(gif);
+                    } else {*//*
+                    gif = new FileInputStream(localPath);
+                    questionImage.setVisibility(View.GONE);
+                    questionGif.setVisibility(View.VISIBLE);
+                    questionGif.setGifResource(gif);
 //                    }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -169,7 +146,7 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
                                 .placeholder(Drawable.createFromPath(localPath)))
                         .into(questionImage);
             }
-           /* } else {
+           *//* } else {
            //                String localPath= Environment.getExternalStorageDirectory()+Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH+"/"+fileName;
                 Bitmap bitmap = BitmapFactory.decodeFile(localPath);
                 questionImage.setImageBitmap(bitmap);

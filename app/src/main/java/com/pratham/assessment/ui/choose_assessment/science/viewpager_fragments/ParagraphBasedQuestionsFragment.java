@@ -19,6 +19,7 @@ import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.constants.Assessment_Constants;
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
@@ -112,14 +113,14 @@ public class ParagraphBasedQuestionsFragment extends Fragment {
 
             String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-            final String localPath;
-            if (scienceQuestion.getIsQuestionFromSDCard())
+            final String localPath= Assessment_Utility.getQuestionLocalPath(scienceQuestion);
+ /*           if (scienceQuestion.getIsQuestionFromSDCard())
                 localPath = scienceQuestion.getPhotourl();
             else
                 localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+*/
 
-
-            String path = scienceQuestion.getPhotourl();
+         /*   String path = scienceQuestion.getPhotourl();
             String[] imgPath = path.split("\\.");
             int len;
             if (imgPath.length > 0)
@@ -128,14 +129,6 @@ public class ParagraphBasedQuestionsFragment extends Fragment {
             if (imgPath[len].equalsIgnoreCase("gif")) {
                 try {
                     InputStream gif;
-                   /* if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-                        Glide.with(getActivity()).asGif()
-                                .load(path)
-                                .apply(new RequestOptions()
-                                        .placeholder(Drawable.createFromPath(localPath)))
-                                .into(questionImage);
-//                    zoomImg.setVisibility(View.VISIBLE);
-                    } else {*/
                         gif = new FileInputStream(localPath);
                         questionImage.setVisibility(View.GONE);
                         questionGif.setVisibility(View.VISIBLE);
@@ -152,13 +145,6 @@ public class ParagraphBasedQuestionsFragment extends Fragment {
                                 .skipMemoryCache(true)
                                 .placeholder(Drawable.createFromPath(localPath)))
                         .into(questionImage);
-            }
-/*            } else {
-                String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
-//                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-                String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-                Bitmap bitmap = BitmapFactory.decodeFile(localPath);
-                questionImage.setImageBitmap(bitmap);
             }*/
         } else questionImage.setVisibility(View.GONE);
     }
