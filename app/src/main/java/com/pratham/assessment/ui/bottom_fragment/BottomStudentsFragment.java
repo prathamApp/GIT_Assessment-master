@@ -3,20 +3,15 @@ package com.pratham.assessment.ui.bottom_fragment;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -40,7 +35,7 @@ import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.interfaces.SplashInterface;
 import com.pratham.assessment.services.AppExitService;
 import com.pratham.assessment.services.LocationService;
-import com.pratham.assessment.ui.bottom_fragment.add_student.AddStudentFragment;
+import com.pratham.assessment.ui.bottom_fragment.add_student.create_profile.AddStudentFragment;
 import com.pratham.assessment.ui.bottom_fragment.add_student.EnrollmentNoFragment;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity_;
 import com.pratham.assessment.ui.splash_activity.SplashActivity;
@@ -386,15 +381,15 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
         }
     }
 
-   /* public void doInitialEntries(AppDatabase appDatabase) {
-        try {
-            Status status;
-            status = new Status();
+    /* public void doInitialEntries(AppDatabase appDatabase) {
+         try {
+             Status status;
+             status = new Status();
 
-            String key = "DeviceId",
-                    value = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
-            setStatusTableEntries(status, key, value);
-           *//* if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey("DeviceId") != null
+             String key = "DeviceId",
+                     value = Settings.Secure.getString(getActivity().getContentResolver(), Settings.Secure.ANDROID_ID);
+             setStatusTableEntries(status, key, value);
+            *//* if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey("DeviceId") != null
                     && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey("DeviceId").equalsIgnoreCase("")) {
                 AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().updateValue(key, value);
             } else {
@@ -433,7 +428,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
                 appDatabase.getStatusDao().insert(status);
             }
 *//*
-              *//*  status = new Status();
+     *//*  status = new Status();
                 status.setStatusKey("DeviceName");
                 status.setValue(Assessment_Utility.getDeviceName());
                 appDatabase.getStatusDao().insert(status);
@@ -474,7 +469,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
 
 
-          *//*  status = new Status();
+     *//*  status = new Status();
             status.setStatusKey("gpsFixDuration");
             status.setValue("");
             appDatabase.getStatusDao().insert(status);
@@ -502,7 +497,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
 *//*
 
-         *//*   status = new Status();
+     *//*   status = new Status();
             status.setStatusKey("apkType");
             if (AssessmentApplication.isTablet)
                 status.setValue("Tablet");
@@ -719,7 +714,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
 *//*
 
-       *//*     status = new Status();
+     *//*     status = new Status();
             status.setStatusKey("Latitude");
             status.setValue("");
             appDatabase.getStatusDao().insert(status);
@@ -911,7 +906,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
 *//*
 
-        *//*    status = new Status();
+     *//*    status = new Status();
             status.setStatusKey("village");
             status.setValue("NA");
             appDatabase.getStatusDao().insert(status);
@@ -1060,7 +1055,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             }
 *//*
 
-*//*
+     *//*
             status = new Status();
             status.setStatusKey("AvailableStorage");
             status.setValue(Assessment_Utility.getAvailableStorage());
@@ -1414,10 +1409,12 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
                     startSesion.setToDate("NA");
                     startSesion.setSentFlag(0);
                     AppDatabase.getDatabaseInstance(getActivity()).getSessionDao().insert(startSesion);
-                    if (isniosstudent != null && !isniosstudent.equalsIgnoreCase(""))
+                    if (isniosstudent != null && !isniosstudent.equalsIgnoreCase("")) {
                         if (isniosstudent.equalsIgnoreCase("1"))
                             FastSave.getInstance().saveBoolean("enrollmentNoLogin", true);
                         else FastSave.getInstance().saveBoolean("enrollmentNoLogin", false);
+
+                    } else FastSave.getInstance().saveBoolean("enrollmentNoLogin", false);
 
 //                    getStudentData(Assessment_Constants.STUDENT_PROGRESS_INTERNET, Assessment_Constants.STUDENT_PROGRESS_API, Assessment_Constants.currentStudentID);
 

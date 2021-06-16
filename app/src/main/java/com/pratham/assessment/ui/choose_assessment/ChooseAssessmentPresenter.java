@@ -34,6 +34,7 @@ import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.NIOSExam;
 import com.pratham.assessment.domain.NIOSExamTopics;
+import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.EBean;
@@ -48,6 +49,10 @@ import java.util.concurrent.ExecutionException;
 
 import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
 import static com.pratham.assessment.BaseActivity.appDatabase;
+import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_LANGUAGE_ID;
+import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_PROGRAM_ID;
+import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_SUBJECT_ID;
+import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_SUBJECT_NAME;
 import static com.pratham.assessment.constants.Assessment_Constants.CURRENT_VERSION;
 
 @EBean
@@ -194,20 +199,58 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
     }*/
 
     private void getListData() {
+        getLanguageData();
+
+        String currentStudentId = FastSave.getInstance().getString("currentStudentID", "");
+        Student student = AppDatabase.getDatabaseInstance(context).getStudentDao().getStudent(currentStudentId);
+
         if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-            getLanguageData();
-            if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
-                getNIOSSubjects();
-            else
-                getSubjectData();
+            if (student != null)
+                if (student.getProgramId() != null && student.getState() != null) {
+                    assessView.clearContentList();
+                    contentTableList.clear();
+                    if (student.getProgramId().equalsIgnoreCase(CHHATTISGARH_PROGRAM_ID)
+                            && student.getState().trim().equalsIgnoreCase(Assessment_Constants.CHHATTISGARH)) {
+//todo show subject Exam etc
+                        AssessmentSubjects subjects = new AssessmentSubjects();
+                        subjects.setLanguageid(CHHATTISGARH_LANGUAGE_ID);
+                        subjects.setSubjectid(CHHATTISGARH_SUBJECT_ID);
+                        subjects.setSubjectname(CHHATTISGARH_SUBJECT_NAME);
+                        contentTableList.add(subjects);
+
+                        AppDatabase.getDatabaseInstance(context).getSubjectDao().deleteSubjectsByLangId(Assessment_Constants.SELECTED_LANGUAGE);
+                        AppDatabase.getDatabaseInstance(context).getSubjectDao().insertAllSubjects(contentTableList);
+                        assessView.addContentToViewList(contentTableList);
+                        assessView.notifyAdapter();
+                    } else {
+                        if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
+                            getNIOSSubjects();
+                        else
+                            getSubjectData();
+                    }
+                } else {
+                    if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
+                        getNIOSSubjects();
+                    else
+                        getSubjectData();
+                }
         } else {
-            /*if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
-                downloadedContentTableList=
-              else*/
-            if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
-                getOfflineNIOSSubjects();
-            else
-                downloadedContentTableList = (ArrayList<AssessmentSubjects>) AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjectsByLangId(Assessment_Constants.SELECTED_LANGUAGE);
+            if (student != null)
+                if (student.getProgramId() != null && student.getState() != null) {
+                    if (student.getProgramId().equalsIgnoreCase(CHHATTISGARH_PROGRAM_ID)
+                            && student.getState().trim().equalsIgnoreCase(Assessment_Constants.CHHATTISGARH)) {
+//todo show subject Exam etc
+                        downloadedContentTableList = (ArrayList<AssessmentSubjects>) AppDatabase.getDatabaseInstance(context).getSubjectDao().getChhattisgarhSubject(CHHATTISGARH_SUBJECT_ID);
+                    } else {
+                        if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
+                            getOfflineNIOSSubjects();
+                        else
+                            downloadedContentTableList = (ArrayList<AssessmentSubjects>) AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjectsByLangId(Assessment_Constants.SELECTED_LANGUAGE);
+                    }
+                } else if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
+                    getOfflineNIOSSubjects();
+                else
+                    downloadedContentTableList = (ArrayList<AssessmentSubjects>) AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjectsByLangId(Assessment_Constants.SELECTED_LANGUAGE);
             assessView.clearContentList();
      /*   }
         if (downloadedContentTableList.size() <= 0) {
@@ -388,7 +431,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
                     @Override
                     public void onError(ANError anError) {
-//                        Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Error in loading..Check internet connection", Toast.LENGTH_SHORT).show();
 //                        AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().deletePaperPatterns();
                         if (progressDialog != null && progressDialog.isShowing()) {
                             progressDialog.dismiss();
@@ -532,37 +575,8 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
         }.execute();
     }*/
 
-    @Override
-    public void clearNodeIds() {
-        nodeIds.clear();
-    }
 
-    @Override
-    public void endSession() {
-        try {
-            new AsyncTask<Object, Void, Object>() {
-                @Override
-                protected Object doInBackground(Object[] objects) {
-                    try {
-                        String currentSession = FastSave.getInstance().getString("CurrentSession", "");
 
-//                        String toDateTemp = appDatabase.getSessionDao().getToDate(Assessment_Constants.currentSession);
-                        String toDateTemp = appDatabase.getSessionDao().getToDate(currentSession);
-                        if (toDateTemp.equalsIgnoreCase("na")) {
-//                            appDatabase.getSessionDao().UpdateToDate(Assessment_Constants.currentSession, AssessmentApplication.getCurrentDateTime());
-                            appDatabase.getSessionDao().UpdateToDate(currentSession, AssessmentApplication.getCurrentDateTime());
-                        }
-                        BackupDatabase.backup(context);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-            }.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void versionObtained(String latestVersion) {
@@ -697,7 +711,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
             b.show();*/
             }
         } else {
-            Toast.makeText(context, "Version mismatch", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.error_in_loading_check_internet_connection, Toast.LENGTH_SHORT).show();
         }
     }
 

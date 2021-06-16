@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +30,7 @@ import org.androidannotations.annotations.ViewById;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
+import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 
@@ -113,12 +116,29 @@ public class ParagraphBasedQuestionsFragment extends Fragment {
 
             String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-            final String localPath= Assessment_Utility.getQuestionLocalPath(scienceQuestion);
+            final String localPath = Assessment_Utility.getQuestionLocalPath(scienceQuestion);
  /*           if (scienceQuestion.getIsQuestionFromSDCard())
                 localPath = scienceQuestion.getPhotourl();
             else
                 localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 */
+            String extension = getFileExtension(localPath);
+
+            if (extension.equalsIgnoreCase("PNG") ||
+                    extension.equalsIgnoreCase("gif") ||
+                    extension.equalsIgnoreCase("JPEG") ||
+                    extension.equalsIgnoreCase("JPG")) {
+                Assessment_Utility.setQuestionImageToImageView( questionImage, questionGif, localPath, getActivity());
+            } else {
+                if (extension.equalsIgnoreCase("mp4") ||
+                        extension.equalsIgnoreCase("3gp")) {
+                    Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
+                }
+                questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250, 250);
+                param.gravity = Gravity.CENTER;
+                questionImage.setLayoutParams(param);
+            }
 
          /*   String path = scienceQuestion.getPhotourl();
             String[] imgPath = path.split("\\.");

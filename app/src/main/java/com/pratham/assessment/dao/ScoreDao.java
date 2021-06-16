@@ -7,7 +7,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-
+import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.Score;
 
 import java.util.List;
@@ -47,6 +47,9 @@ public interface ScoreDao {
     @Query("select * from Score where sentFlag = 0 AND paperId=:paperId AND SessionID=:sessionId")
     List<Score> getAllNewScores(String paperId, String sessionId);
 
+    @Query("select * from Score where QuestionId=:qId AND paperId=:paperId AND SessionID=:sessionId")
+    List<Score> getScoreToUpdate(String paperId, String sessionId, String qId);
+
     @Query("select count(*) from Score where Level =:level AND paperId=:paperId")
     int getLevelCnt(String level, String paperId);
 
@@ -67,8 +70,14 @@ public interface ScoreDao {
     @Query("select * from Score where sentFlag = 0 AND SessionID=:sessionID")
     List<Score> getAllNewScoresBySession(String sessionID);
 
+    @Query("DELETE FROM Score WHERE examid=:examId and SessionID=:sessionId and paperId=:paperId and StudentID=:studId")
+    public int deleteByExamIdSessionIdPaperIdStudId(String examId, String sessionId, String paperId, String studId);
 
     @Query("Select count(distinct REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(substr(startdatetime,1,instr(startdatetime,' ')),'01','1'),'02','2'),'03','3'),'04','4'),'05','5'),'06','6'),'07','7'),'08','8'),'09','9')) as dates from Score sc where length(startdatetime)>5")
     int getTotalActiveDeviceDays();
 
+
+  /*  @RawQuery
+    void updateQuestion(SupportSQLiteQuery query);
+*/
 }

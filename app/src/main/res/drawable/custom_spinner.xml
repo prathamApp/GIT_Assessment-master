@@ -3,7 +3,7 @@
 
     <item>
         <layer-list>
-            <item android:right="20dp">
+            <item android:right="8dp">
                 <bitmap android:gravity="right" android:src="@drawable/arrowdown" />
             </item>
         </layer-list>

@@ -3,10 +3,10 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:fontFamily="@font/quicksand_bold"
+    android:fontFamily="@font/quicksand_regular"
     android:gravity="left"
     android:paddingHorizontal="@dimen/_5sdp"
     android:paddingVertical="@dimen/_2sdp"
     android:textColor="#000000"
-    android:textSize="@dimen/_13sdp"
+    android:textSize="@dimen/_12sdp"
     android:textStyle="normal" />

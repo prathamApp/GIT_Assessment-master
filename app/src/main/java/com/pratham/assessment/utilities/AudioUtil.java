@@ -8,7 +8,6 @@ import android.net.Uri;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlayerInterface;
 
 import java.io.IOException;
-import java.net.URI;
 
 public class AudioUtil {
 
@@ -52,7 +51,7 @@ public class AudioUtil {
 
             mPlayer = new MediaPlayer();
             audioPlayerInterface = activity;
-            mPlayer.setDataSource(context,filePath);
+            mPlayer.setDataSource(context, filePath);
             mPlayer.prepare();
             mPlayer.start();
 
@@ -73,7 +72,8 @@ public class AudioUtil {
             e.printStackTrace();
         }
     }
-public static void playRecording(String filePath, final AudioPlayerInterface activity) {
+
+    public static void playRecording(String filePath, final AudioPlayerInterface activity) {
         try {
             if (mPlayer != null && mPlayer.isPlaying())
                 mPlayer.stop();

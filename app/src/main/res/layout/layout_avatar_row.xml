@@ -4,14 +4,16 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:gravity="center"
-    android:layout_margin="6dp"
-    android:elevation="5dp">
+    android:layout_margin="@dimen/_6sdp"
+    android:padding="@dimen/_2sdp"
+    android:background="@drawable/custom_edit_text"
+    android:elevation="@dimen/_3sdp">
 
     <ImageView
         android:id="@+id/iv_avatar"
-        android:layout_width="@dimen/_70sdp"
+        android:layout_width="@dimen/_65sdp"
         android:layout_gravity="center"
-        android:layout_height="@dimen/_70sdp"
+        android:layout_height="@dimen/_65sdp"
         android:padding="@dimen/_5sdp"
         android:src="@drawable/g1"/>
 </LinearLayout>

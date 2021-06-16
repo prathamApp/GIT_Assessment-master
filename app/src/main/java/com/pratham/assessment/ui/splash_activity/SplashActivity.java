@@ -73,7 +73,7 @@ import static com.pratham.assessment.constants.Assessment_Constants.SDCARD_OFFLI
 import static com.pratham.assessment.utilities.Assessment_Utility.copyFileUsingStream;
 
 @EActivity(R.layout.activity_splash)
-public class SplashActivity extends SplashSupportActivity implements SplashContract.SplashView, PermissionResult, Interface_copying , DataPushListener {
+public class SplashActivity extends SplashSupportActivity implements SplashContract.SplashView, PermissionResult, Interface_copying, DataPushListener {
 
     @ViewById(R.id.btn_start)
     Button btn_start_game;
@@ -149,7 +149,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         initiateApp();
     }*/
 
-    public void initiateApp() {
+    public void  initiateApp() {
 
         permissionArray = new String[]{PermissionUtils.Manifest_CAMERA,
                 PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
@@ -488,17 +488,17 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     }
 
     public void createDataBase() {
-        Log.d("$$$", "createDataBase");
+//        Log.d("$$$", "createDataBase");
 
         try {
             boolean dbExist = checkDataBase();
             if (!dbExist) {
                 try {
-                    Log.d("$$$", "createDataBasebefore");
+//                    Log.d("$$$", "createDataBasebefore");
 
                     appDatabase = AppDatabase.getDatabaseInstance(this);
 
-                    Log.d("$$$", "createDataBaseAfter");
+//                    Log.d("$$$", "createDataBaseAfter");
 
                           /*  Room.databaseBuilder(this,
                             AppDatabase.class, AppDatabase.DB_NAME)
@@ -683,6 +683,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                                 paper.setFullName(response.getJSONObject(i).getString("FullName"));
                                 paper.setGender(response.getJSONObject(i).getString("Gender"));
                                 paper.setAge(response.getJSONObject(i).getInt("Age"));
+
                                 paper.setIsniosstudent(response.getJSONObject(i).getString("isniosstudent"));
                                 newStudentCertificates.add(paper);
                             }
@@ -762,6 +763,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         student.setFullName(assessmentPaperForPush.getFullName());
         student.setAge(assessmentPaperForPush.getAge());
         student.setGender(assessmentPaperForPush.getGender());
+
         student.setAvatarName(Assessment_Utility.getRandomAvatarName(context));
         student.setIsniosstudent(assessmentPaperForPush.getIsniosstudent());
         student.setGroupId("PS");

@@ -114,7 +114,7 @@
             android:name=".ui.login.qr_scan.QRScanActivity_"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.choose_assessment.science.custom_dialogs.ZoomImageDialog_"
+            android:name=".ui.choose_assessment.science.custom_dialogs.ZoomImageActivity_"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.choose_assessment.science.custom_dialogs.ImageListDialog_"

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
@@ -16,6 +17,8 @@ import com.pratham.assessment.constants.APIs;
 import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.font.FontChanger;
+import com.pratham.assessment.database.AppDatabase;
+import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.io.File;
@@ -40,7 +43,8 @@ public class AssessmentApplication extends Application {
     public static String uploadDataUrl = "http://swap.prathamcms.org/api/Assessment/AssesmentPushData";
     public static String uploadScienceUrl = APIs.baseAzureURL + "api/pushassessment/AssessmentPushData";
     public static String uploadScienceFilesUrl = APIs.baseAzureURL + "api/question/pushFiles";
-    public static String UploadJsonZipURL = APIs.baseAzureURL+"api/pushzip/pushfiles";
+    //    public static String uploadScienceFilesUrl = APIs.baseAzureURL + "api/uploadfile/UploadFile";
+    public static String UploadJsonZipURL = APIs.baseAzureURL + "api/pushzip/pushfiles";
     String sdCardPathString = null;
     public static MediaPlayer bubble_mp, bgMusic;
     public static WiseFy wiseF;
@@ -78,7 +82,12 @@ public class AssessmentApplication extends Application {
         FastSave.init(getApplicationContext());
 
         sharedPreferences = getSharedPreferences(PREFS_VERSION, Context.MODE_PRIVATE);
-        assessPath = Assessment_Utility.getInternalPath(this);
+       /* assessPath = Assessment_Utility.getInternalPath(this);
+        Log.d("yyyy", "onCreate: " + assessPath);*/
+        assessPath = Environment.getExternalStorageDirectory() + "/Android/data/com.pratham.assessment/files";
+        Log.d("yyyy", "onCreate: " + assessPath);
+
+
         SDCardPathForOffline = Assessment_Utility.getExternalPath(this);
         if (assessPath != null) {
             File mydir = null;
@@ -294,6 +303,36 @@ public class AssessmentApplication extends Application {
     public void setExistingSDContentPath(String path) {
         contentExistOnSD = true;
         contentSDPath = path;
+    }
+
+
+    public static void endTestSession(Context context) {
+        try {
+            new AsyncTask<Object, Void, Object>() {
+                @Override
+                protected Object doInBackground(Object[] objects) {
+                    try {
+                        String currentSession = FastSave.getInstance().getString("CurrentSession", "");
+
+                        String toDateTemp = AppDatabase.getDatabaseInstance(context).getSessionDao().getToDate(currentSession);
+
+                        AppDatabase.getDatabaseInstance(context).getSessionDao().UpdateToDate(currentSession, AssessmentApplication.getCurrentDateTime());
+                        BackupDatabase.backup(context);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            }.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        endTestSession(this);
     }
 
 }

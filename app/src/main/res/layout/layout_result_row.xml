@@ -50,11 +50,11 @@
                 android:layout_height="@dimen/_100sdp"
                 />
 
-            <VideoView
+          <!--  <VideoView
                 android:id="@+id/question_video"
                 android:layout_width="@dimen/_100sdp"
                 android:layout_height="@dimen/_100sdp"
-                android:visibility="gone" />
+                android:visibility="gone" />-->
         </LinearLayout>
 
         <LinearLayout

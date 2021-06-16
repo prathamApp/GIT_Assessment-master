@@ -15,9 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -32,7 +30,6 @@ import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ImageListDialog_;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlayerInterface;
 import com.pratham.assessment.utilities.Assessment_Utility;
-import com.pratham.assessment.utilities.AudioUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +53,7 @@ import static com.pratham.assessment.constants.Assessment_Constants.VIDEO;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHolder> implements AudioPlayerInterface {
     Context context;
@@ -63,6 +61,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
     ResultListener resultListener;
     boolean isAudioPlaying = false, isQuestionAudioPlaying = false;
     View prevView, currentView;
+    String localPath = "";
 
     public ResultAdapter(Context context, List<ResultModalClass> resultList, ResultFragment resultFragment) {
         this.context = context;
@@ -77,7 +76,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
         ImageView questionImg;
         ImageView iv_correct_wrong_indicator, image_you_answered, image_correct_ans;
         LinearLayout ll_correct_ans, ll_user_ans, ll_ans;
-        VideoView questionVideo;
+//        VideoView questionVideo;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -95,7 +94,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
             iv_correct_wrong_indicator = itemView.findViewById(R.id.iv_correct_wrong_indicator);
             image_correct_ans = itemView.findViewById(R.id.media_correct_Ans);
             image_you_answered = itemView.findViewById(R.id.media_you_answered);
-            questionVideo = itemView.findViewById(R.id.question_video);
+//            questionVideo = itemView.findViewById(R.id.question_video);
 //            answerVideo = itemView.findViewById(R.id.video_you_answered);
             ll_ans = itemView.findViewById(R.id.ll_answers);
         }
@@ -120,9 +119,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
         setOdiaFont(context, myViewHolder.btnCorrectAnswer);
         setOdiaFont(context, myViewHolder.tv_you_answered_label);
 
-        if (i == resultList.size() - 1) {
+        if (resultList.size() < 5)
             resultListener.showDone(true);
-        } else resultListener.showDone(false);
+        else resultListener.showDone(i == resultList.size() - 1);
 
 
         final ResultModalClass result = resultList.get(i);
@@ -131,96 +130,62 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
         if (!result.getQuestionImg().equalsIgnoreCase("")) {
             myViewHolder.questionImg.setVisibility(View.VISIBLE);
-            myViewHolder.questionVideo.setVisibility(View.GONE);
-            String fileName = Assessment_Utility.getFileName(result.getqId(), result.getQuestionImg());
-//                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+//            myViewHolder.questionVideo.setVisibility(View.GONE);
+        /*    String fileName = Assessment_Utility.getFileName(result.getqId(), result.getQuestionImg());
             final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-//                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-
-
+*/
+            final String fileName = getFileName(result.getqId(), result.getQuestionImg());
+            if (result.isQuestionFromSDCard())
+                localPath = result.getQuestionImg();
+            else
+                localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 //            if (wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-            final String path = result.getQuestionImg();
-            final String[] imgPath = path.split("\\.");
-            final int len;
-            if (imgPath.length > 0)
-                len = imgPath.length - 1;
-            else len = 0;
-            if (imgPath[len].equalsIgnoreCase("gif")) {
+//            final String path = result.getQuestionImg();
+            String ext = getFileExtension(localPath);
+            if (ext.equalsIgnoreCase("gif")) {
                 Glide.with(context).asGif()
-                        .load(path)
+                        .load(localPath)
                         .apply(new RequestOptions()
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .skipMemoryCache(true)
                                 .placeholder(Drawable.createFromPath(localPath))
                         )
                         .into(myViewHolder.questionImg);
-                myViewHolder.questionImg.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                       /* ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
-                        zoomImageDialog.show();*/
-                        Assessment_Utility.showZoomDialog(context, path, localPath, "");
-
-                    }
-                });
-            } else if (imgPath[len].equalsIgnoreCase("jpg") || imgPath[len].equalsIgnoreCase("jpeg") || imgPath[len].equalsIgnoreCase("png")) {
+                myViewHolder.questionImg.setOnClickListener(v -> Assessment_Utility.showZoomDialog(context, localPath, ""));
+            } else if (ext.equalsIgnoreCase("jpg") || ext.equalsIgnoreCase("jpeg") || ext.equalsIgnoreCase("png")) {
                 Glide.with(context)
-                        .load(path)
+                        .load(localPath)
                         .apply(new RequestOptions()
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .skipMemoryCache(true)
                                 .placeholder(Drawable.createFromPath(localPath))
                         )
                         .into(myViewHolder.questionImg);
-                myViewHolder.questionImg.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
-                        zoomImageDialog.show();*/
-                        Assessment_Utility.showZoomDialog(context, path, localPath, "");
+                myViewHolder.questionImg.setOnClickListener(v -> {
+                    /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
+                    zoomImageDialog.show();*/
+                    Assessment_Utility.showZoomDialog(context, localPath, "");
 
-                    }
                 });
-            } else if (imgPath[len].equalsIgnoreCase("mp3")) {
+            } else if (ext.equalsIgnoreCase("mp3")) {
                 myViewHolder.questionImg.setImageResource(R.drawable.ic_play);
-                myViewHolder.questionImg.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        currentView = v;
-                        playMedia(path, localPath, v, imgPath[len]);
-                    }
+                myViewHolder.questionImg.setOnClickListener(v -> {
+                    currentView = v;
+                    showZoomDialog(context, localPath, "");
+//                        playMedia(localPath, localPath, v, ext);
                 });
 
-            } else if (imgPath[len].equalsIgnoreCase("mp4") || imgPath[len].equalsIgnoreCase("3gp")) {
+            } else if (ext.equalsIgnoreCase("mp4") || ext.equalsIgnoreCase("3gp")) {
                 myViewHolder.questionImg.setImageResource(R.drawable.ic_play);
-                myViewHolder.questionImg.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        myViewHolder.questionImg.setVisibility(View.GONE);
-                        myViewHolder.questionVideo.setVisibility(View.VISIBLE);
-                        playMedia(path, localPath, myViewHolder.questionVideo, imgPath[len]);
-                    }
+                myViewHolder.questionImg.setOnClickListener(v -> {
+                    myViewHolder.questionImg.setVisibility(View.GONE);
+//                        myViewHolder.questionVideo.setVisibility(View.VISIBLE);
+//                        playMedia(localPath, localPath, myViewHolder.questionVideo, ext);
+                    showZoomDialog(context, localPath, "");
                 });
 
             }
-           /* myViewHolder.questionImg.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
-                    zoomImageDialog.show();
-                }
-            });*/
-           /* } else {
-               Bitmap bitmap = BitmapFactory.decodeFile(localPath);
-                myViewHolder.questionImg.setImageBitmap(bitmap);
-                myViewHolder.questionImg.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, localPath,localPath);
-                        zoomImageDialog.show();
-                    }
-                });
-            }*/
+
 
         } else myViewHolder.questionImg.setVisibility(View.GONE);
 
@@ -232,54 +197,41 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
             showButtons(myViewHolder, true);
         }*/
 
-        myViewHolder.btnCorrectAnswer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ResultModalClass result = resultList.get(myViewHolder.getAdapterPosition());
+        myViewHolder.btnCorrectAnswer.setOnClickListener(v -> {
+            ResultModalClass result1 = resultList.get(myViewHolder.getAdapterPosition());
 
-                List<ScienceQuestionChoice> scienceQuestionChoice = AppDatabase.
-                        getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(result.getqId());
-                String corrImg = "", localPath = "";
-                for (int i = 0; i < scienceQuestionChoice.size(); i++) {
-                    if (scienceQuestionChoice.get(i).getCorrect().equalsIgnoreCase("true")) {
-//                        if (wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-                        corrImg = scienceQuestionChoice.get(i).getChoiceurl();
-//                        } else {
-//                            String dirPath = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Downloaded";
-                        String dirPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH;
-                        String fileName = getFileName(scienceQuestionChoice.get(i).getQid(), scienceQuestionChoice.get(i).getChoiceurl());
-                        localPath = dirPath + "/" + fileName;
-//                        }
-                        /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, corrImg, localPath);
-                        zoomImageDialog.show();*/
-                        Assessment_Utility.showZoomDialog(context, corrImg, localPath, "");
-
-                    }
+            List<ScienceQuestionChoice> scienceQuestionChoice = AppDatabase.
+                    getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(result1.getqId());
+            String /*corrImg = "",*/ localPath;
+            for (int i1 = 0; i1 < scienceQuestionChoice.size(); i1++) {
+                if (scienceQuestionChoice.get(i1).getCorrect().equalsIgnoreCase("true")) {
+//                    corrImg = scienceQuestionChoice.get(i1).getChoiceurl();
+                    String dirPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH;
+                    String fileName = getFileName(scienceQuestionChoice.get(i1).getQid(), scienceQuestionChoice.get(i1).getChoiceurl());
+                    localPath = dirPath + "/" + fileName;
+                    if (result1.isQuestionFromSDCard())
+                        localPath = scienceQuestionChoice.get(i1).getChoiceurl();
+                    Assessment_Utility.showZoomDialog(context, localPath, "");
                 }
-
             }
+
         });
-        myViewHolder.btnUserAnswer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ResultModalClass result = resultList.get(myViewHolder.getAdapterPosition());
+        myViewHolder.btnUserAnswer.setOnClickListener(v -> {
+            ResultModalClass result12 = resultList.get(myViewHolder.getAdapterPosition());
 
-                String dirPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH;
-                String img = getImage(result.getUserAnswerId());
-                if (img.equalsIgnoreCase("")) {
-                   /* ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, result.getUserAnswer(), result.getUserAnswer());
-                    zoomImageDialog.show();*/
-                    Assessment_Utility.showZoomDialog(context, result.getUserAnswer(), result.getUserAnswer(), "");
+            String dirPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH;
+            String imgPath = getImage(result12.getUserAnswerId());
+            if (imgPath.equalsIgnoreCase("")) {
+                Assessment_Utility.showZoomDialog(context, result12.getUserAnswer(), "");
 
-                } else {
-                    String fileName = getFileName(result.getqId(), img);
-                    String localPath = dirPath + "/" + fileName;
+            } else {
+                String fileName = getFileName(result12.getqId(), imgPath);
+                String localPath;
+                localPath = dirPath + "/" + fileName;
+                if (result12.isQuestionFromSDCard()) localPath = imgPath;
 
-                    /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, img, localPath);
-                    zoomImageDialog.show();*/
-                    Assessment_Utility.showZoomDialog(context, img, localPath, "");
+                Assessment_Utility.showZoomDialog(context, localPath, "");
 
-                }
             }
         });
 
@@ -332,29 +284,14 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
                     }
                 }
-                myViewHolder.btnCorrectAnswer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ShowAnswerDialog showAnswerDialog = new ShowAnswerDialog(context, scienceQuestionChoice);
-                        showAnswerDialog.show();
-                    }
+                myViewHolder.btnCorrectAnswer.setOnClickListener(v -> {
+                    ShowAnswerDialog showAnswerDialog = new ShowAnswerDialog(context, scienceQuestionChoice);
+                    showAnswerDialog.show();
                 });
-                myViewHolder.btnUserAnswer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        List<ScienceQuestionChoice> userAns = result.getUserAnsList();
-                        /*String ans = result.getUserAnswer();
-                        String[] ansArr = ans.split(",");
-                        for (int i = 0; i < ansArr.length; i++) {
-                            for (int j = 0; j < scienceQuestionChoice.size(); j++) {
-                                if (scienceQuestionChoice.get(j).getQcid().equalsIgnoreCase(ansArr[i])) {
-                                    userAns.add(scienceQuestionChoice.get(j));
-                                }
-                            }
-                        }*/
-                        ShowAnswerDialog showAnswerDialog = new ShowAnswerDialog(context, userAns, scienceQuestionChoice);
-                        showAnswerDialog.show();
-                    }
+                myViewHolder.btnUserAnswer.setOnClickListener(v -> {
+                    List<ScienceQuestionChoice> userAns = result.getUserAnsList();
+                    ShowAnswerDialog showAnswerDialog = new ShowAnswerDialog(context, userAns, scienceQuestionChoice);
+                    showAnswerDialog.show();
                 });
                 if (!result.isAttempted()) {
                     myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
@@ -367,35 +304,29 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 myViewHolder.image_correct_ans.setVisibility(View.GONE);
                 showButtons(myViewHolder, result.isAttempted());
 
-                myViewHolder.btnCorrectAnswer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        List<ScienceQuestionChoice> correctAns = new ArrayList<>();
+                myViewHolder.btnCorrectAnswer.setOnClickListener(v -> {
+                    List<ScienceQuestionChoice> correctAns = new ArrayList<>();
 
-                        for (int i = 0; i < scienceQuestionChoice.size(); i++) {
-                            if (scienceQuestionChoice.get(i).getCorrect().equalsIgnoreCase("true"))
-                                correctAns.add(scienceQuestionChoice.get(i));
-                        }
-                        ShowAnswerDialog showAnswerDialog = new ShowAnswerDialog(context, correctAns, MULTIPLE_SELECT);
-                        showAnswerDialog.show();
+                    for (int i12 = 0; i12 < scienceQuestionChoice.size(); i12++) {
+                        if (scienceQuestionChoice.get(i12).getCorrect().equalsIgnoreCase("true"))
+                            correctAns.add(scienceQuestionChoice.get(i12));
                     }
+                    ShowAnswerDialog showAnswerDialog = new ShowAnswerDialog(context, correctAns, MULTIPLE_SELECT);
+                    showAnswerDialog.show();
                 });
-                myViewHolder.btnUserAnswer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        List<ScienceQuestionChoice> userAns = new ArrayList<>();
-                        String ans = result.getUserAnswer();
-                        String[] ansArr = ans.split(",");
-                        for (int a = 0; a < ansArr.length; a++) {
-                            for (int j = 0; j < scienceQuestionChoice.size(); j++) {
-                                if (scienceQuestionChoice.get(j).getQcid().equalsIgnoreCase(ansArr[a])) {
-                                    userAns.add(scienceQuestionChoice.get(j));
-                                }
+                myViewHolder.btnUserAnswer.setOnClickListener(v -> {
+                    List<ScienceQuestionChoice> userAns = new ArrayList<>();
+                    String ans = result.getUserAnswer();
+                    String[] ansArr = ans.split(",");
+                    for (String s : ansArr) {
+                        for (int j = 0; j < scienceQuestionChoice.size(); j++) {
+                            if (scienceQuestionChoice.get(j).getQcid().equalsIgnoreCase(s)) {
+                                userAns.add(scienceQuestionChoice.get(j));
                             }
                         }
-                        ShowAnswerDialog showAnswerDialog = new ShowAnswerDialog(context, userAns, MULTIPLE_SELECT);
-                        showAnswerDialog.show();
                     }
+                    ShowAnswerDialog showAnswerDialog = new ShowAnswerDialog(context, userAns, MULTIPLE_SELECT);
+                    showAnswerDialog.show();
                 });
                 if (!result.isAttempted()) {
                     myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
@@ -489,6 +420,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                         if (!userAns.getChoicename().equalsIgnoreCase("")) {
                             myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
                             myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
+                            myViewHolder.correctAnswer.setText(userAns.getChoicename());
                         }
                         if (!result.getUserAnswer().equalsIgnoreCase("")) {
                             myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
@@ -548,7 +480,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     } else {
                         myViewHolder.ll_correct_ans.setVisibility(View.GONE);
                         myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
-                        myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
+                        myViewHolder.correctAnswer.setVisibility(View.GONE);
 
                     }
                 } else {
@@ -586,30 +518,26 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     myViewHolder.ll_correct_ans.setVisibility(View.GONE);
                 }
 
-                myViewHolder.btnUserAnswer.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (result.getUserAnsList() != null && result.getUserAnsList().size() > 0) {
-                            List imageList = new ArrayList();
-                            for (int j = 0; j < result.getUserAnsList().size(); j++) {
-                                Uri uri = Uri.parse(result.getUserAnsList().get(j).getQcid());
-                                Log.d("Uri", "onClick: " + uri);
-                                // TODO: 13-Mar-21 check this ri issue
-                                imageList.add(result.getUserAnsList().get(j).getQcid());
-                            }
+                myViewHolder.btnUserAnswer.setOnClickListener(view -> {
+                    if (result.getUserAnsList() != null && result.getUserAnsList().size() > 0) {
+                        List imageList = new ArrayList();
+                        for (int j = 0; j < result.getUserAnsList().size(); j++) {
+                            Uri uri = Uri.parse(result.getUserAnsList().get(j).getQcid());
+                            Log.d("Uri", "onClick: " + uri);
+                            imageList.add(result.getUserAnsList().get(j).getQcid());
+                        }
 //                            List imgs = Arrays.asList(result.getUserAnswer().split(","));
 //                            imageList.addAll(imgs);
-                            Intent intent = new Intent(context, ImageListDialog_.class);
-                            intent.putParcelableArrayListExtra("imageList", (ArrayList<? extends Parcelable>) imageList);
-                            if (scienceQuestion.getQtid().equalsIgnoreCase(VIDEO))
-                                intent.putExtra(DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA, DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO);
-                            else if (scienceQuestion.getQtid().equalsIgnoreCase(AUDIO))
-                                intent.putExtra(DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA, DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO);
-                            else if (scienceQuestion.getQtid().equalsIgnoreCase(IMAGE_ANSWER))
-                                intent.putExtra(DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA, DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE);
-                            intent.putExtra("showDeleteButton", false);
-                            context.startActivity(intent);
-                        }
+                        Intent intent = new Intent(context, ImageListDialog_.class);
+                        intent.putParcelableArrayListExtra("imageList", (ArrayList<? extends Parcelable>) imageList);
+                        if (scienceQuestion.getQtid().equalsIgnoreCase(VIDEO))
+                            intent.putExtra(DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA, DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO);
+                        else if (scienceQuestion.getQtid().equalsIgnoreCase(AUDIO))
+                            intent.putExtra(DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA, DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO);
+                        else if (scienceQuestion.getQtid().equalsIgnoreCase(IMAGE_ANSWER))
+                            intent.putExtra(DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA, DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE);
+                        intent.putExtra("showDeleteButton", false);
+                        context.startActivity(intent);
                     }
                 });
                 break;
@@ -714,7 +642,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
     }
 
-    private void playMedia(String path, String localPath, View view, String extension) {
+    /*private void playMedia(String path, String localPath, View view, String extension) {
         if (extension.equalsIgnoreCase("mp3")) {
             if (isQuestionAudioPlaying) {
                 isQuestionAudioPlaying = false;
@@ -742,87 +670,71 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
             ((VideoView) view).start();
         }
     }
-
+*/
     private void setImage(ScienceQuestionChoice scienceQuestionChoice, String answer, ImageView view) {
-        final String path = answer;
-        String extension = getFileExtension(path);
+//        final String path = answer;
         String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), answer);
         final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+
+        String extension = getFileExtension(localPath);
 
         if (extension.equalsIgnoreCase("gif")) {
             prevView = view;
             Glide.with(context).asGif()
-                    .load(path)
+                    .load(localPath)
                     .apply(new RequestOptions()
                             .placeholder(Drawable.createFromPath(localPath))
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true))
                     .into(view);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                  /*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
-                    zoomImageDialog.show();*/
-                    Assessment_Utility.showZoomDialog(context, path, localPath, "");
-
-                }
-            });
+            view.setOnClickListener(view13 -> Assessment_Utility.showZoomDialog(context, localPath, ""));
         } else if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("png")) {
             prevView = view;
             Glide.with(context)
-                    .load(path)
+                    .load(localPath)
                     .apply(new RequestOptions()
                             .placeholder(Drawable.createFromPath(localPath))
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true))
                     .into(view);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                  /*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
-                    zoomImageDialog.show();*/
-                    Assessment_Utility.showZoomDialog(context, path, localPath, "");
-                    /**/
-                }
-            });
-        } else if (extension.equalsIgnoreCase("mp3")) {
+            view.setOnClickListener(view12 -> Assessment_Utility.showZoomDialog(context, localPath, ""));
+        } else /*if (extension.equalsIgnoreCase("mp3"))*/ {
             prevView = view;
             view.setImageResource(R.drawable.ic_play);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            view.setOnClickListener(view1 -> {
+                showZoomDialog(context, localPath, "");
+              /*  ((ImageView) prevView).setImageResource(R.drawable.ic_play);
+                currentView = view;
+                if (prevView != null && view != prevView && isAudioPlaying) {
                     ((ImageView) prevView).setImageResource(R.drawable.ic_play);
-                    currentView = view;
-                    if (prevView != null && view != prevView && isAudioPlaying) {
-                        ((ImageView) prevView).setImageResource(R.drawable.ic_play);
-                        isAudioPlaying = false;
-                        AudioUtil.stopPlayingAudio();
-                        stopPlayer();
-                    }
-                    prevView = view;
-                    if (isAudioPlaying) {
-                        isAudioPlaying = false;
-                        ((ImageView) view).setImageResource(R.drawable.ic_play);
-                        AudioUtil.stopPlayingAudio();
-                        stopPlayer();
-
-                    } else {
-                        isAudioPlaying = true;
-                        ((ImageView) view).setImageResource(R.drawable.ic_pause);
-                        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
-                            AudioUtil.playRecording(path, ResultAdapter.this);
-                        else AudioUtil.playRecording(localPath, ResultAdapter.this);
-                    }
+                    isAudioPlaying = false;
+                    AudioUtil.stopPlayingAudio();
+                    stopPlayer();
                 }
+                prevView = view;
+                if (isAudioPlaying) {
+                    isAudioPlaying = false;
+                    ((ImageView) view).setImageResource(R.drawable.ic_play);
+                    AudioUtil.stopPlayingAudio();
+                    stopPlayer();
+
+                } else {
+                    isAudioPlaying = true;
+                    ((ImageView) view).setImageResource(R.drawable.ic_pause);
+                    AudioUtil.playRecording(localPath, ResultAdapter.this);
+                }*/
             });
-        } else if (extension.equalsIgnoreCase("mp4") || extension.equalsIgnoreCase("3gp")) {
-        }
+        } /*else if (extension.equalsIgnoreCase("mp4") || extension.equalsIgnoreCase("3gp")) {
+            showZoomDialog(context, localPath, "");
+
+        }*/
 
     }
 
     private String getImage(String userAnswerId) {
         String img = AppDatabase.getDatabaseInstance(context)
                 .getScienceQuestionChoicesDao().getImageByQcID(userAnswerId);
+
         if (img != null)
             return img;
         else return "";
@@ -831,22 +743,18 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
     private void showButtons(MyViewHolder myViewHolder, boolean attempted) {
         if (attempted) {
             myViewHolder.btnUserAnswer.setVisibility(View.VISIBLE);
-            myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
-            myViewHolder.correctAnswer.setVisibility(View.GONE);
-            myViewHolder.userAnswer.setVisibility(View.GONE);
         } else {
             myViewHolder.btnUserAnswer.setVisibility(View.GONE);
-            myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
-            myViewHolder.correctAnswer.setVisibility(View.GONE);
-            myViewHolder.userAnswer.setVisibility(View.GONE);
         }
+        myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
+        myViewHolder.correctAnswer.setVisibility(View.GONE);
+        myViewHolder.userAnswer.setVisibility(View.GONE);
 
     }
 
     private ScienceQuestion getQuestion(String qId) {
-        ScienceQuestion scienceQuestion = AppDatabase.
+        return AppDatabase.
                 getDatabaseInstance(context).getScienceQuestionDao().getQuestionByQID(qId);
-        return scienceQuestion;
     }
 
     @Override

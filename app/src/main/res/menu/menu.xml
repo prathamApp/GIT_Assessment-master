@@ -21,4 +21,8 @@
     <item
         android:id="@+id/menu_push_data"
         android:title="@string/push_data" />
+
+    <item
+        android:id="@+id/menu_push_db"
+        android:title="@string/push_db_file" />
 </menu>

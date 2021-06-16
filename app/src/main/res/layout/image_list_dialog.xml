@@ -93,93 +93,164 @@
 
         </ScrollView>
 
-        <ScrollView
-            android:id="@+id/sv_audio"
+        <!--        <ScrollView
+                    android:id="@+id/sv_audio"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/ll_dialog_title"
+                    android:layout_margin="@dimen/_5sdp">-->
+
+        <!--  <RelativeLayout
+              android:id="@+id/rl_answer_audio"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_vertical"
+              android:gravity="center">
+
+
+
+              <RelativeLayout
+                  android:id="@+id/rl_title"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:background="@drawable/main_card_bg"
+                  android:padding="@dimen/_3sdp">
+
+                  <TextView
+                      android:id="@+id/tv_your_ans"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_marginHorizontal="@dimen/_3sdp"
+                      android:fontFamily="@font/quicksand_bold"
+                      android:text="@string/your_answer"
+                      android:textSize="@dimen/_15sdp" />
+
+                  <TextView
+                      android:id="@+id/tv_duration"
+                      android:layout_width="@dimen/_50sdp"
+                      android:layout_height="wrap_content"
+                      android:layout_below="@+id/tv_your_ans"
+                      android:layout_marginHorizontal="@dimen/_3sdp"
+                      android:fontFamily="@font/quicksand_bold"
+                      android:padding="@dimen/_3sdp"
+                      android:text="00.00"
+                      android:textSize="@dimen/_10sdp" />
+              </RelativeLayout>
+
+              <ImageView
+                  android:id="@+id/iv_answer_audio"
+                  android:layout_width="@dimen/_40sdp"
+                  android:layout_height="@dimen/_40sdp"
+                  android:layout_centerInParent="true"
+                  android:layout_marginHorizontal="@dimen/_3sdp"
+                  android:layout_toLeftOf="@+id/iv_close"
+                  android:layout_toRightOf="@+id/rl_title"
+                  android:src="@drawable/ic_play_circle" />
+
+
+              <ImageView
+                  android:id="@+id/iv_close"
+                  android:layout_width="@dimen/_40sdp"
+                  android:layout_height="@dimen/_40sdp"
+                  android:layout_alignParentEnd="true"
+                  android:layout_centerVertical="true"
+                  android:padding="@dimen/_3sdp"
+                  android:src="@drawable/ic_close_black_24dp"
+                  android:visibility="gone" />
+          </RelativeLayout>-->
+        <RelativeLayout
+            android:id="@+id/rl_audio"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/ll_dialog_title"
-            android:layout_margin="@dimen/_5sdp">
+            android:layout_centerInParent="true">
 
             <RelativeLayout
                 android:id="@+id/rl_answer_audio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_centerInParent="true"
                 android:gravity="center">
 
-                <!--    <ImageView
-                        android:id="@+id/iv_start_audio"
-                        android:layout_width="@dimen/_40sdp"
-                        android:layout_height="@dimen/_40sdp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_margin="@dimen/_5sdp"
-                        android:layout_toRightOf="@+id/tv_your_ans"
-                        android:background="@drawable/ripple_rectangle"
-                        android:elevation="@dimen/_5sdp"
-                        android:padding="@dimen/_5sdp"
-
-                        android:src="@drawable/ic_mic_24dp"
-                        android:visibility="visible" />-->
 
                 <RelativeLayout
                     android:id="@+id/rl_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_5sdp"
                     android:background="@drawable/main_card_bg"
                     android:padding="@dimen/_3sdp">
 
                     <TextView
-                        android:id="@+id/tv_your_ans"
+                        android:id="@+id/tv_start_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_3sdp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginHorizontal="@dimen/_5sdp"
                         android:fontFamily="@font/quicksand_bold"
-                        android:text="@string/your_answer"
-                        android:textSize="@dimen/_15sdp" />
+                        android:text="00:00"
+                        android:textSize="@dimen/_12sdp" />
 
                     <TextView
                         android:id="@+id/tv_duration"
                         android:layout_width="@dimen/_50sdp"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/tv_your_ans"
-                        android:layout_marginHorizontal="@dimen/_3sdp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginHorizontal="@dimen/_5sdp"
                         android:fontFamily="@font/quicksand_bold"
                         android:padding="@dimen/_3sdp"
                         android:text="00.00"
-                        android:textSize="@dimen/_10sdp" />
+                        android:textAlignment="textEnd"
+                        android:textSize="@dimen/_12sdp" />
                 </RelativeLayout>
 
                 <ImageView
-                    android:id="@+id/iv_answer_audio"
+                    android:id="@+id/iv_rewind"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginHorizontal="@dimen/_3sdp"
+                    android:layout_toLeftOf="@+id/iv_play_audio"
+                    android:src="@drawable/rewind" />
+
+                <ImageView
+                    android:id="@+id/iv_play_audio"
                     android:layout_width="@dimen/_40sdp"
                     android:layout_height="@dimen/_40sdp"
                     android:layout_centerInParent="true"
                     android:layout_marginHorizontal="@dimen/_3sdp"
-                    android:layout_toLeftOf="@+id/iv_close"
-                    android:layout_toRightOf="@+id/rl_title"
                     android:src="@drawable/ic_play_circle" />
 
-
                 <ImageView
-                    android:id="@+id/iv_close"
+                    android:id="@+id/iv_fast_forward"
                     android:layout_width="@dimen/_40sdp"
                     android:layout_height="@dimen/_40sdp"
-                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:padding="@dimen/_3sdp"
-                    android:src="@drawable/ic_close_black_24dp"
-                    android:visibility="gone" />
+                    android:layout_marginHorizontal="@dimen/_3sdp"
+                    android:layout_toRightOf="@+id/iv_play_audio"
+                    android:rotation="180"
+                    android:src="@drawable/rewind" />
             </RelativeLayout>
 
+            <android.support.v7.widget.AppCompatSeekBar
+                android:id="@+id/sb_audio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/rl_answer_audio"
+                android:layout_margin="@dimen/_5sdp" />
+        </RelativeLayout>
 
-        </ScrollView>
+        <!--        </ScrollView>-->
 
         <ScrollView
             android:id="@+id/sv_video"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/ll_dialog_title"
-            android:layout_margin="@dimen/_5sdp">
+            android:layout_margin="@dimen/_5sdp"
+            android:visibility="gone">
 
             <RelativeLayout
                 android:id="@+id/rl_answer_video"
@@ -197,15 +268,14 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:fontFamily="@font/quicksand_medium"
-                    android:textSize="@dimen/_15sdp"
-                    android:text="@string/your_answer"/>
+                    android:text="@string/your_answer"
+                    android:textSize="@dimen/_15sdp" />
 
                 <ImageView
                     android:id="@+id/iv_answer_image_play_icon"
                     android:layout_width="@dimen/_100sdp"
-                    android:layout_below="@+id/tv_title"
                     android:layout_height="@dimen/_150sdp"
-                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
                     android:src="@drawable/ic_play_circle"
                     android:visibility="visible" />
 

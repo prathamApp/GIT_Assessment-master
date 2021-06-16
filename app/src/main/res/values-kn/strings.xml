@@ -404,6 +404,8 @@
     <string name="no_students_to_pull">ಎಳೆಯಲು(ಪುಲ್ ಮಾಡಲು) ವಿದ್ಯಾರ್ಥಿಗಳಿಲ್ಲ ..</string>
     <string name="loading_certificates">ಪ್ರಮಾಣಪತ್ರಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ ..</string>
     <string name="loading_exams">ಪರೀಕ್ಷೆಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ</string>
+    <string name="db_push_failed">Db push failed</string>
+    <string name="db_pushed_successfully">Db pushed successfully</string>
 
 
 </resources>

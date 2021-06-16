@@ -1,7 +1,6 @@
 package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.multiple_select;
 
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -11,24 +10,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
-import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.MultipleSelectFragment_;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
@@ -37,11 +30,10 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.List;
 
-import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
+import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
+import static com.pratham.assessment.utilities.Assessment_Utility.getOptionLocalPath;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
@@ -131,22 +123,27 @@ public class MultipleSelectFragment extends Fragment implements MultipleSelectCo
 
         if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
-            Assessment_Utility.setQuestionImageToImageView(scienceQuestion, questionImage, questionGif, localPath, getActivity());
+            String extension = getFileExtension(localPath);
 
+            if (extension.equalsIgnoreCase("PNG") ||
+                    extension.equalsIgnoreCase("gif") ||
+                    extension.equalsIgnoreCase("JPEG") ||
+                    extension.equalsIgnoreCase("JPG")) {
+                Assessment_Utility.setQuestionImageToImageView(questionImage, questionGif, localPath, getActivity());
+            } else {
+                if (extension.equalsIgnoreCase("mp4") ||
+                        extension.equalsIgnoreCase("3gp")) {
+                    Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
+                }
+                questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250, 250);
+                param.gravity = Gravity.CENTER;
+                questionImage.setLayoutParams(param);
+            }
         } else questionImage.setVisibility(View.GONE);
 
-        questionImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
-            }
-        });
-        questionGif.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
-            }
-        });
+        questionImage.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
+        questionGif.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
 
         final List<ScienceQuestionChoice> choices = scienceQuestion.getLstquestionchoice();
 
@@ -162,13 +159,13 @@ public class MultipleSelectFragment extends Fragment implements MultipleSelectCo
                 checkBox.setText(Html.fromHtml(choices.get(j).getChoicename()));
 
             if (!choices.get(j).getChoiceurl().equalsIgnoreCase("")) {
-                final String path = choices.get(j).getChoiceurl();
+//                final String path = choices.get(j).getChoiceurl();
 
                 String fileNameChoice = Assessment_Utility.getFileName(scienceQuestion.getQid(), choices.get(j).getChoiceurl());
-                final String localPathChoice = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileNameChoice;
+                final String localPathChoice = getOptionLocalPath(choices.get(j), scienceQuestion.isParaQuestion()); /*AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileNameChoice;
+                 */
 
-
-                checkBox.setOnClickListener(v -> Assessment_Utility.showZoomDialog(getActivity(), path, localPathChoice, ""));
+                checkBox.setOnClickListener(v -> Assessment_Utility.showZoomDialog(getActivity(), localPathChoice, ""));
 
                 if (choices.get(j).getChoicename().equalsIgnoreCase(""))
                     checkBox.setText(getString(R.string.view_option) + " " + (j + 1));
@@ -186,17 +183,14 @@ public class MultipleSelectFragment extends Fragment implements MultipleSelectCo
                 }
 //                }
             }
-            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
-                    multipleSelectPresenter.setCheckedAnswer(buttonView, isChecked, choices);
-                    for (int i = 0; i < gridLayout.getRowCount(); i++) {
-                        if (((CheckBox) gridLayout.getChildAt(i)).isChecked()) {
-                            ((CheckBox) gridLayout.getChildAt(i)).setTextColor(Assessment_Utility.selectedColor);
-                        } else {
-                            ((CheckBox) gridLayout.getChildAt(i)).setTextColor(Color.WHITE);
-                        }
+                multipleSelectPresenter.setCheckedAnswer(buttonView, isChecked, choices);
+                for (int i = 0; i < gridLayout.getRowCount(); i++) {
+                    if (((CheckBox) gridLayout.getChildAt(i)).isChecked()) {
+                        ((CheckBox) gridLayout.getChildAt(i)).setTextColor(Assessment_Utility.selectedColor);
+                    } else {
+                        ((CheckBox) gridLayout.getChildAt(i)).setTextColor(Color.WHITE);
                     }
                 }
             });
@@ -248,7 +242,7 @@ public class MultipleSelectFragment extends Fragment implements MultipleSelectCo
         if (scienceQuestion != null) {
             if (scienceQuestion.isParaQuestion()) {
                 String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
-                showZoomDialog(getActivity(), "", "", para);
+                showZoomDialog(getActivity(), "", para);
             }
         }
     }
@@ -256,6 +250,5 @@ public class MultipleSelectFragment extends Fragment implements MultipleSelectCo
     @Override
     public void setAnswer(List<ScienceQuestionChoice> choices) {
         assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), choices);
-
     }
 }

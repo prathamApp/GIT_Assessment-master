@@ -408,5 +408,7 @@
     <string name="no_students_to_pull">पुल करण्यासाठी कोणतेही विद्द्यार्थी नाहीत..</string>
     <string name="loading_certificates">प्रमाणपत्रे लोड  होत आहेत..</string>
     <string name="loading_exams">असेसमेंट  लोड होत आहेत</string>
+    <string name="db_push_failed">Db push failed</string>
+    <string name="db_pushed_successfully">Db pushed successfully</string>
 
 </resources>

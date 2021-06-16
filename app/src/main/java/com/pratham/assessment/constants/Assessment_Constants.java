@@ -40,6 +40,17 @@ public class Assessment_Constants {
     public static int TransferredImages = 0;
 
 
+    public static final String CHHATTISGARH = "Chhattisgarh";
+    public static final String CHHATTISGARH_PROGRAM_ID = "36";
+    public static final String CHHATTISGARH_LANGUAGE_ID = "2";
+    public static final String CHHATTISGARH_SUBJECT_ID = "265";
+    public static final String CHHATTISGARH_SUBJECT_NAME = "Career Awareness";
+    public static final String CHHATTISGARH_EXAM_ID = "4532";
+    public static final String CHHATTISGARH_EXAM_NAME = "Career Awareness";
+    public static final String CHHATTISGARH_EXAMMODE = "practice";
+    public static final String CHHATTISGARH_EXAMTYPE = "Public";
+
+
     public static final String PRATHAM_KOLIBRI_HOTSPOT = "prathamkolibri";
     public static String FACILITY_ID = "facility_id";
     public static final String USAGEDATA = "USAGEDATA";

@@ -1,5 +1,6 @@
 package com.pratham.assessment.ui.choose_assessment.science.custom_dialogs;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -32,16 +35,15 @@ import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlayerInterface;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.UpdateImageListListener;
-import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.ImageAnswerFragment;
-import com.pratham.assessment.utilities.AudioUtil;
+import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.image_answer.ImageAnswerFragment;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,8 +51,10 @@ import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MED
 import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE;
 import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA;
 import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO;
-import static com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.ImageAnswerFragment.SHOW_DIALOG;
+import static com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.image_answer.ImageAnswerFragment.SHOW_DIALOG;
 import static com.pratham.assessment.utilities.Assessment_Utility.formatMilliSeccond;
+
+//import com.pratham.assessment.utilities.AudioUtil;
 
 @EActivity(R.layout.image_list_dialog)
 public class ImageListDialog extends AppCompatActivity implements AudioPlayerInterface {
@@ -65,11 +69,8 @@ public class ImageListDialog extends AppCompatActivity implements AudioPlayerInt
     ImageButton ib_next;
     @ViewById(R.id.tv_img_label)
     TextView tv_img_label;
-    @ViewById(R.id.tv_duration)
-    TextView tv_duration;
-
-    @ViewById(R.id.iv_answer_audio)
-    ImageView iv_answer_audio;
+/*    @ViewById(R.id.iv_answer_audio)
+    ImageView iv_answer_audio;*/
 
 
     @ViewById(R.id.vv_answer_play_video)
@@ -79,14 +80,31 @@ public class ImageListDialog extends AppCompatActivity implements AudioPlayerInt
     @ViewById(R.id.iv_answer_image_play_icon)
     ImageView iv_answer_image_play_icon;
 
+    @ViewById(R.id.iv_play_audio)
+    ImageView audio_view;
+    @ViewById(R.id.iv_fast_forward)
+    ImageView iv_fast_forward;
+    @ViewById(R.id.iv_rewind)
+    ImageView iv_rewind;
+    @ViewById(R.id.tv_duration)
+    TextView tv_duration;
+    @ViewById(R.id.tv_start_time)
+    TextView tv_start_time;
+    @ViewById(R.id.sb_audio)
+    SeekBar sb_audio;
 
     @ViewById(R.id.sv_image)
     ScrollView sv_image;
-    @ViewById(R.id.sv_audio)
-    ScrollView sv_audio;
+    @ViewById(R.id.rl_audio)
+    RelativeLayout rl_audio;
     @ViewById(R.id.sv_video)
     ScrollView sv_video;
-
+    boolean isAudioPlaying = false;
+    MediaPlayer mediaPlayer;
+    int oneTimeOnly = 0;
+    int finalTime;
+    int startTime;
+    Handler myHandler;
 
     @ViewById(R.id.iv_captured_image)
     ImageView iv_captured_image;
@@ -115,7 +133,8 @@ public class ImageListDialog extends AppCompatActivity implements AudioPlayerInt
 
     @AfterViews
     public void init() {
-
+        mediaPlayer = new MediaPlayer();
+        myHandler = new Handler();
         this.imageList = getIntent().getParcelableArrayListExtra("imageList");
         showDeleteBtn = getIntent().getBooleanExtra("showDeleteButton", false);
         mediaType = getIntent().getStringExtra(DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA);
@@ -178,22 +197,61 @@ public class ImageListDialog extends AppCompatActivity implements AudioPlayerInt
 
         if (mediaType.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO)) {
             try {
-                sv_audio.setVisibility(View.VISIBLE);
+                rl_audio.setVisibility(View.VISIBLE);
                 sv_video.setVisibility(View.GONE);
                 sv_image.setVisibility(View.GONE);
-                MediaPlayer mediaPlayer = new MediaPlayer();
-                if (obj instanceof Uri)
-                    mediaPlayer.setDataSource(this, (Uri) obj);
-                else mediaPlayer.setDataSource(obj.toString());
+//                MediaPlayer mediaPlayer = new MediaPlayer();
 
-                mediaPlayer.prepare();
+
+          /*      mediaPlayer.prepare();
                 int finalTime = mediaPlayer.getDuration();
                 String dur = formatMilliSeccond(finalTime);
                 Log.d("finalTime", "onAnswerPlayClick: " + dur);
 //            assessmentAnswerListener.setAudio(path, isAudioRecording);
                 tv_duration.setText(dur);
-//                rl_answer_audio.setVisibility(View.VISIBLE);
-            } catch (IOException e) {
+//                rl_answer_audio.setVisibility(View.VISIBLE);*/
+
+
+                try {
+                    if (obj instanceof Uri)
+                        mediaPlayer.setDataSource(this, (Uri) obj);
+                    else mediaPlayer.setDataSource(obj.toString());
+                    mediaPlayer.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                finalTime = mediaPlayer.getDuration();
+
+                startTime = mediaPlayer.getCurrentPosition();
+                if (oneTimeOnly == 0) {
+                    sb_audio.setMax(finalTime);
+                    oneTimeOnly = 1;
+                }
+
+                mediaPlayer.setOnCompletionListener(mp1 -> {
+                    audio_view.setImageResource(R.drawable.ic_play_circle);
+                    isAudioPlaying = false;
+                    try {
+                        if (mp1.isPlaying())
+                            mp1.stop();
+                        myHandler = new Handler();
+                        if (obj instanceof Uri)
+                            mp1.setDataSource(this, (Uri) obj);
+                        else mp1.setDataSource(obj.toString());
+                        mp1.prepare();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+                tv_duration.setText(formatMilliSeccond(finalTime));
+
+
+                tv_start_time.setText(formatMilliSeccond(startTime));
+
+                sb_audio.setClickable(false);
+
+
+            } catch (Exception e) {
                 Toast.makeText(this, "Can't play this audio.", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
@@ -201,7 +259,7 @@ public class ImageListDialog extends AppCompatActivity implements AudioPlayerInt
         } else if (mediaType.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE)) {
 
             try {
-                sv_audio.setVisibility(View.GONE);
+                rl_audio.setVisibility(View.GONE);
                 sv_video.setVisibility(View.GONE);
                 sv_image.setVisibility(View.VISIBLE);
                 Glide.with(this)
@@ -214,7 +272,7 @@ public class ImageListDialog extends AppCompatActivity implements AudioPlayerInt
                 e.printStackTrace();
             }
         } else if (mediaType.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO)) {
-            sv_audio.setVisibility(View.GONE);
+            rl_audio.setVisibility(View.GONE);
             sv_video.setVisibility(View.VISIBLE);
             sv_image.setVisibility(View.GONE);
             try {
@@ -238,45 +296,47 @@ public class ImageListDialog extends AppCompatActivity implements AudioPlayerInt
     @Click(R.id.ib_next)
     public void nextImg() {
         currentCnt++;
+
+
+        vv_answer.stopPlayback();
+        if (isAudioPlaying) {
+            isAudioPlaying = false;
+//            iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
+//            AudioUtil.stopPlayingAudio();
+            mediaPlayer.stop();
+            mediaPlayer.seekTo(0);
+        }
         if (currentCnt < imageList.size()) {
             setUri(imageList.get(currentCnt));
         } else {
             currentCnt = imageList.size();
         }
-
-        vv_answer.stopPlayback();
-        if (isAnsPlaying) {
-            isAnsPlaying = false;
-            iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
-            AudioUtil.stopPlayingAudio();
-        }
         showPrevNext();
 
     }
 
-    boolean isAnsPlaying;
 
-    @Click(R.id.iv_answer_audio)
-    public void playAnsAudio() {
-        Object path = imageList.get(currentCnt);
-        if (path != null) {
-            if (isAnsPlaying) {
-                isAnsPlaying = false;
-                iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
-                AudioUtil.stopPlayingAudio();
+    /* @Click(R.id.iv_answer_audio)
+     public void playAnsAudio() {
+         Object path = imageList.get(currentCnt);
+         if (path != null) {
+             if (isAnsPlaying) {
+                 isAnsPlaying = false;
+                 iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
+                 AudioUtil.stopPlayingAudio();
 
-            } else {
-                isAnsPlaying = true;
-                iv_answer_audio.setImageResource(R.drawable.ic_pause);
-                if (path instanceof Uri)
-                    AudioUtil.playRecording((Uri) path, ImageListDialog.this, this);
-                else AudioUtil.playRecording(path.toString(), ImageListDialog.this);
+             } else {
+                 isAnsPlaying = true;
+                 iv_answer_audio.setImageResource(R.drawable.ic_pause);
+                 if (path instanceof Uri)
+                     AudioUtil.playRecording((Uri) path, ImageListDialog.this, this);
+                 else AudioUtil.playRecording(path.toString(), ImageListDialog.this);
 
 
-            }
-        }
-    }
-
+             }
+         }
+     }
+ */
     @Click({R.id.iv_answer_image_play_icon, R.id.vv_answer_play_video})
     public void onAnswerVideoClicked() {
         MediaController mediaController = new MediaController(this);
@@ -296,16 +356,20 @@ public class ImageListDialog extends AppCompatActivity implements AudioPlayerInt
     @Click(R.id.ib_prev)
     public void prevImg() {
         currentCnt--;
+
+        vv_answer.stopPlayback();
+        if (isAudioPlaying) {
+            isAudioPlaying = false;
+//            iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
+//            AudioUtil.stopPlayingAudio();
+            mediaPlayer.stop();
+            mediaPlayer.seekTo(0);
+
+        }
         if (currentCnt > -1) {
             setUri(imageList.get(currentCnt));
         } else currentCnt = 0;
 
-        vv_answer.stopPlayback();
-        if (isAnsPlaying) {
-            isAnsPlaying = false;
-            iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
-            AudioUtil.stopPlayingAudio();
-        }
 
         showPrevNext();
 
@@ -331,11 +395,13 @@ public class ImageListDialog extends AppCompatActivity implements AudioPlayerInt
     public void closeDialog() {
         ScienceAssessmentActivity.dialogOpen = false;
         vv_answer.stopPlayback();
-        if (isAnsPlaying) {
-            isAnsPlaying = false;
-            iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
-            AudioUtil.stopPlayingAudio();
+        if (isAudioPlaying) {
+            isAudioPlaying = false;
+//            iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
+//            AudioUtil.stopPlayingAudio();
+            mediaPlayer.stop();
         }
+
         if (showDeleteBtn)
             updateList();
         else finish();
@@ -343,13 +409,47 @@ public class ImageListDialog extends AppCompatActivity implements AudioPlayerInt
 //        ImageAnswerFragment.updateList(imageList);
     }
 
+    @Click(R.id.iv_fast_forward)
+    public void onFastForwardClicked() {
+        sb_audio.setClickable(false);
+
+        if (isAudioPlaying) {
+            int temp = (int) startTime;
+            if ((temp + 1000) <= finalTime) {
+                startTime = startTime + 1000;
+                mediaPlayer.seekTo((int) startTime);
+                sb_audio.setProgress((int) startTime);
+                tv_start_time.setText(formatMilliSeccond(startTime));
+
+            }
+        }
+    }
+
+    @Click(R.id.iv_rewind)
+    public void onRewindClicked() {
+        sb_audio.setClickable(false);
+
+        if (isAudioPlaying) {
+            int temp = (int) startTime;
+            if ((temp - 1000) > 0) {
+                startTime = startTime - 1000;
+                mediaPlayer.seekTo((int) startTime);
+                sb_audio.setProgress((int) startTime);
+                tv_start_time.setText(formatMilliSeccond(startTime));
+            }
+        }
+    }
+
     private void updateList() {
         vv_answer.stopPlayback();
-        if (isAnsPlaying) {
-            isAnsPlaying = false;
-            iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
-            AudioUtil.stopPlayingAudio();
+        if (isAudioPlaying) {
+            isAudioPlaying = false;
+//            iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
+//            AudioUtil.stopPlayingAudio();
+            mediaPlayer.stop();
+
         }
+
         Intent intent = new Intent();
         intent.putStringArrayListExtra("imageList", (ArrayList<String>) imageList);
         intent.putExtra(DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA, Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE);
@@ -389,8 +489,84 @@ public class ImageListDialog extends AppCompatActivity implements AudioPlayerInt
         return false;
     }
 
+    @Click(R.id.iv_play_audio)
+    public void listenAudio() {
+        sb_audio.setClickable(false);
+
+        if (isAudioPlaying) {
+            isAudioPlaying = false;
+            audio_view.setImageResource(R.drawable.ic_play_circle);
+//            AudioUtil.stopPlayingAudio();
+            mediaPlayer.stop();
+            mediaPlayer.seekTo(0);
+//            stopPlayer();
+
+        } else {
+            isAudioPlaying = true;
+            audio_view.setImageResource(R.drawable.ic_pause);
+//            AudioUtil.playRecording(localPath, this);
+            mediaPlayer.start();
+            myHandler.postDelayed(UpdateSongTime, 100);
+        }
+
+
+ /*           final int duration = mediaPlayer.getDuration();
+            final int amountToUpdate = duration / 100;
+            Timer mTimer = new Timer();
+            mTimer.schedule(new TimerTask() {
+
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            if (!(amountToUpdate * sb_audio.getProgress() >= duration)) {
+                                int p = sb_audio.getProgress();
+                                p += 1;
+                                sb_audio.setProgress(p);
+                            }
+                        }
+                    });
+                }
+
+                ;
+            }, amountToUpdate);*/
+
+//        final SeekBar mSeelBar = new SeekBar(this);
+
+    }
+
+    private Runnable UpdateSongTime = new Runnable() {
+        @SuppressLint("DefaultLocale")
+        @UiThread
+        public void run() {
+            try {
+                startTime = mediaPlayer.getCurrentPosition();
+       /*         tv_start_time.setText(String.format("%d min, %d sec",
+                        TimeUnit.MILLISECONDS.toMinutes((long) startTime),
+                        TimeUnit.MILLISECONDS.toSeconds((long) startTime) -
+                                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.
+                                        toMinutes((long) startTime)))
+                );*/
+                tv_start_time.setText(formatMilliSeccond(startTime));
+                Log.d("AUDIO ACT", "run: " + startTime);
+                sb_audio.setProgress((int) startTime);
+                myHandler.postDelayed(this, 100);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
     @Override
     public void onBackPressed() {
+        if (isAudioPlaying) {
+            stopPlayer();
+//            AudioUtil.stopPlayingAudio();
+            mediaPlayer.stop();
+        }
         /*super.onBackPressed();
         ScienceAssessmentActivity.dialogOpen = false;*/
 //        ImageAnswerFragment.updateList(imageList);
@@ -399,10 +575,10 @@ public class ImageListDialog extends AppCompatActivity implements AudioPlayerInt
 
     @Override
     public void stopPlayer() {
-        if (isAnsPlaying) {
-            isAnsPlaying = false;
-            if (iv_answer_audio != null)
-                iv_answer_audio.setImageResource(R.drawable.ic_play_circle);
+        if (isAudioPlaying) {
+            isAudioPlaying = false;
+       /*     if (iv_answer_audio != null)
+                iv_answer_audio.setImageResource(R.drawable.ic_play_circle);*/
         }
     }
 

@@ -34,7 +34,10 @@ public interface SubjectDao {
 //    @Query("SELECT * FROM Groups WHERE VillageID=:vID ORDER BY GroupName ASC")
 //    public List<Groups> GetGroups(int vID);
 
-    @Query("select subjectid FROM AssessmentSubjects WHERE subjectname=:subName")
+    @Query("select * FROM AssessmentSubjects WHERE subjectid=:subId")
+    public List<AssessmentSubjects> getChhattisgarhSubject(String subId);
+
+   @Query("select subjectid FROM AssessmentSubjects WHERE subjectname=:subName")
     public String getIdByName(String subName);
 
     @Query("select * FROM AssessmentSubjects WHERE subjectid=:subId")

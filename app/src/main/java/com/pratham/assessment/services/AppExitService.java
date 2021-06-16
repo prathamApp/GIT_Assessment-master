@@ -44,10 +44,10 @@ public class AppExitService extends Service {
 //                        String toDateTemp = appDatabase.getSessionDao().getToDate(Assessment_Constants.currentSession);
                         String toDateTemp = appDatabase.getSessionDao().getToDate(currentSession);
 
-                        if (toDateTemp.equalsIgnoreCase("na")) {
+//                        if (toDateTemp.equalsIgnoreCase("na")) {
 //                            appDatabase.getSessionDao().UpdateToDate(Assessment_Constants.currentSession, EndTime);
                             appDatabase.getSessionDao().UpdateToDate(currentSession, EndTime);
-                        }
+//                        }
 
                         // String assessmentSession = FastSave.getInstance().getString("assessmentSession", "");
 

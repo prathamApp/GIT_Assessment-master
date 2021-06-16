@@ -11,11 +11,15 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -33,7 +37,6 @@ import com.pratham.assessment.services.stt_service_new.ContinuousSpeechService_N
 import com.pratham.assessment.services.stt_service_new.STT_Result_New;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
-import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.TextParagraphFragment_;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
@@ -52,6 +55,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
+import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
@@ -171,15 +175,31 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
 
             String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-            final String localPath=Assessment_Utility.getQuestionLocalPath(scienceQuestion);
+            final String localPath = Assessment_Utility.getQuestionLocalPath(scienceQuestion);
       /*      if (scienceQuestion.getIsQuestionFromSDCard())
                 localPath = scienceQuestion.getPhotourl();
             else
                 localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 
 */
-            Assessment_Utility.setQuestionImageToImageView(scienceQuestion,questionImage,questionGif,localPath,getActivity());
+            String extension = getFileExtension(localPath);
 
+            if (extension.equalsIgnoreCase("PNG") ||
+                    extension.equalsIgnoreCase("gif") ||
+                    extension.equalsIgnoreCase("JPEG") ||
+                    extension.equalsIgnoreCase("JPG")) {
+                Assessment_Utility.setQuestionImageToImageView(questionImage, questionGif, localPath, getActivity());
+            } else {
+                if (extension.equalsIgnoreCase("mp4") ||
+                        extension.equalsIgnoreCase("3gp")) {
+                    Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
+                }
+                questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
+                RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(
+                        250, 250);
+                param.addRule(RelativeLayout.CENTER_IN_PARENT);
+                questionImage.setLayoutParams(param);
+            }
    /*         String path = scienceQuestion.getPhotourl();
             String[] imgPath = path.split("\\.");
             int len;
@@ -220,11 +240,8 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
 
     @Click({R.id.iv_question_image, R.id.iv_question_gif})
     public void questionImageClicked() {
-        String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
-        final String localPath = AssessmentApplication.assessPath
-                + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH
-                + "/" + fileName;
-        showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
+        final String localPath = Assessment_Utility.getQuestionLocalPath(scienceQuestion);
+        showZoomDialog(getActivity(), localPath, "");
     }
 
     private void setWords() {
@@ -553,7 +570,6 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
     }
 
 
-
     public int getPercentage() {
         int corrCnt = getCorrectCounter();
         int perc = (corrCnt * 100) / splitWords.size();
@@ -587,7 +603,6 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
 //        if (voiceStart)
 //            sttMethod();
     }
-
 
 
     private void isScrollBelowVisible(View view) {
@@ -683,17 +698,17 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
         }
     }
 
-   /* @Click(R.id.btn_view_hint)
-    public void showPara() {
-        if (scienceQuestion != null) {
-            if (scienceQuestion.isParaQuestion()) {
-                String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
-                showZoomDialog(getActivity(), "", "", para);
-            }
-        }
-    }*/
-   private int calculateMarks() {
-       int marks = (getPercentage() * Integer.parseInt(scienceQuestion.getOutofmarks())) / 100;
-       return marks;
-   }
+    /* @Click(R.id.btn_view_hint)
+     public void showPara() {
+         if (scienceQuestion != null) {
+             if (scienceQuestion.isParaQuestion()) {
+                 String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
+                 showZoomDialog(getActivity(), "", "", para);
+             }
+         }
+     }*/
+    private int calculateMarks() {
+        int marks = (getPercentage() * Integer.parseInt(scienceQuestion.getOutofmarks())) / 100;
+        return marks;
+    }
 }

@@ -1,7 +1,5 @@
 package com.pratham.assessment.async;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -38,8 +36,6 @@ import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.interfaces.DataPushListener;
-import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
-import com.pratham.assessment.ui.login.MainActivity;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.Background;
@@ -117,7 +113,7 @@ public class PushDataToServer {
     List<DownloadMedia> downloadMediaList = new ArrayList<>();
     List<DownloadMedia> supervisorMediaList = new ArrayList<>();
     List<DownloadMedia> videoRecordingList = new ArrayList<>();
-    private int pushCnt = 0, mediaCnt = 0, videoMonCnt = 0, supervisorCnt = 0, answerMediaCnt = 0;
+    private int pushCnt = 0, videoMonCnt = 0, supervisorCnt = 0, answerMediaCnt = 0;
     private int totalVideoMonCnt = 0, totalSupervisorCnt = 0, totalAnswerMediaCnt = 0;
     //    ProgressDialog progressDialog;
     JSONObject requestJsonObjectScience;
@@ -164,6 +160,7 @@ public class PushDataToServer {
         ok_btn = pushDialog.findViewById(R.id.ok_btn);
         ok_btn.setOnClickListener(view -> {
             pushDialog.dismiss();
+            downloadMediaList = null;
             dataPushListener.onResponseGet();
         });
     }
@@ -264,6 +261,7 @@ public class PushDataToServer {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
+                totalSupervisorCnt = 0;
                 supervisorMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_SUPERVISOR));
                 if (supervisorMediaList.size() > 0) {
                     totalSupervisorCnt = supervisorMediaList.size();
@@ -282,6 +280,8 @@ public class PushDataToServer {
 
             @Override
             protected Void doInBackground(Void... voids) {
+                totalAnswerMediaCnt = 0;
+                downloadMediaList = new ArrayList<>();
                 downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE));
                 downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO));
                 downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO));
@@ -302,6 +302,7 @@ public class PushDataToServer {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
+                totalVideoMonCnt = 0;
                 videoRecordingList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING));
                 if (videoRecordingList.size() > 0) {
            /* String filePath = videoRecordingList.get(videoRecCnt).getPhotoUrl();
@@ -334,10 +335,12 @@ public class PushDataToServer {
             final MediaType MEDIA_TYPE_MP4 = MediaType.parse("video/mp4");
             final MediaType MEDIA_TYPE_3GP = MediaType.parse("video/3gp");
             final MediaType MEDIA_TYPE_MP3 = MediaType.parse("audio/mp3");
+            final MediaType MEDIA_TYPE_3GPP = MediaType.parse("audio/3gpp");
+            final MediaType MEDIA_TYPE_M4A = MediaType.parse("audio/m4a");
+            final MediaType MEDIA_TYPE_AMR = MediaType.parse("audio/amr");
 
             MultipartBody.Builder builderNew = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
-//            if (!type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING)) {
             String fileName;
             for (int i = 0; i < pushList.size(); i++) {
                 String file[] = pushList.get(i).getPhotoUrl().split("/");
@@ -358,6 +361,12 @@ public class PushDataToServer {
                         mediaType = MEDIA_TYPE_MP4;
                     else if (extension.equalsIgnoreCase("mp3"))
                         mediaType = MEDIA_TYPE_MP3;
+                    else if (extension.equalsIgnoreCase("3gpp"))
+                        mediaType = MEDIA_TYPE_3GPP;
+                    else if (extension.equalsIgnoreCase("m4a"))
+                        mediaType = MEDIA_TYPE_M4A;
+                    else if (extension.equalsIgnoreCase("amr"))
+                        mediaType = MEDIA_TYPE_AMR;
                     builderNew.addFormDataPart(fileName, fileName, RequestBody.create(mediaType, f));
                 }
             }
@@ -518,6 +527,12 @@ public class PushDataToServer {
                 _studentObj.put("villageName", studentList.get(i).getVillageName());
                 _studentObj.put("newFlag", studentList.get(i).getNewFlag());
                 _studentObj.put("isniosstudent", studentList.get(i).getIsniosstudent());
+                _studentObj.put("programId", studentList.get(i).getProgramId());
+                _studentObj.put("state", studentList.get(i).getState());
+                _studentObj.put("district", studentList.get(i).getDistrict());
+                _studentObj.put("block", studentList.get(i).getBlock());
+                _studentObj.put("school", studentList.get(i).getSchool());
+                _studentObj.put("villageId", studentList.get(i).getVillageId());
                 _studentObj.put("DeviceId", Assessment_Utility.getDeviceId(context));
                 studentData.put(_studentObj);
             }
@@ -566,6 +581,8 @@ public class PushDataToServer {
                 _obj.put("EndDateTime", _score.getEndDateTime());
                 _obj.put("Level", _score.getLevel());
                 _obj.put("Label", _score.getLabel());
+                _obj.put("RedirectedFromApp", _score.getRedirectedFromApp());
+                _obj.put("RedirectedAppSessionId", _score.getRedirectedAppSessionId());
 //                _obj.put("isAttempted", _score.getIsAttempted());
 //                _obj.put("isCorrect", _score.getIsCorrect());
                 _obj.put("userAnswer", _score.getUserAnswer());
@@ -637,6 +654,8 @@ public class PushDataToServer {
                         _obj_score.put("isCorrect", _score.getIsCorrect());
                         _obj_score.put("userAnswer", _score.getUserAnswer());
                         _obj_score.put("paperId", _score.getPaperId());
+                        _obj_score.put("RedirectedFromApp", _score.getRedirectedFromApp());
+                        _obj_score.put("RedirectedAppSessionId", _score.getRedirectedAppSessionId());
 
                         scoreData.put(_obj_score);
                     }
@@ -916,22 +935,25 @@ public class PushDataToServer {
 
     private void setMediaPushFlag(String type) {
         if (type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_SUPERVISOR)) {
+            supervisorCnt = 0;
             int cnt = AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().setSentFlag();
             int sCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_SUPERVISOR);
             supervisorImagesPushed = true;
-            supervisorCnt += sCnt;
+            supervisorCnt = sCnt;
         } else {
             if (type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING)) {
+                videoMonCnt = 0;
                 int vmCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
                 videoMonImagesPushed = true;
-                videoMonCnt += vmCnt;
+                videoMonCnt = vmCnt;
                 onPostExecute();
             } else if (type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA)) {
+                answerMediaCnt = 0;
                 answerMediaPushed = true;
                 int audioCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO);
                 int imgCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE);
                 int videoCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().setSentFlag(DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO);
-                answerMediaCnt += audioCnt + imgCnt + videoCnt;
+                answerMediaCnt = audioCnt + imgCnt + videoCnt;
             }
         }
         BackupDatabase.backup(context);
@@ -947,7 +969,7 @@ public class PushDataToServer {
         if (!isTablet)
             AppDatabase.getDatabaseInstance(context).getStudentDao().setSentFlag();
         AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().setSentFlag();
-//        AppDatabase.getDatabaseInstance(context).getLearntWordDao().setSentFlag();
+        AppDatabase.getDatabaseInstance(context).getCertificateKeywordRatingDao().setSentFlag();
         BackupDatabase.backup(context);
 
     }
@@ -971,7 +993,7 @@ public class PushDataToServer {
                     String msg1 = "", msg2 = "";
                     msg1 = context.getString(R.string.papers_pushed) + pushCnt;
 //                    if (answerMediaPushed && supervisorImagesPushed && videoMonImagesPushed) {
-                    mediaCnt = supervisorCnt + answerMediaCnt + videoMonCnt;
+                    int mediaCnt = supervisorCnt + answerMediaCnt + videoMonCnt;
                     int totalMediaCnt = totalSupervisorCnt + totalAnswerMediaCnt + totalVideoMonCnt;
                     msg2 = context.getString(R.string.media_pushed) + mediaCnt + "/" + totalMediaCnt;
                     txt_push_dialog_msg.setText(msg1);

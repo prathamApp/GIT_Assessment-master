@@ -26,9 +26,7 @@ public interface ChooseAssessmentContract {
 
         void copyListData();
 
-        void clearNodeIds();
 
-        void endSession();
 
 //        void startAssessSession();
     }

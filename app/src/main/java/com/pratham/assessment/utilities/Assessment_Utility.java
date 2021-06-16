@@ -25,11 +25,13 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.location.Address;
 import android.location.Geocoder;
+import android.media.ThumbnailUtils;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -41,7 +43,6 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.IntRange;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
@@ -82,13 +83,14 @@ import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.domain.ScienceQuestion;
+import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.domain.StorageInfo;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.result.ResultActivity;
 import com.pratham.assessment.ui.choose_assessment.science.DownloadQuestionsActivity;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
-import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageDialog_;
+import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ZoomImageActivity_;
 import com.pratham.assessment.ui.login.MainActivity;
 import com.pratham.assessment.ui.login.group_selection.SelectGroupActivity;
 
@@ -192,30 +194,33 @@ public class Assessment_Utility {
 
     }
 
-    public static void setQuestionImageToImageView(ScienceQuestion scienceQuestion, ImageView questionImage, GifView questionGif, String localPath, Context context) {
-        String path = scienceQuestion.getPhotourl();
-        String[] imgPath = path.split("\\.");
+
+    public static String getOptionLocalPath(ScienceQuestionChoice scienceQuestionChoice, boolean isSDCardQuestion) {
+        final String fileName = getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getChoiceurl());
+//                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+        if (isSDCardQuestion)
+            return scienceQuestionChoice.getChoiceurl();
+        else
+            return AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+
+    }
+
+    public static void setQuestionImageToImageView(ImageView questionImage, GifView questionGif, String localPath, Context context) {
+//        String path = scienceQuestion.getPhotourl();
+        String extension = getFileExtension(localPath);
+        String[] imgPath = localPath.split("\\.");
         int len;
         if (imgPath.length > 0)
             len = imgPath.length - 1;
         else len = 0;
-        if (imgPath[len].equalsIgnoreCase("gif")) {
+        if (extension.equalsIgnoreCase("gif")) {
             try {
                 InputStream gif;
-                 /*   if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-                        Glide.with(getActivity()).asGif()
-                                .load(path)
-                                .apply(new RequestOptions()
-                                        .placeholder(Drawable.createFromPath(localPath)))
-                                .into(questionImage);
-//                    zoomImg.setVisibility(View.VISIBLE);
 
-                    } else {*/
                 gif = new FileInputStream(localPath);
                 questionImage.setVisibility(View.GONE);
                 questionGif.setVisibility(View.VISIBLE);
                 questionGif.setGifResource(gif);
-//                    }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -228,6 +233,50 @@ public class Assessment_Utility {
                             .placeholder(Drawable.createFromPath(localPath)))
                     .into(questionImage);
         }
+    }
+
+    public static void setThumbnailForVideo(String localPath, Context context, ImageView questionImage) {
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 1;
+        Bitmap thumb = ThumbnailUtils.createVideoThumbnail(localPath, MediaStore.Images.Thumbnails.MICRO_KIND);
+        BitmapDrawable ob = new BitmapDrawable(context.getResources(), thumb);
+        questionImage.setBackgroundDrawable(ob);
+
+    }
+
+    public static String getLanguageIdByLanguage(String language) {
+        String langCode = "1";
+        switch (language) {
+            case "hindi":
+                langCode = "2";
+                break;
+            case "marathi":
+                langCode = "3";
+                break;
+            case "gujarati":
+                langCode = "7";
+                break;
+            case "kannada":
+                langCode = "8";
+                break;
+            case "assamese":
+                langCode = "9";
+                break;
+            case "bengali":
+                langCode = "10";
+                break;
+            case "odia":
+                langCode = "12";
+                break;
+            case "telugu":
+                langCode = "14";
+                break;
+            case "english":
+            default:
+                langCode = "1";
+        }
+        return langCode;
     }
 
     public boolean getSdCardPath(Context context) {
@@ -2160,9 +2209,9 @@ public class Assessment_Utility {
         }
     }
 
-    public static void showZoomDialog(Context context, String path, String localPath, String para) {
-        Intent intent = new Intent(context, ZoomImageDialog_.class);
-        intent.putExtra("onlinePath", path);
+    public static void showZoomDialog(Context context, String localPath, String para) {
+        Intent intent = new Intent(context, ZoomImageActivity_.class);
+//        intent.putExtra("onlinePath", path);
         intent.putExtra("localPath", localPath);
         intent.putExtra("paragraph", para);
         context.startActivity(intent);

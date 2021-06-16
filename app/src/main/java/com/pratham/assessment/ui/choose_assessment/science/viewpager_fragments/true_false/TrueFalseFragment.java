@@ -1,20 +1,17 @@
 package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.true_false;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.database.AppDatabase;
@@ -22,7 +19,6 @@ import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
@@ -31,11 +27,10 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
@@ -139,8 +134,23 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
         if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
 //            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-            Assessment_Utility.setQuestionImageToImageView(scienceQuestion,questionImage,questionGif,localPath,getActivity());
+            String extension = getFileExtension(localPath);
 
+            if (extension.equalsIgnoreCase("PNG") ||
+                    extension.equalsIgnoreCase("gif") ||
+                    extension.equalsIgnoreCase("JPEG") ||
+                    extension.equalsIgnoreCase("JPG")) {
+                Assessment_Utility.setQuestionImageToImageView(questionImage, questionGif, localPath, getActivity());
+            } else {
+                if (extension.equalsIgnoreCase("mp4") ||
+                        extension.equalsIgnoreCase("3gp")) {
+                    Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
+                }
+                questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250, 250);
+                param.gravity = Gravity.CENTER;
+                questionImage.setLayoutParams(param);
+            }
 
           /*  String path = scienceQuestion.getPhotourl();
             String[] imgPath = path.split("\\.");
@@ -189,13 +199,13 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
         questionImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
+                showZoomDialog(getActivity(), localPath, "");
             }
         });
         questionGif.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showZoomDialog(getActivity(), scienceQuestion.getPhotourl(), localPath, "");
+                showZoomDialog(getActivity(), localPath, "");
             }
         });
 
@@ -339,7 +349,7 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
         if (scienceQuestion != null) {
             if (scienceQuestion.isParaQuestion()) {
                 String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
-                showZoomDialog(getActivity(), "", "", para);
+                showZoomDialog(getActivity(), "", para);
             }
         }
     }

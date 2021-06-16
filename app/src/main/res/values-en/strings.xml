@@ -407,6 +407,8 @@
     <string name="no_students_to_pull">No students to pull..</string>
     <string name="loading_certificates">Loading Certificates..</string>
     <string name="loading_exams">Loading Exams</string>
+    <string name="db_push_failed">Db push failed</string>
+    <string name="db_pushed_successfully">Db pushed successfully</string>
 
     <!-- <string name="hello_blank_fragment">Hello blank fragment</string>
      <string name="thank_you_for_giving_assessment">Thank you \n for giving assessment.</string>

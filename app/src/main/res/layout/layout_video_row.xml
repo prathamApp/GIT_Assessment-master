@@ -40,57 +40,34 @@
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_margin="@dimen/_3sdp"
-            android:layout_weight="0.5"
-            android:background="@drawable/main_card_bg"
+            android:layout_weight="0.4"
             android:padding="@dimen/_3sdp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/iv_question_image"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_150sdp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_play_circle"
-                android:visibility="visible" />
+                style="@style/CustomQuestionImageStyle"
+                android:layout_height="@dimen/_60sdp" />
 
             <com.pratham.assessment.custom.gif_viewer.GifView
                 android:id="@+id/iv_question_gif"
                 style="@style/CustomQuestionImageStyle"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.5" />
+                android:layout_height="@dimen/_60sdp"
+                android:layout_gravity="center_horizontal" />
 
-            <VideoView
-                android:id="@+id/vv_question"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_150sdp"
-                android:layout_centerHorizontal="true"
-                android:visibility="gone" />
+            <!--  <VideoView
+                  android:id="@+id/vv_question"
+                  android:layout_width="match_parent"
+                  android:layout_height="@dimen/_150sdp"
+                  android:layout_centerHorizontal="true"
+                  android:visibility="gone" />-->
 
         </RelativeLayout>
-        <!--  <TextView
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center"
-              android:textSize="@dimen/_12sdp"
-              android:text="Play Video" />-->
 
-        <!-- <ImageView
-             android:id="@+id/iv_question_video"
-             android:layout_width="@dimen/_50sdp"
-             android:layout_height="@dimen/_50sdp"
-             android:layout_gravity="center"
-             android:src="@drawable/ic_play_circle" />
-
- -->
-        <!-- <VideoView
-             android:id="@+id/vv_play_video"
-             android:layout_width="@dimen/_100sdp"
-             android:layout_height="@dimen/_100sdp"
-             android:layout_gravity="center" />-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.3">
+            android:layout_weight="0.4">
 
             <!-- <Button
                  android:id="@+id/btn_capture_video"

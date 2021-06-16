@@ -45,5 +45,7 @@ public interface CertificateKeywordRatingDao {
     @Query("select * from CertificateKeywordRating where examId=:examId and subjectid=:subjectid and paperId=:paperId and studentId=:studId")
     public List<CertificateKeywordRating> getQuestionsByExamIdSubIdPaperIdStudId(String examId, String subjectid, String paperId, String studId);
 
+    @Query("update CertificateKeywordRating set sentFlag=1 where sentFlag=0")
+    public void setSentFlag();
 
 }

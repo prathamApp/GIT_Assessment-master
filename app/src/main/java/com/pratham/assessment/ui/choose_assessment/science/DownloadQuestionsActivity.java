@@ -113,7 +113,7 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
     WormDotsIndicator dots_indicator;
     @ViewById(R.id.tv_timer)
     TextView tv_timer;
-    @ViewById(R.id.btn_save_Assessment)
+    @ViewById(R.id.btn_next)
     ImageView btn_save_Assessment;
     @ViewById(R.id.btn_submit)
     Button btn_submit;

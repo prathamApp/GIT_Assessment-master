@@ -407,5 +407,7 @@
     <string name="no_students_to_pull">کوئی طالب علم نہیں ہے ..</string>
     <string name="loading_certificates">سرٹیفکیٹ لوڈ ہورہے ہیں ..</string>
     <string name="loading_exams">لوڈنگ امتحانات</string>
+    <string name="db_push_failed">Db push failed</string>
+    <string name="db_pushed_successfully">Db pushed successfully</string>
 
 </resources>

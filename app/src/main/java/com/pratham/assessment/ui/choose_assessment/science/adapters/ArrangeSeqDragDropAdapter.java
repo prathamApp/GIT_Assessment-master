@@ -2,11 +2,11 @@ package com.pratham.assessment.ui.choose_assessment.science.adapters;
 
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ScaleDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,26 +16,22 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
-import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
 import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.arrange_sequence.ArrangeSequenceFragment;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
+import static com.pratham.assessment.utilities.Assessment_Utility.getOptionLocalPath;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
 
 public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDragDropAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
@@ -48,12 +44,13 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
     AssessmentAnswerListener assessmentAnswerListener;
     String qid = "";
     //    String qtId = "";
-    String path;
+//    String path;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mTitle;
         ImageView iv_choice_image;
+        GifView iv_choice_gif;
         View rowView;
         ScrollView sv_arr_seq;
         LinearLayout ll_options;
@@ -64,6 +61,7 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
             rowView = itemView;
             mTitle = itemView.findViewById(R.id.tv_text);
             iv_choice_image = itemView.findViewById(R.id.iv_choice_image);
+            iv_choice_gif = itemView.findViewById(R.id.iv_choice_gif);
             sv_arr_seq = itemView.findViewById(R.id.sv_arr_seq);
             ll_options = itemView.findViewById(R.id.ll_options);
         }
@@ -89,6 +87,7 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
     public void onBindViewHolder(final MyViewHolder holder, int position) {
 //        holder.mTitle.setText(data.get(position));
 //        if(data.get(position))
+
         setOdiaFont(context, holder.mTitle);
         holder.setIsRecyclable(false);
         holder.mTitle.setTextColor(Assessment_Utility.selectedColor);
@@ -102,32 +101,30 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
         if (data.size() > 0) {
             qid = data.get(0).getQid();
             ScienceQuestionChoice scienceQuestionChoice = data.get(position);
-            if (!scienceQuestionChoice.getChoiceurl().equalsIgnoreCase("")) {
-                /*Assessment_Constants.loadOnlineImagePath +*/
-                ;
-                path = scienceQuestionChoice.getChoiceurl();
+            final String localPath = getOptionLocalPath(scienceQuestionChoice,
+                    scienceQuestionChoice.getIsQuestionFromSDCard());
+
+            if (scienceQuestionChoice.getChoiceurl() != null && !scienceQuestionChoice.getChoiceurl().equalsIgnoreCase("")) {
 
 
-                holder.iv_choice_image.setVisibility(View.VISIBLE);
-                holder.mTitle.setVisibility(View.GONE);
-                holder.mTitle.setTextColor(Color.WHITE);
-                Glide.with(context).asBitmap().
-                        load(path).apply(new RequestOptions()
-                        .fitCenter()
-                        .format(DecodeFormat.PREFER_ARGB_8888)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .skipMemoryCache(true)
-                        .override(Target.SIZE_ORIGINAL))
-                        .into(holder.iv_choice_image);
-
-               /* holder.iv_choice_image.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                      *//*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
-                        zoomImageDialog.show();*//*
-                        Assessment_Utility.showZoomDialog(context, path, localPath,"");
+                String extension = getFileExtension(localPath);
+                if (extension.equalsIgnoreCase("PNG") ||
+                        extension.equalsIgnoreCase("gif") ||
+                        extension.equalsIgnoreCase("JPEG") ||
+                        extension.equalsIgnoreCase("JPG")) {
+                    Assessment_Utility.setQuestionImageToImageView(holder.iv_choice_image, holder.iv_choice_gif, localPath, context);
+                } else {
+                    if (extension.equalsIgnoreCase("mp4") ||
+                            extension.equalsIgnoreCase("3gp")) {
+                        Assessment_Utility.setThumbnailForVideo(localPath, context, holder.iv_choice_image);
                     }
-                });*/
+                    holder.iv_choice_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_play_circle));
+                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250, 250);
+                    param.gravity = Gravity.CENTER;
+                    holder.iv_choice_image.setLayoutParams(param);
+                }
+
+
             } else holder.mTitle.setText(Html.fromHtml(scienceQuestionChoice.getChoicename()));
 
             holder.ll_options.setOnTouchListener(new View.OnTouchListener() {
@@ -147,10 +144,10 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
                     if (event.getAction() ==
                             MotionEvent.ACTION_DOWN) {
                         startDragListener.requestDrag(holder);
-                        String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getChoiceurl());
+                       /* String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getChoiceurl());
                         final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-
-                        Assessment_Utility.showZoomDialog(context, path, localPath, "");
+*/
+                        Assessment_Utility.showZoomDialog(context, localPath, "");
                     }
                     return false;
                 }

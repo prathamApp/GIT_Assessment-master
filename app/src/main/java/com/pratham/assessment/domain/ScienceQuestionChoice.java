@@ -22,6 +22,7 @@ public class ScienceQuestionChoice implements Serializable {
     private String choiceurl;
     @Ignore
     private String myIscorrect = "false";
+    private boolean IsQuestionFromSDCard;
 
     public String getMyIscorrect() {
         return myIscorrect;
@@ -34,6 +35,13 @@ public class ScienceQuestionChoice implements Serializable {
             this.myIscorrect = myIscorrect;
     }
 
+    public boolean getIsQuestionFromSDCard() {
+        return IsQuestionFromSDCard;
+    }
+
+    public void setIsQuestionFromSDCard(boolean questionFromSDCard) {
+        IsQuestionFromSDCard = questionFromSDCard;
+    }
 
     public String getMatchingurl() {
         return matchingurl;

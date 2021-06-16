@@ -14,6 +14,15 @@ public class ResultModalClass implements Serializable {
     List<ScienceQuestionChoice> userAnsList;
     boolean isCorrect;
     boolean isAttempted;
+    boolean isQuestionFromSDCard;
+
+    public boolean isQuestionFromSDCard() {
+        return isQuestionFromSDCard;
+    }
+
+    public void setQuestionFromSDCard(boolean questionFromSDCard) {
+        isQuestionFromSDCard = questionFromSDCard;
+    }
 
     public String getUserAnswerId() {
         return userAnswerId;

@@ -335,6 +335,12 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                             detail.setVillageName(content_cursor.getString(content_cursor.getColumnIndex("villageName")));
                                             detail.setNewFlag(content_cursor.getInt(content_cursor.getColumnIndex("newFlag")));
                                             detail.setDeviceId(content_cursor.getString(content_cursor.getColumnIndex("DeviceId")));
+                                            detail.setProgramId(content_cursor.getString(content_cursor.getColumnIndex("programId")));
+                                            detail.setState(content_cursor.getString(content_cursor.getColumnIndex("state")));
+                                            detail.setDistrict(content_cursor.getString(content_cursor.getColumnIndex("district")));
+                                            detail.setBlock(content_cursor.getString(content_cursor.getColumnIndex("block")));
+                                            detail.setSchool(content_cursor.getString(content_cursor.getColumnIndex("school")));
+                                            detail.setVillageId(content_cursor.getString(content_cursor.getColumnIndex("villageId")));
                                             detail.setIsniosstudent(content_cursor.getString(content_cursor.getColumnIndex("isniosstudent")));
                                             contents.add(detail);
                                             content_cursor.moveToNext();
@@ -605,6 +611,8 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                             downloadMedia.setMediaType("optionImage");
                                             DownloadMediaList.add(downloadMedia);*/
                                         }
+                                        scienceQuestionChoice.setIsQuestionFromSDCard(true);
+
                                         scienceQuestionChoiceList.add(scienceQuestionChoice);
                                         content_cursor.moveToNext();
                                     }
@@ -752,202 +760,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
         }
     }
 
-    /*public void doInitialEntries(AppDatabase appDatabase) {
-        try {
-            Status status;
-            status = new Status();
-            status.setStatusKey("DeviceId");
-            status.setValue("" + Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID));
-            status.setDescription("" + Build.SERIAL);
-            appDatabase.getStatusDao().insert(status);
 
-            status = new Status();
-            status.setStatusKey("CRLID");
-            status.setValue("default");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("DeviceName");
-            status.setValue(Assessment_Utility.getDeviceName());
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("gpsFixDuration");
-            status.setValue("");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("prathamCode");
-            status.setValue("");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("apkType");
-            status.setValue("");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("Latitude");
-            status.setValue("");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("Longitude");
-            status.setValue("");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("GPSDateTime");
-            status.setValue("");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("CurrentSession");
-            status.setValue("NA");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("SdCardPath");
-            status.setValue("NA");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("AppLang");
-            status.setValue("NA");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("AppStartDateTime");
-            status.setValue("NA");
-            appDatabase.getStatusDao().insert(status);
-
-            //new Entries
-            status = new Status();
-            status.setStatusKey("ActivatedForGroups");
-            status.setValue("NA");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("programId");
-            status.setValue("1");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("group1");
-            status.setValue("NA");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("group2");
-            status.setValue("NA");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("group3");
-            status.setValue("NA");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("group4");
-            status.setValue("NA");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("group5");
-            status.setValue("NA");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("village");
-            status.setValue("NA");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("ActivatedDate");
-            status.setValue("NA");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("AssessmentSession");
-            status.setValue("NA");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("AndroidID");
-            status.setValue("NA");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("DBVersion");
-            status.setValue("NA");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("SerialID");
-            status.setValue(Assessment_Utility.getDeviceSerialID());
-            appDatabase.getStatusDao().insert(status);
-
-
-            status = new Status();
-            status.setStatusKey("OsVersionName");
-            status.setValue(Assessment_Utility.getOSVersion());
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("OsVersionNum");
-            status.setValue(Assessment_Utility.getOSVersionNo() + "");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("AvailableStorage");
-            status.setValue(Assessment_Utility.getAvailableStorage());
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("ScreenResolution");
-            status.setValue(Assessment_Utility.getScreenResolution((AppCompatActivity) context));
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("Manufacturer");
-            status.setValue(Assessment_Utility.getManufacturer());
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("Model");
-            status.setValue(Assessment_Utility.getModel());
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("ApiLevel");
-            status.setValue(Assessment_Utility.getApiLevel() + "");
-            appDatabase.getStatusDao().insert(status);
-
-            status = new Status();
-            status.setStatusKey("InternalStorageSize");
-            status.setValue(Assessment_Utility.getInternalStorageSize() + "");
-            appDatabase.getStatusDao().insert(status);
-
-            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            WifiInfo wInfo = wifiManager.getConnectionInfo();
-            String macAddress = wInfo.getMacAddress();
-            status.setStatusKey("wifiMAC");
-            status.setValue(macAddress);
-            appDatabase.getStatusDao().insert(status);
-
-            setAppName(status);
-            setAppVersion(status);
-            BackupDatabase.backup(context);
-
-            addStartTime();
-//            getSdCardPath();
-            requestLocation();
-            sharedPreferences.edit().putBoolean(Assessment_Constants.INITIAL_ENTRIES, true).apply();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 //    @Override
     public static void doInitialEntries(Context context) {
         try {

@@ -404,6 +404,8 @@
     <string name="no_students_to_pull">কোন ছাত্র বা ছাত্রী পুল করেনি</string>
     <string name="loading_certificates">সার্টিফিকেট লোড করুন</string>
     <string name="loading_exams">পরীক্ষা লোড করুন</string>
+    <string name="db_push_failed">Db push failed</string>
+    <string name="db_pushed_successfully">Db pushed successfully</string>
 
 
 </resources>

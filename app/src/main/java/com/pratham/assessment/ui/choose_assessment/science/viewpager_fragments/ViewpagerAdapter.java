@@ -9,8 +9,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import com.pratham.assessment.domain.ScienceQuestion;
-import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.multiple_select.MultipleSelectFragment;
-import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.text_paragraph.TextParagraphFragment;
+import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.Mcq.McqFillInTheBlanksFragment;
+import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.audio.AudioFragment;
+import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.image_answer.ImageAnswerFragment;
+import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.video.VideoFragment;
 
 import java.util.ArrayList;
 import java.util.List;

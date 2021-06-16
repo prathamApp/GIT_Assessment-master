@@ -3,7 +3,6 @@ package com.pratham.assessment.ui.choose_assessment.science.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
@@ -15,23 +14,23 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.Assessment_Constants;
+import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
 import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.match_the_pair.MatchThePairFragment;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 
 public class MatchPairDragDropAdapter extends RecyclerView.Adapter<MatchPairDragDropAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
     List<ScienceQuestionChoice> draggedList = new ArrayList<>();
@@ -46,18 +45,20 @@ public class MatchPairDragDropAdapter extends RecyclerView.Adapter<MatchPairDrag
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mTitle;
-        ImageView iv_choice_image, iv_zoom_eye;
+        ImageView imageView;
+        GifView gifView;
         View rowView;
-        RelativeLayout rl_img;
+        RelativeLayout rl_img, rl_root;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
             rowView = itemView;
             mTitle = itemView.findViewById(R.id.tv_text);
-            iv_choice_image = itemView.findViewById(R.id.iv_choice_image);
-            iv_zoom_eye = itemView.findViewById(R.id.iv_zoom_eye);
+            imageView = itemView.findViewById(R.id.iv_choice_image);
+            gifView = itemView.findViewById(R.id.iv_choice_gif);
             rl_img = itemView.findViewById(R.id.rl_img);
+            rl_root = itemView.findViewById(R.id.rl_root);
         }
     }
 
@@ -83,8 +84,7 @@ public class MatchPairDragDropAdapter extends RecyclerView.Adapter<MatchPairDrag
         draggedList.clear();
         if (data.size() > 0) {
             ScienceQuestionChoice scienceQuestionChoice = data.get(position);
-            if (!scienceQuestionChoice.getMatchingurl().equalsIgnoreCase("")) {
-                final String path = /*Assessment_Constants.loadOnlineImagePath +*/ scienceQuestionChoice.getMatchingurl();
+            if (scienceQuestionChoice.getMatchingurl() != null && !scienceQuestionChoice.getMatchingurl().equalsIgnoreCase("")) {
 
                 String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getMatchingurl());
                 final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
@@ -101,25 +101,38 @@ public class MatchPairDragDropAdapter extends RecyclerView.Adapter<MatchPairDrag
                         .override(Target.SIZE_ORIGINAL))
                         .into(holder.iv_choice_image);*/
 
-                Glide.with(context)
+                String extension = getFileExtension(localPath);
+
+                if (extension.equalsIgnoreCase("PNG") ||
+                        extension.equalsIgnoreCase("gif") ||
+                        extension.equalsIgnoreCase("JPEG") ||
+                        extension.equalsIgnoreCase("JPG")) {
+                    Assessment_Utility.setQuestionImageToImageView(holder.imageView, holder.gifView, localPath, context);
+                } else {
+                    if (extension.equalsIgnoreCase("mp4") ||
+                            extension.equalsIgnoreCase("3gp")) {
+                        Assessment_Utility.setThumbnailForVideo(localPath, context, holder.imageView);
+                    }
+                    holder.imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_play_circle));
+                    RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT, 190);
+                    param.addRule(RelativeLayout.CENTER_IN_PARENT);
+                    holder.imageView.setPadding(5,5,5,5);
+                    holder.imageView.setLayoutParams(param);
+                }
+
+             /*   Glide.with(context)
                         .load(path)
 //                            .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                         .apply(new RequestOptions()
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .skipMemoryCache(true)
                                 .placeholder(Drawable.createFromPath(localPath)))
-                        .into(holder.iv_choice_image);
+                        .into(holder.imageView);*/
 
 //                holder.iv_choice_image.setOnClickListener(new View.OnClickListener() {
-                holder.iv_zoom_eye.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.d("QQQ", "choice clicked....");
-                      /*  ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
-                        zoomImageDialog.show();*/
-                        Assessment_Utility.showZoomDialog(context, path, localPath, "");
-                    }
-                });
+                holder.imageView.setOnClickListener(v -> Assessment_Utility.showZoomDialog(context, localPath, ""));
+                holder.gifView.setOnClickListener(v -> Assessment_Utility.showZoomDialog(context, localPath, ""));
             } else {
                 holder.rl_img.setVisibility(View.GONE);
                 if (scienceQuestionChoice.getMatchingname() != null && !scienceQuestionChoice.getMatchingname().equalsIgnoreCase(""))
@@ -139,6 +152,26 @@ public class MatchPairDragDropAdapter extends RecyclerView.Adapter<MatchPairDrag
 
 //            holder.iv_choice_image.setOnTouchListener(new View.OnTouchListener() {
             holder.rl_img.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() ==
+                            MotionEvent.ACTION_DOWN) {
+                        startDragListener.requestDrag(holder);
+                    }
+                    return false;
+                }
+            });
+            holder.imageView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() ==
+                            MotionEvent.ACTION_DOWN) {
+                        startDragListener.requestDrag(holder);
+                    }
+                    return false;
+                }
+            });
+            holder.rowView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     if (event.getAction() ==

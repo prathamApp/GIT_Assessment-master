@@ -404,6 +404,8 @@
     <string name="no_students_to_pull">ਹੋਰ ਕੋਈ ਵਿਦਿਆਰਥੀ ਦੀ ਜਾਣਕਾਰੀ ਨਹੀਂ</string>
     <string name="loading_certificates">ਸਰਟੀਫਿਕੇਟ ਡਾਉਨਲੋਡ ਹੋ ਰਹੇ ਹਨ ..</string>
     <string name="loading_exams">ਪੇਪਰਾਂ ਦੀ ਪ੍ਰਕਿਰਿਆ ਜਾਰੀ ਹੈ</string>
+    <string name="db_push_failed">Db push failed</string>
+    <string name="db_pushed_successfully">Db pushed successfully</string>
 
 
 </resources>

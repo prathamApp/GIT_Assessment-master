@@ -28,7 +28,7 @@ public class QuestionTrackerAdapter extends RecyclerView.Adapter<QuestionTracker
         this.scienceQuestionList = scienceQuestions;
         this.context = context;
         questionTrackerListener = (QuestionTrackerListener) context;
-        this.bottomQuestionFragment=bottomQuestionFragment;
+        this.bottomQuestionFragment = bottomQuestionFragment;
     }
 
 
@@ -65,7 +65,7 @@ public class QuestionTrackerAdapter extends RecyclerView.Adapter<QuestionTracker
         myViewHolder.text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                questionTrackerListener.onQuestionClick(queNo-1);
+                questionTrackerListener.onQuestionClick(queNo - 1);
                 bottomQuestionFragment.dismiss();
             }
         });

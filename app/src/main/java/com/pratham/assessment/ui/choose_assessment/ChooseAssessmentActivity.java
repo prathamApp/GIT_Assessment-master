@@ -34,9 +34,10 @@ import android.widget.Toast;
 
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.BaseActivity;
-import com.pratham.assessment.CatchoActivity;
 import com.pratham.assessment.R;
+import com.pratham.assessment.async.PushDBZipToServer;
 import com.pratham.assessment.async.PushDataToServer;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.GridSpacingItemDecoration;
 import com.pratham.assessment.custom.ProcessPhoenix;
@@ -51,8 +52,6 @@ import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment_;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity_;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
-import com.pratham.assessment.ui.splash_activity.SplashActivity_;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
@@ -74,10 +73,11 @@ import static com.pratham.assessment.utilities.Assessment_Utility.dpToPx;
 
 @EActivity(R.layout.activity_choose_assessment)
 public class ChooseAssessmentActivity extends BaseActivity implements
-        ChoseAssessmentClicked, ChooseAssessmentContract.ChooseAssessmentView , DataPushListener {
+        ChoseAssessmentClicked, ChooseAssessmentContract.ChooseAssessmentView, DataPushListener {
     @Bean(ChooseAssessmentPresenter.class)
     ChooseAssessmentContract.ChooseAssessmentPresenter presenter;
-
+    @Bean(PushDBZipToServer.class)
+    PushDBZipToServer pushDataBaseZipToServer;
     @ViewById(R.id.rl_Profile)
     RelativeLayout rl_Profile;
     @ViewById(R.id.btn_Profile)
@@ -119,76 +119,6 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         context = this;
 
-
-      /*  try {
-            Bundle bundle = new Bundle();
-            bundle = this.getIntent().getExtras();
-            String studId = String.valueOf(bundle.getString("studentId"));
-            String appName = String.valueOf(bundle.getString("appName"));
-            String studName = String.valueOf(bundle.getString("studentName"));
-            String subject = String.valueOf(bundle.getString("subjectName"));
-            String language = String.valueOf(bundle.getString("subjectLanguage"));
-            String subLevel = String.valueOf(bundle.getString("subjectLevel"));
-       *//*     Toast.makeText(this, "Id : " + studId + "\nAppName : "
-                    + appName + "\nStudentName : " + studName + "\nSubject : " + subject + "\nLanguage : " + language
-                    + "\nLevel : " + subLevel, Toast.LENGTH_LONG).show();
-       *//*
-            String langCode = "1";
-            if (!language.equalsIgnoreCase("")) {
-                switch (language.toLowerCase()) {
-                    case "english":
-                        langCode = "1";
-                        break;
-                    case "hindi":
-                        langCode = "2";
-                        break;
-                    case "marathi":
-                        langCode = "3";
-                        break;
-                    case "gujarati":
-                        langCode = "7";
-                        break;
-                    case "kannada":
-                        langCode = "8";
-                        break;
-                    case "assamese":
-                        langCode = "9";
-                        break;
-                    case "bengali":
-                        langCode = "10";
-                        break;
-                    case "odia":
-                        langCode = "12";
-                        break;
-                    case "telugu":
-                        langCode = "14";
-                        break;
-                    default:
-                        langCode = "1";
-                }
-            }
-            Assessment_Constants.SELECTED_LANGUAGE = langCode;
-            FastSave.getInstance().saveString("language", langCode);
-            if (!subject.equalsIgnoreCase("")) {
-                Assessment_Constants.SELECTED_SUBJECT_ID = subject;
-                FastSave.getInstance().saveString("SELECTED_SUBJECT_ID", subject);
-            }
-            if (!studId.equalsIgnoreCase("")) {
-                Assessment_Constants.currentStudentID = studId;
-                FastSave.getInstance().saveString("currentStudentID", studId);
-//                createDataBase();
-            }
-            if (!studName.equalsIgnoreCase("")) {
-                Assessment_Constants.currentStudentName = studName;
-                FastSave.getInstance().saveString("currentStudentName", studName);
-            }
-
-        } catch (Exception e) {
-            Log.d("Exception@@@", e.getMessage());
-            e.printStackTrace();
-        }*/
-
-//        setLocale(this, "langCode");
 
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
 //        String studentName = AppDatabase.getDatabaseInstance(this).getStudentDao().getFullName(Assessment_Constants.currentStudentID);
@@ -347,6 +277,11 @@ public class ChooseAssessmentActivity extends BaseActivity implements
                         PUSH_DATA_FROM_DRAWER = true;
                         pushDataToServer.setValue(ChooseAssessmentActivity.this, false);
                         pushDataToServer.doInBackground();
+                        break;
+                    case R.id.menu_push_db:
+                        pushDataBaseZipToServer.setValue(context, false);
+                        pushDataBaseZipToServer.doInBackground();
+                        break;
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
 
@@ -653,15 +588,8 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                String curSession = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getStatusDao().getValue("CurrentSession");
-                String toDateTemp = AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getSessionDao().getToDate(curSession);
-
-                Log.d("AppExitService:", "curSession : " + curSession + "      toDateTemp : " + toDateTemp);
+                AssessmentApplication.endTestSession(context);
                 VIDEOMONITORING = false;
-                if (toDateTemp != null) {
-                    if (toDateTemp.equalsIgnoreCase("na"))
-                        AppDatabase.getDatabaseInstance(ChooseAssessmentActivity.this).getSessionDao().UpdateToDate(curSession, Assessment_Utility.getCurrentDateTime());
-                }
                 finishAffinity();
 
             }

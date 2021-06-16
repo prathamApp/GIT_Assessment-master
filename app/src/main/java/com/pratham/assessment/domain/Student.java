@@ -40,6 +40,13 @@ public class Student implements Comparable, Parcelable {
     private int newFlag;
     public String avatarName;
     public String isniosstudent;
+    //new
+    public String programId;
+    public String state;
+    public String district;
+    public String block;
+    public String villageId;
+    public String school;
 
 
     @Ignore
@@ -254,6 +261,54 @@ public class Student implements Comparable, Parcelable {
         return 0;
     }
 
+    public String getProgramId() {
+        return programId;
+    }
+
+    public void setProgramId(String programId) {
+        this.programId = programId;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getBlock() {
+        return block;
+    }
+
+    public void setBlock(String block) {
+        this.block = block;
+    }
+
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
+    }
+
+    public String getVillageId() {
+        return villageId;
+    }
+
+    public void setVillageId(String villageId) {
+        this.villageId = villageId;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(GroupId);
@@ -282,5 +337,6 @@ public class Student implements Comparable, Parcelable {
             return 0;
         }
     }
+
 
 }

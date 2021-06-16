@@ -407,6 +407,8 @@
     <string name="no_students_to_pull">இழுக்க  மாணவர்கள் யாரும் இல்லை .. </string>
     <string name="loading_certificates">சான்றிதழ்களை ஏற்றுகிறது ..</string>
     <string name="loading_exams">தேர்வுகள் ஏற்றப்படுகின்றன</string>
+    <string name="db_push_failed">Db push failed</string>
+    <string name="db_pushed_successfully">Db pushed successfully</string>
 
 
 </resources>

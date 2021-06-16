@@ -946,7 +946,7 @@ public class PullDataPresenterImp implements PullDataContract.PullDataPresenter,
             gson = new Gson();
             Type listType = new TypeToken<List<RaspCrl>>() {
             }.getType();
-            ArrayList<RaspCrl> crlListTemp = gson.fromJson(response.toString(), listType);
+            ArrayList<RaspCrl> crlListTemp = gson.fromJson(response, listType);
             crlList.clear();
             for (RaspCrl raspCrl : crlListTemp) {
                 for (Crl modal_crl : raspCrl.getData()) {

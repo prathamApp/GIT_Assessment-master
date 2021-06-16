@@ -37,6 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_EXAM_ID;
+import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_EXAM_NAME;
+import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_LANGUAGE_ID;
+import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_SUBJECT_ID;
+import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_SUBJECT_NAME;
 import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
 
 /*import butterknife.BindView;
@@ -66,7 +71,18 @@ public class TopicFragment extends Fragment {
         langId = FastSave.getInstance().getString(LANGUAGE, "1");
         tv_no_exams.setText(R.string.no_exams);
         if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-            if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
+           /* if (subjectId.equalsIgnoreCase(CHHATTISGARH_SUBJECT_ID) && langId.equalsIgnoreCase(CHHATTISGARH_LANGUAGE_ID)) {
+                AssessmentTest test = new AssessmentTest();
+                test.setLanguageId(CHHATTISGARH_LANGUAGE_ID);
+                test.setSubjectname(CHHATTISGARH_SUBJECT_NAME);
+                test.setSubjectid(CHHATTISGARH_SUBJECT_ID);
+                test.setExamname(CHHATTISGARH_EXAM_NAME);
+                test.setExamid(CHHATTISGARH_EXAM_ID);
+                assessmentTests.add(test);
+                AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
+                AppDatabase.getDatabaseInstance(getActivity()).getTestDao().insertAllTest(assessmentTests);
+                setTopicsToRecyclerView(assessmentTests);
+            } else*/ if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
                 getNIOSExams();
             else
                 getExamData();

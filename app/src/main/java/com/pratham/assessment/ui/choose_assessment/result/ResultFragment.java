@@ -97,7 +97,7 @@ public class ResultFragment extends Fragment implements ResultListener {
 */
         String studentName = presenter.getStudent(studentId);
         tv_name.setText(studentName);
-        if (resultList.size() > 2)
+        if (resultList.size() > 5)
             btn_done.setVisibility(View.GONE);
         if (!FastSave.getInstance().getBoolean(Assessment_Constants.SUPERVISED, false)) {
             rl_thanks.setVisibility(View.GONE);
@@ -209,16 +209,25 @@ public class ResultFragment extends Fragment implements ResultListener {
 //                if (paperPattern.getNoofcertificateq().equalsIgnoreCase("") || Integer.parseInt(paperPattern.getNoofcertificateq()) == 0) {
 
 
-            List<CertificateTopicList> certificateTopicLists = AppDatabase.getDatabaseInstance(getActivity()).getCertificateTopicListDao().getQuestionsByExamIdSubId(examId, subjectId);
+        List<CertificateTopicList> certificateTopicLists = AppDatabase.getDatabaseInstance(getActivity()).getCertificateTopicListDao().getQuestionsByExamIdSubId(examId, subjectId);
 
-            if (certificateTopicLists == null || certificateTopicLists.size() < 1) {
-                Objects.requireNonNull(getActivity()).finish();
-            } else {
+        if (certificateTopicLists == null || certificateTopicLists.size() < 1) {
+            Objects.requireNonNull(getActivity()).finish();
+        } else {
+            int qCnt = 0;
+            for (int i = 0; i < certificateTopicLists.size(); i++) {
+                if (!certificateTopicLists.get(i).getCertificatequestion().equalsIgnoreCase("")) {
+                    qCnt++;
+                }
+            }
+            if (qCnt > 0) {
                 AssessmentPaperForPush assessmentPaperForPush = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByPaperId(paperId);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("assessmentPaperForPush", assessmentPaperForPush);
                 Assessment_Utility.showFragment(getActivity(), new CertificateFragment_(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
-            }
+            } else Objects.requireNonNull(getActivity()).finish();
+
+        }
 //            } else Objects.requireNonNull(getActivity()).finish();
 //        } else Objects.requireNonNull(getActivity()).finish();
     }

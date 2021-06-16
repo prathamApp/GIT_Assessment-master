@@ -407,6 +407,8 @@
     <string name="no_students_to_pull">પુલ કરવા માટે કોઈ વિદ્યાર્થીઓની માહિતી નથી.</string>
     <string name="loading_certificates">પ્રમાણપત્રો લોડ થઇ રહ્યા છે..</string>
     <string name="loading_exams">પરીક્ષા લોડ થઇ રહી છે.</string>
+    <string name="db_push_failed">Db push failed</string>
+    <string name="db_pushed_successfully">Db pushed successfully</string>
 
 </resources>
 

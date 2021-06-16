@@ -408,5 +408,7 @@
     <string name="no_students_to_pull">స్టూడెంట్స్ ఎవరూ పుల్ అవలేదు </string>
     <string name="loading_certificates">సర్టిఫికెట్స్ లోడ్ అవుతున్నాయి </string>
     <string name="loading_exams">ఎగ్జామ్స్ లోడ్ అవుతున్నాయి </string>
+    <string name="db_push_failed">Db push failed</string>
+    <string name="db_pushed_successfully">Db pushed successfully</string>
 
 </resources>

@@ -45,32 +45,125 @@
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
-    <ImageView
-        android:id="@+id/audio_view"
-        android:layout_width="@dimen/_200sdp"
-        android:layout_height="@dimen/_200sdp"
+    <!--    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:id="@+id/audio_view"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="@dimen/_150sdp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_play_circle"
+                android:visibility="gone" />
+        </RelativeLayout>-->
+    <RelativeLayout
+        android:id="@+id/rl_audio"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btn_ok_img"
         android:layout_centerInParent="true"
-        android:src="@drawable/ic_play"
-        android:visibility="gone" />
+        android:background="@drawable/answer_bg"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/rl_answer_audio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center">
+
+
+            <RelativeLayout
+                android:id="@+id/rl_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:background="@drawable/main_card_bg"
+                android:padding="@dimen/_3sdp">
+
+                <TextView
+                    android:id="@+id/tv_start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginHorizontal="@dimen/_5sdp"
+                    android:fontFamily="@font/quicksand_bold"
+                    android:text="00:00"
+                    android:textSize="@dimen/_12sdp" />
+
+                <TextView
+                    android:id="@+id/tv_duration"
+                    android:layout_width="@dimen/_50sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_your_ans"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginHorizontal="@dimen/_5sdp"
+                    android:fontFamily="@font/quicksand_bold"
+                    android:padding="@dimen/_3sdp"
+                    android:text="00.00"
+                    android:textAlignment="textEnd"
+                    android:textSize="@dimen/_12sdp" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/iv_rewind"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/iv_play_audio"
+                android:layout_marginHorizontal="@dimen/_3sdp"
+                android:src="@drawable/rewind" />
+
+            <ImageView
+                android:id="@+id/iv_play_audio"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_centerInParent="true"
+                android:layout_marginHorizontal="@dimen/_3sdp"
+                android:src="@drawable/ic_play_circle" />
+
+            <ImageView
+                android:id="@+id/iv_fast_forward"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_toRightOf="@+id/iv_play_audio"
+                android:layout_centerVertical="true"
+                android:rotation="180"
+                android:layout_marginHorizontal="@dimen/_3sdp"
+                android:src="@drawable/rewind" />
+        </RelativeLayout>
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:id="@+id/sb_audio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/rl_answer_audio"
+            android:layout_margin="@dimen/_5sdp" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rl_text_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/btn_ok_img"
-        android:background="@drawable/answer_bg">
+        android:background="@drawable/answer_bg"
+        android:visibility="visible">
 
-       <!-- <TextView
-            android:id="@+id/tv_para_label"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_alignParentTop="true"
-            android:layout_margin="@dimen/_5sdp"
-            android:fontFamily="@font/quicksand_bold"
-            android:text=""
-            android:padding="@dimen/_3sdp"
-            android:textAlignment="center"
-            android:textSize="@dimen/_20sdp" />-->
+        <!-- <TextView
+             android:id="@+id/tv_para_label"
+             android:layout_width="match_parent"
+             android:layout_height="@dimen/_40sdp"
+             android:layout_alignParentTop="true"
+             android:layout_margin="@dimen/_5sdp"
+             android:fontFamily="@font/quicksand_bold"
+             android:text=""
+             android:padding="@dimen/_3sdp"
+             android:textAlignment="center"
+             android:textSize="@dimen/_20sdp" />-->
 
         <ScrollView
             android:id="@+id/sv_para"
@@ -80,8 +173,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:gravity="center">
 
                 <TextView
                     android:id="@+id/tv_text_view"
@@ -90,9 +183,9 @@
                     android:layout_centerInParent="true"
                     android:fontFamily="@font/quicksand_light"
                     android:padding="@dimen/_5sdp"
-                    android:textColor="@color/black"
                     android:text="गाँव के एक कोने में रज्जब चाचा का | "
                     android:textAlignment="textStart"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp"
                     android:visibility="visible" />
             </RelativeLayout>

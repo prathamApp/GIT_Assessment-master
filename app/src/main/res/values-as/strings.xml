@@ -404,5 +404,7 @@
     <string name="no_students_to_pull">পুল কৰিবলৈ কোনো ছাত্ৰ নাই …</string>
     <string name="loading_certificates">প্ৰমাণ পত্ৰ (চাৰ্টিফিকেট)  লোড হৈ আছে ..</string>
     <string name="loading_exams">পৰীক্ষা সমূহ লোড হৈ আছে।</string>
+    <string name="db_push_failed">Db push failed</string>
+    <string name="db_pushed_successfully">Db pushed successfully</string>
 
 </resources>

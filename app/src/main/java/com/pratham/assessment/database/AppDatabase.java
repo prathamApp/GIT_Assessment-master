@@ -72,7 +72,7 @@ import com.pratham.assessment.domain.Village;
         AssessmentTest.class, AssessmentPaperForPush.class,
         AssessmentPaperPattern.class, AssessmentPatternDetails.class,
         SupervisorData.class, DownloadMedia.class, TempScienceQuestion.class,
-        NIOSExam.class, NIOSExamTopics.class, CertificateTopicList.class, CertificateKeywordRating.class}, version = 14/*,exportSchema = false*/)
+        NIOSExam.class, NIOSExamTopics.class, CertificateTopicList.class, CertificateKeywordRating.class}, version = 17/*,exportSchema = false*/)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
 
@@ -152,7 +152,8 @@ public abstract class AppDatabase extends RoomDatabase {
                         .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4,
                                 MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8,
                                 MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12,
-                                MIGRATION_12_13,MIGRATION_13_14)
+                                MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15,MIGRATION_15_16,
+                                MIGRATION_14_15,MIGRATION_16_17)
                         .allowMainThreadQueries().build();
 
             }
@@ -478,6 +479,56 @@ public abstract class AppDatabase extends RoomDatabase {
                 database.execSQL("ALTER TABLE Score add COLUMN revisitedEndDateTime TEXT");
 
                 Log.d("$$$", "after MIGRATION_13_14");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    static final Migration MIGRATION_14_15 = new Migration(14, 15) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_14_15");
+            try {
+                database.execSQL("ALTER TABLE Student add programId TEXT");
+                database.execSQL("ALTER TABLE Student add state TEXT");
+                database.execSQL("ALTER TABLE Student add district TEXT");
+                database.execSQL("ALTER TABLE Student add block TEXT");
+                database.execSQL("ALTER TABLE Student add school TEXT");
+                Log.d("$$$", "after MIGRATION_14_15");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    static final Migration MIGRATION_15_16 = new Migration(15, 16) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_15_16");
+            try {
+                database.execSQL("ALTER TABLE Student add villageId TEXT");
+
+                Log.d("$$$", "after MIGRATION_15_16");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    static final Migration MIGRATION_16_17 = new Migration(16, 17) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_16_17");
+            try {
+                database.execSQL("ALTER TABLE Score add redirectedFromApp TEXT");
+                database.execSQL("ALTER TABLE Score add redirectedAppSessionId TEXT");
+                database.execSQL("ALTER TABLE ScienceQuestionChoice add IsQuestionFromSDCard INTEGER not null DEFAULT 0");
+
+                Log.d("$$$", "after MIGRATION_16_17");
             } catch (Exception e) {
                 e.printStackTrace();
             }

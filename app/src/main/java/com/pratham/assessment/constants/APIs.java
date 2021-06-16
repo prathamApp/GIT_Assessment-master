@@ -226,6 +226,7 @@ public class APIs {
 
     public static String pullStudentByEnrollmentNoAPI = "http://www.devtab.openiscool.org/api/StudentEnrollment?enrollmentno=";
     public static String pullStateAPI = "http://swap.prathamcms.org/api/state?progid=";
+    public static String push_db_zip = baseAzureURL + "api/AssessmentDB/pushFiles";
 
 
     //kolibri

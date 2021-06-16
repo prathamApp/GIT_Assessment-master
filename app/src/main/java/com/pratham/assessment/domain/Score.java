@@ -53,6 +53,8 @@ public class Score implements Serializable {
     private String examId;
     @ColumnInfo(name = "paperId")
     private String paperId;
+    private String redirectedFromApp;
+    private String redirectedAppSessionId;
 
 
     @Override
@@ -70,6 +72,22 @@ public class Score implements Serializable {
                 ", EndDateTime='" + EndDateTime + '\'' +
                 ", Level=" + Level +
                 '}';
+    }
+
+    public String getRedirectedFromApp() {
+        return redirectedFromApp;
+    }
+
+    public void setRedirectedFromApp(String redirectedFromApp) {
+        this.redirectedFromApp = redirectedFromApp;
+    }
+
+    public String getRedirectedAppSessionId() {
+        return redirectedAppSessionId;
+    }
+
+    public void setRedirectedAppSessionId(String redirectedAppSessionId) {
+        this.redirectedAppSessionId = redirectedAppSessionId;
     }
 
     public String getExamId() {

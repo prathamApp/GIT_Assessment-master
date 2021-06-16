@@ -69,27 +69,23 @@ import static com.pratham.assessment.constants.Assessment_Constants.TransferredI
 
 public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener/*, PermissionResult*/ {
 
-    public static TTSService ttsService;
-    public static STTService sttService;
-
-    static CountDownTimer cd;
-    static Long timeout = (long) 20000 * 60;
-    static Long duration = timeout;
-    static Boolean setTimer = false;
-    static String pauseTime;
-
-    private final int KEY_PERMISSION = 200;
-    private PermissionResult permissionResult;
-    private String permissionsAsk[];
-    public static AppDatabase appDatabase;
-    private static AudioManager audioManager;
-    public static MediaPlayer ButtonClickSound;
-    public static boolean muteFlg = false;
     private static final int SHOW_OTG_TRANSFER_DIALOG = 9;
     private static final int SDCARD_LOCATION_CHOOSER = 10;
     private static final int SHOW_OTG_SELECT_DIALOG = 11;
     private static final int HIDE_OTG_TRANSFER_DIALOG_SUCCESS = 12;
     private static final int HIDE_OTG_TRANSFER_DIALOG_FAILED = 13;
+    public static TTSService ttsService;
+    public static STTService sttService;
+    public static AppDatabase appDatabase;
+    public static MediaPlayer ButtonClickSound;
+    public static boolean muteFlg = false;
+    static CountDownTimer cd;
+    static Long timeout = (long) 20000 * 60;
+    static Long duration = timeout;
+    static Boolean setTimer = false;
+    static String pauseTime;
+    private static AudioManager audioManager;
+    private final int KEY_PERMISSION = 200;
     CustomLodingDialog pushDialog;
     CustomLodingDialog sd_builder;
     LottieAnimationView push_lottie;
@@ -97,51 +93,44 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
     TextView txt_push_error;
     RelativeLayout rl_btn;
     Button ok_btn, eject_btn;
-
+    @SuppressLint("HandlerLeak")
+    private final Handler mHandler = new Handler() {
+        @SuppressLint({"MissingPermission", "SetTextI18n"})
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case SHOW_OTG_TRANSFER_DIALOG:
+                    showSDBuilderDialog();
+                    break;
+                case SHOW_OTG_SELECT_DIALOG:
+                    ShowOTGPushDialog();
+                    rl_btn.setVisibility(View.GONE);
+                    break;
+                case HIDE_OTG_TRANSFER_DIALOG_SUCCESS:
+                    push_lottie.setAnimation("success.json");
+                    push_lottie.playAnimation();
+                    int days = appDatabase.getScoreDao().getTotalActiveDeviceDays();
+                    txt_push_dialog_msg.setText("Data of " + days + " days and\n" + TransferredImages + " Images\nCopied Successfully!!");
+                    rl_btn.setVisibility(View.VISIBLE);
+                    break;
+                case HIDE_OTG_TRANSFER_DIALOG_FAILED:
+                    push_lottie.setAnimation("error_cross.json");
+                    push_lottie.playAnimation();
+                    txt_push_dialog_msg.setText(R.string.data_copying_failed);
+                    txt_push_dialog_msg.setTextColor(getResources().getColor(R.color.colorRed));
+                    txt_push_error.setVisibility(View.GONE);
+                    rl_btn.setVisibility(View.VISIBLE);
+                    break;
+            }
+        }
+    };
+    private PermissionResult permissionResult;
+    private String[] permissionsAsk;
     private AppUpdateManager appUpdateManager;
     private Task<AppUpdateInfo> appUpdateInfoTask;
-    private int APP_UPDATE_TYPE_SUPPORTED = AppUpdateType.FLEXIBLE;
-    private int REQUEST_UPDATE = 100;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Assessment_Utility utility = new Assessment_Utility();
-        audioManager = (AudioManager) getSystemService(this.AUDIO_SERVICE);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        ButtonClickSound = MediaPlayer.create(this, R.raw.click);//new MediaPlayer instance
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        ttsService = new TTSService(getApplication());
-        ttsService.setActivity(this);
-        ttsService.setSpeechRate(0.7f);
-        ttsService.setLanguage(new Locale("en", "IN"));
-
-        String langId = FastSave.getInstance().getString(LANGUAGE, "1");
-        Assessment_Utility.setLocaleByLanguageId(this, langId);
-
-//        checkForUpdate();
-        muteFlg = false;
-        Catcho.Builder(this)
-                .activity(CatchoActivity_.class)
-                .recipients("ankita.lakhamade27@gmail.com")
-                .build();
-        Log.d("@path@@", AssessmentApplication.assessPath);
-
-        String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA,
-                PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
-                PermissionUtils.Manifest_RECORD_AUDIO,
-                PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
-                PermissionUtils.Manifest_ACCESS_FINE_LOCATION
-        };
-
-        /*if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-            if (!isPermissionsGranted(this, permissionArray)) {
-                askCompactPermissionsInSplash(permissionArray, this);
-            }
-        }*/
-    }
+    private final int APP_UPDATE_TYPE_SUPPORTED = AppUpdateType.FLEXIBLE;
+    private final int REQUEST_UPDATE = 100;
 
     /*    private void overrideDefaultTypefaces() {
             FontChanger.overrideDefaultFont(this, "DEFAULT", "fonts/lohit_oriya.ttf");
@@ -280,10 +269,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
     }
 
-    *//**
-     * @param permission       String permission ask
-     * @param permissionResult callback PermissionResult
-     *//*
+    *//*
     public void askCompactPermission(String permission, PermissionResult permissionResult) {
         permissionsAsk = new String[]{permission};
         this.permissionResult = permissionResult;
@@ -291,15 +277,44 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
     }*/
 
-    /**
-     * @param permissions      String[] permissions ask
-     * @param permissionResult callback PermissionResult
-     */
-    public void askCompactPermissions(String permissions[], PermissionResult permissionResult) {
-        permissionsAsk = permissions;
-        this.permissionResult = permissionResult;
-        internalRequestPermission(permissionsAsk, this);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Assessment_Utility utility = new Assessment_Utility();
+        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        ButtonClickSound = MediaPlayer.create(this, R.raw.click);//new MediaPlayer instance
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        ttsService = new TTSService(getApplication());
+        ttsService.setActivity(this);
+        ttsService.setSpeechRate(0.7f);
+        ttsService.setLanguage(new Locale("en", "IN"));
+
+        String langId = FastSave.getInstance().getString(LANGUAGE, "1");
+        Assessment_Utility.setLocaleByLanguageId(this, langId);
+
+//        checkForUpdate();
+        muteFlg = false;
+        Catcho.Builder(this)
+                .activity(CatchoActivity_.class)
+                .recipients("ankita.lakhamade27@gmail.com")
+                .build();
+        Log.d("@path@@", AssessmentApplication.assessPath);
+
+        String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA,
+                PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
+                PermissionUtils.Manifest_RECORD_AUDIO,
+                PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
+                PermissionUtils.Manifest_ACCESS_FINE_LOCATION
+        };
+
+        /*if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+            if (!isPermissionsGranted(this, permissionArray)) {
+                askCompactPermissionsInSplash(permissionArray, this);
+            }
+        }*/
     }
 
 /*    public void openSettingsApp(Context context) {
@@ -313,6 +328,16 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
     }*/
 
+    /**
+     * @param permissions      String[] permissions ask
+     * @param permissionResult callback PermissionResult
+     */
+    public void askCompactPermissions(String[] permissions, PermissionResult permissionResult) {
+        permissionsAsk = permissions;
+        this.permissionResult = permissionResult;
+        internalRequestPermission(permissionsAsk, this);
+
+    }
 
     public void ActivityOnPause() {
 
@@ -325,10 +350,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
                 appDatabase = AppDatabase.getDatabaseInstance(BaseActivity.this);
                 Log.d("$$$", "BaseActivity2-ActivityOnPause");
 
-                /*appDatabase = Room.databaseBuilder(BaseActivity.this,
-                        AppDatabase.class, AppDatabase.DB_NAME)
-                        .build();*/
-                String AppStartDateTime = appDatabase.getStatusDao().getValue("AppStartDateTime");
+                String AppStartDateTime = AppDatabase.getDatabaseInstance(BaseActivity.this).getStatusDao().getValue("AppStartDateTime");
                 if (AppStartDateTime == null)
                     pauseTime = AssessmentApplication.getCurrentDateTime(false, "");
                 else
@@ -336,10 +358,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
                 return null;
             }
         }.execute();
-        Log.d("APP_END", "onFinish: Startd the App: " + duration);
-        Log.d("APP_END", "onFinish: Startd the App: " + pauseTime);
-
-        cd = new CountDownTimer(duration, 1000) {
+         cd = new CountDownTimer(duration, 1000) {
             //cd = new CountDownTimer(duration, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -353,16 +372,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
                     @Override
                     protected Object doInBackground(Object[] objects) {
                         try {
-
-                            String curSession = appDatabase.getStatusDao().getValue("CurrentSession");
-                            String toDateTemp = appDatabase.getSessionDao().getToDate(curSession);
-
-                            Log.d("AppExitService:", "curSession : " + curSession + "      toDateTemp : " + toDateTemp);
-
-                            if (toDateTemp.equalsIgnoreCase("na")) {
-                                appDatabase.getSessionDao().UpdateToDate(curSession, pauseTime);
-                            }
-                            BackupDatabase.backup(BaseActivity.this);
+                            AssessmentApplication.endTestSession(BaseActivity.this);
                             finishAffinity();
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -375,40 +385,6 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
             }
         }.start();
     }
-
-
-    @SuppressLint("HandlerLeak")
-    private final Handler mHandler = new Handler() {
-        @SuppressLint({"MissingPermission", "SetTextI18n"})
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case SHOW_OTG_TRANSFER_DIALOG:
-                    showSDBuilderDialog();
-                    break;
-                case SHOW_OTG_SELECT_DIALOG:
-                    ShowOTGPushDialog();
-                    rl_btn.setVisibility(View.GONE);
-                    break;
-                case HIDE_OTG_TRANSFER_DIALOG_SUCCESS:
-                    push_lottie.setAnimation("success.json");
-                    push_lottie.playAnimation();
-                    int days = appDatabase.getScoreDao().getTotalActiveDeviceDays();
-                    txt_push_dialog_msg.setText("Data of " + days + " days and\n" + TransferredImages + " Images\nCopied Successfully!!");
-                    rl_btn.setVisibility(View.VISIBLE);
-                    break;
-                case HIDE_OTG_TRANSFER_DIALOG_FAILED:
-                    push_lottie.setAnimation("error_cross.json");
-                    push_lottie.playAnimation();
-                    txt_push_dialog_msg.setText(R.string.data_copying_failed);
-                    txt_push_dialog_msg.setTextColor(getResources().getColor(R.color.colorRed));
-                    txt_push_error.setVisibility(View.GONE);
-                    rl_btn.setVisibility(View.VISIBLE);
-                    break;
-            }
-        }
-    };
 
     private void ShowOTGPushDialog() {
         pushDialog = new CustomLodingDialog(this);
@@ -717,7 +693,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
      * @param permissions String[] permission to ask
      * @return boolean true/false
      */
-    public boolean isPermissionsGranted(Context context, String permissions[]) {
+    public boolean isPermissionsGranted(Context context, String[] permissions) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return true;
 
@@ -733,7 +709,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
 
 
     private void internalRequestPermission(String[] permissionAsk, Context context) {
-        String arrayPermissionNotGranted[];
+        String[] arrayPermissionNotGranted;
         ArrayList<String> permissionsNotGranted = new ArrayList<>();
 
         for (int i = 0; i < permissionAsk.length; i++) {
@@ -812,7 +788,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
      * @param permissions      String[] permissions ask
      * @param permissionResult callback PermissionResult
      */
-    public void askCompactPermissionsInSplash(String permissions[], PermissionResult permissionResult, Context context) {
+    public void askCompactPermissionsInSplash(String[] permissions, PermissionResult permissionResult, Context context) {
         permissionsAsk = permissions;
         this.permissionResult = permissionResult;
         internalRequestPermission(permissionsAsk, context);
