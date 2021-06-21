@@ -158,8 +158,6 @@ import butterknife.OnClick;*/
 //@Fullscreen
 @EActivity(R.layout.activity_science_assessment)
 public class ScienceAssessmentActivity extends BaseActivity implements PictureCapturingListener,/* DiscreteScrollView.OnItemChangedListener,*/ AssessmentAnswerListener, QuestionTrackerListener, DataPushListener, PermissionResult {
-
-
     public static ViewpagerAdapter viewpagerAdapter;
     public static int ExamTime = 0;
     static boolean isActivityRunning = false;
@@ -3413,7 +3411,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         return rating;
     }
 
-    private boolean  matchKeywords(List<String> splittedPatternKeywords, List<String> splittedCertificateKeywords) {
+    private boolean matchKeywords(List<String> splittedPatternKeywords, List<String> splittedCertificateKeywords) {
         for (int i = 0; i < splittedCertificateKeywords.size(); i++) {
             for (int j = 0; j < splittedPatternKeywords.size(); j++) {
                 String ck = splittedCertificateKeywords.get(i).trim().toLowerCase();
