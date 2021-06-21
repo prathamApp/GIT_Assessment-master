@@ -24,6 +24,9 @@ public interface CertificateKeywordRatingDao {
     @Query("DELETE FROM CertificateKeywordRating where subjectid=:subjectId and examid=:examId")
     public void deleteQuestionByExamIdSubId(String subjectId, String examId);
 
+ @Query("DELETE FROM CertificateKeywordRating where subjectid=:subjectId and examid=:examId and paperId=:paperId")
+    public void deleteQuestionByExamIdSubIdPaperId(String subjectId, String examId,String paperId);
+
     @Query("select * from CertificateKeywordRating")
     public List<CertificateKeywordRating> getAllCertificateQuestions();
 

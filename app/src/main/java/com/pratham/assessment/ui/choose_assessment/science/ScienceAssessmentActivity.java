@@ -3322,7 +3322,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             paper.setStudentId("" + currentStudentID);
 //        calculateRatingTopicWise();
 //        paper.setCertificateQuestionRatings(calculateRatingTopicWise());
-            calculateKeywordWiseRating();
+//            calculateKeywordWiseRating();
+            calculateNewKeywordsRating();
       /*  paper.setQuestion1Rating(calculateTotalLevelQuestions("1") + "");
         paper.setQuestion2Rating(calculateTotalLevelQuestions("2") + "");
         paper.setQuestion3Rating(calculateTotalLevelQuestions("3") + "");
@@ -3346,6 +3347,82 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             e.printStackTrace();
         }
         return paper;
+    }
+
+    private void calculateNewKeywordsRating() {
+        float rating = 0;
+        List<CertificateKeywordRating> keywordRatingList = new ArrayList<>();
+        List<AssessmentPatternDetails> patternForRating = new ArrayList<>();
+        for (int i = 0; i < certificateTopicLists.size(); i++) {
+            List<String> splittedCertificateKeywords = Arrays.asList(certificateTopicLists.get(i).getCertificatekeyword().split("\\|"));
+            for (int j = 0; j < assessmentPatternDetails.size(); j++) {
+                List<String> splittedPatternKeywords = Arrays.asList(assessmentPatternDetails.get(j).getKeyworddetail().split("\\|"));
+                if (matchKeywords(splittedPatternKeywords, splittedCertificateKeywords)) {
+                    patternForRating.add(assessmentPatternDetails.get(j));
+                }
+            }
+            rating = getPatternQuestions(patternForRating, splittedCertificateKeywords);
+            patternForRating.clear();
+            CertificateKeywordRating keywordRating = new CertificateKeywordRating();
+            keywordRating.setCertificatekeyword(certificateTopicLists.get(i).getCertificatekeyword());
+            keywordRating.setCertificatequestion(certificateTopicLists.get(i).getCertificatequestion());
+            keywordRating.setExamId(selectedExamId);
+            keywordRating.setPaperId(assessmentSession);
+            keywordRating.setSubjectId(subjectId);
+            keywordRating.setLanguageId(selectedLang);
+            keywordRating.setStudentId(FastSave.getInstance()
+                    .getString("currentStudentID", ""));
+            keywordRating.setRating(String.valueOf(rating));
+            keywordRatingList.add(keywordRating);
+        }
+        AppDatabase.getDatabaseInstance(this).getCertificateKeywordRatingDao().deleteQuestionByExamIdSubIdPaperId(subjectId, selectedExamId, assessmentSession);
+        AppDatabase.getDatabaseInstance(this).getCertificateKeywordRatingDao().insertAllKeywordRating(keywordRatingList);
+        Log.d("KeywordWiseRating", "calculateKeywordWiseRating: " + keywordRatingList.size());
+
+    }
+
+    private float getPatternQuestions(List<AssessmentPatternDetails> assessmentPatternDetails, List<String> splittedCertificateKeywords) {
+        int totalCnt = 0, correctCnt = 0;
+        float rating;
+
+        boolean containsKeyword = false;
+        for (int i = 0; i < scienceQuestionList.size(); i++) {
+            for (int l = 0; l < assessmentPatternDetails.size(); l++) {
+                if (scienceQuestionList.get(i).getTopicid().
+                        equalsIgnoreCase(assessmentPatternDetails.get(l).getTopicid()) &&
+                        scienceQuestionList.get(i).getQtid().
+                                equalsIgnoreCase(assessmentPatternDetails.get(l).getQtid()) &&
+                        scienceQuestionList.get(i).getQlevel().
+                                equalsIgnoreCase(assessmentPatternDetails.get(l).getQlevel())) {
+                    List<String> splittedQuestionKeywords = Arrays.asList(scienceQuestionList.get(i).getAnsdesc().split(","));
+                    for (int j = 0; j < splittedCertificateKeywords.size(); j++) {
+                        for (int k = 0; k < splittedQuestionKeywords.size(); k++) {
+                            if (splittedQuestionKeywords.get(k).trim().equalsIgnoreCase(splittedCertificateKeywords.get(j).trim())) {
+                                containsKeyword = true;
+                            }
+                        }
+                    }
+                    if (containsKeyword) totalCnt++;
+                    if (scienceQuestionList.get(i).getIsCorrect() && totalCnt > 0 && containsKeyword)
+                        correctCnt++;
+                }
+            }
+        }
+        rating = calculateRating(totalCnt, correctCnt);
+        Log.d("rating", rating + "");
+        return rating;
+    }
+
+    private boolean  matchKeywords(List<String> splittedPatternKeywords, List<String> splittedCertificateKeywords) {
+        for (int i = 0; i < splittedCertificateKeywords.size(); i++) {
+            for (int j = 0; j < splittedPatternKeywords.size(); j++) {
+                String ck = splittedCertificateKeywords.get(i).trim().toLowerCase();
+                String pk = splittedPatternKeywords.get(j).trim().toLowerCase();
+                if (ck.equalsIgnoreCase(pk))
+                    return true;
+            }
+        }
+        return false;
     }
 
     private float calculateTotalLevelQuestions(String level) {
@@ -3388,39 +3465,40 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
     }
 
-    private float calculateKeywordTotalAndCorrectQuestions(CertificateTopicList certificateTopicList) {
+    private float calculateKeywordTotalAndCorrectQuestions(CertificateTopicList
+                                                                   certificateTopicList) {
         int totalLevelQuestions = 0, correctQuestions = 0;
 
         float rating = 0;
         try {
 //            for (int i = 0; i < assessmentPatternDetails.size(); i++) {
 //                List<ScienceQuestion> scienceQuestionList = getPatternWiseKeywords(assessmentPatternDetails.get(i));
-                for (int j = 0; j < scienceQuestionList.size(); j++) {
-                    if (scienceQuestionList.get(j).getExamid().equalsIgnoreCase(certificateTopicList.getExamid()) &&
-                            scienceQuestionList.get(j).getSubjectid().equalsIgnoreCase(certificateTopicList.getSubjectid())) {
+            for (int j = 0; j < scienceQuestionList.size(); j++) {
+                if (scienceQuestionList.get(j).getExamid().equalsIgnoreCase(certificateTopicList.getExamid()) &&
+                        scienceQuestionList.get(j).getSubjectid().equalsIgnoreCase(certificateTopicList.getSubjectid())) {
 
-                        //                String question = "लग|वृक्ष|escorting the guest|";
+                    //                String question = "लग|वृक्ष|escorting the guest|";
 
-                        List<String> splittedQuestionKeywords = Arrays.asList(scienceQuestionList.get(j).getAnsdesc().split(","));
-                        List<String> splittedCertificateKeywords = Arrays.asList(certificateTopicList.getCertificatekeyword().split("\\|"));
-                        boolean containsKeyword = false;
-                        if (splittedCertificateKeywords.size() > 0 && splittedQuestionKeywords.size() > 0) {
-                            for (int c = 0; c < splittedCertificateKeywords.size(); c++) {
-                                for (int k = 0; k < splittedQuestionKeywords.size(); k++) {
-                                    String cw = splittedCertificateKeywords.get(c);
-                                    String s = splittedQuestionKeywords.get(k);
-                                    Log.d("calculate", "calculateKeywordTotalAndCorrectQuestions: " + cw + " " + s);
-                                    if (splittedCertificateKeywords.get(c).trim().equalsIgnoreCase(splittedQuestionKeywords.get(k).trim())) {
-                                        containsKeyword = true;
-                                    }
+                    List<String> splittedQuestionKeywords = Arrays.asList(scienceQuestionList.get(j).getAnsdesc().split(","));
+                    List<String> splittedCertificateKeywords = Arrays.asList(certificateTopicList.getCertificatekeyword().split("\\|"));
+                    boolean containsKeyword = false;
+                    if (splittedCertificateKeywords.size() > 0 && splittedQuestionKeywords.size() > 0) {
+                        for (int c = 0; c < splittedCertificateKeywords.size(); c++) {
+                            for (int k = 0; k < splittedQuestionKeywords.size(); k++) {
+                                String cw = splittedCertificateKeywords.get(c);
+                                String s = splittedQuestionKeywords.get(k);
+                                Log.d("calculate", "calculateKeywordTotalAndCorrectQuestions: " + cw + " " + s);
+                                if (splittedCertificateKeywords.get(c).trim().equalsIgnoreCase(splittedQuestionKeywords.get(k).trim())) {
+                                    containsKeyword = true;
                                 }
                             }
-                            if (containsKeyword) totalLevelQuestions++;
-
-                            if (scienceQuestionList.get(j).getIsCorrect() && totalLevelQuestions > 0 && containsKeyword)
-                                correctQuestions++;
                         }
+                        if (containsKeyword) totalLevelQuestions++;
+
+                        if (scienceQuestionList.get(j).getIsCorrect() && totalLevelQuestions > 0 && containsKeyword)
+                            correctQuestions++;
                     }
+                }
 //                }
             }
             rating = calculateRating(totalLevelQuestions, correctQuestions);
@@ -3432,7 +3510,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         return rating;
     }
 
-    private List<ScienceQuestion> getPatternWiseKeywords(AssessmentPatternDetails assessmentPatternDetails) {
+    private List<ScienceQuestion> getPatternWiseKeywords(AssessmentPatternDetails
+                                                                 assessmentPatternDetails) {
         List<ScienceQuestion> kList = new ArrayList<>();
         for (int i = 0; i < scienceQuestionList.size(); i++) {
             if (assessmentPatternDetails.getTopicid()
