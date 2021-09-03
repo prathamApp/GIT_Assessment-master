@@ -24,11 +24,11 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.APIs;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.interfaces.SplashInterface;
-import com.pratham.assessment.constants.APIs;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.json.JSONArray;
@@ -141,7 +141,8 @@ public class EnrollmentNoFragment extends DialogFragment {
         btn_add_new_student_enroll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onAddNewClick();            }
+                onAddNewClick();
+            }
         });
 
     }
@@ -184,18 +185,18 @@ public class EnrollmentNoFragment extends DialogFragment {
         newEnrolledStudent.setDeviceId(Assessment_Utility.getDeviceId(getActivity()));
         newEnrolledStudent.setStudentUID("NIOS");
         newEnrolledStudent.setIsniosstudent("1");
-        Student student = AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().getStudent(newEnrolledStudent.getStudentID());
+        /*AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().insert(newEnrolledStudent);
         if (student != null) {
 //            Toast.makeText(getActivity(), R.string.profile_is_already_saved, Toast.LENGTH_SHORT).show();
             Toast.makeText(getActivity(), "Profile is already saved..", Toast.LENGTH_SHORT).show();
-        } else {
+        } else {*/
             AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().insert(newEnrolledStudent);
             BackupDatabase.backup(getActivity());
 //            Toast.makeText(getActivity(), R.string.profile_created_successfully, Toast.LENGTH_SHORT).show();
             Toast.makeText(getActivity(), "Profile created Successfully..", Toast.LENGTH_SHORT).show();
             splashInterface.onChildAdded();
             dismiss();
-        }
+//        }
     }
 
 

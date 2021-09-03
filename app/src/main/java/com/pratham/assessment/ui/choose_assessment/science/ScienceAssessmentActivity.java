@@ -341,7 +341,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             String key = "CurrentSession";
             Status status = new Status();
             SplashPresenter.setStatusTableEntries(status, key, currentSession, context);
-
+            key = "AppBuildDate";
+            String value = "27-07-2021";
+            SplashPresenter.setStatusTableEntries(status, key, value, context);
 
             Attendance attendance = new Attendance();
             attendance.setStudentID(studId);
@@ -2757,7 +2759,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     int matchPairCnt = 0;
                     List<ScienceQuestionChoice> queOptions = AppDatabase.getDatabaseInstance(this).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
                     for (int i = 0; i < queOptions.size(); i++) {
-                        if (queOptions.get(i).getQcid().equalsIgnoreCase(scienceQuestion.getMatchingNameList().get(i).getQcid())) {
+                        if (queOptions.get(i).getQcid().equalsIgnoreCase(scienceQuestion.getMatchingNameList().get(i).getQcid()) ||
+                                queOptions.get(i).getChoicename().trim().equalsIgnoreCase(scienceQuestion.getMatchingNameList().get(i).getChoicename().trim())) {
                             scienceQuestion.getMatchingNameList().get(i).setMyIscorrect("true");
                             matchPairCnt++;
                         } else scienceQuestion.getMatchingNameList().get(i).setMyIscorrect("false");
@@ -3187,7 +3190,15 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     int count1 = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
                             getTempScienceQuestionDao().deleteByLangIdSubIdTopicIdStudId(selectedExamId, selectedLang, subjectId, currentStudentID);
                     Log.d("delete count", "doInBackground: " + count + count1);
-                    insertInDB(scienceQuestionList, " Exam completed");
+                    List<ScienceQuestion> attemptedQuestion = new ArrayList<>();
+                    for (int i = 0; i < scienceQuestionList.size(); i++) {
+                        if (scienceQuestionList.get(i).getIsAttempted())
+                            attemptedQuestion.add(scienceQuestionList.get(i));
+                    }
+                    if (attemptedQuestion.size() == scienceQuestionList.size())
+                        insertInDB(scienceQuestionList, " Exam completed");
+                    else insertInDB(scienceQuestionList, " Exam incomplete");
+
 
                     Intent intent = new Intent();
                     intent.putExtra(EXAM_STATUS, "Exam completed");
@@ -3385,8 +3396,34 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
         boolean containsKeyword = false;
         for (int i = 0; i < scienceQuestionList.size(); i++) {
+            String qlevel;
+            if (scienceQuestionList.get(i).IsParaQuestion) {
+                ScienceQuestion para = AppDatabase.getDatabaseInstance(context)
+                        .getScienceQuestionDao().getQuestionByRefId(scienceQuestionList.get(i).getRefParaID());
+
+
+            }
             for (int l = 0; l < assessmentPatternDetails.size(); l++) {
-                if (scienceQuestionList.get(i).getTopicid().
+                if (!assessmentPatternDetails.get(l).getParalevel().equalsIgnoreCase("0")) {
+                    if (scienceQuestionList.get(i).getTopicid().
+                            equalsIgnoreCase(assessmentPatternDetails.get(l).getTopicid()) &&
+                            scienceQuestionList.get(i).getQlevel().
+                                    equalsIgnoreCase(assessmentPatternDetails.get(l).getParalevel())
+                            && !scienceQuestionList.get(i).getRefParaID().equalsIgnoreCase("0")) {
+                        List<String> splittedQuestionKeywords = Arrays.asList(scienceQuestionList.get(i).getAnsdesc().split(","));
+                        for (int j = 0; j < splittedCertificateKeywords.size(); j++) {
+                            for (int k = 0; k < splittedQuestionKeywords.size(); k++) {
+                                if (splittedQuestionKeywords.get(k).trim().equalsIgnoreCase(splittedCertificateKeywords.get(j).trim())) {
+                                    containsKeyword = true;
+                                }
+                            }
+                        }
+                        if (containsKeyword) totalCnt++;
+                        if (scienceQuestionList.get(i).getIsCorrect() && totalCnt > 0 && containsKeyword)
+                            correctCnt++;
+                    }
+
+                } else if (scienceQuestionList.get(i).getTopicid().
                         equalsIgnoreCase(assessmentPatternDetails.get(l).getTopicid()) &&
                         scienceQuestionList.get(i).getQtid().
                                 equalsIgnoreCase(assessmentPatternDetails.get(l).getQtid()) &&
@@ -3613,7 +3650,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             intent.putExtra(EXAM_STATUS, "Exam incomplete");
             setResult(5252, intent);
             if (attemptedQuestion.size() > 0) {
-                insertInDB(scienceQuestionList, " Exam incomplete");
+                if (attemptedQuestion.size() == scienceQuestionList.size())
+                    insertInDB(scienceQuestionList, " Exam completed");
+                else insertInDB(scienceQuestionList, " Exam incomplete");
+
                 if (!AssessmentApplication.isTablet) {
                     pushDataOnSubmit();
                 } else finish();
@@ -3682,6 +3722,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             AppDatabase.getDatabaseInstance(this).getAssessmentPaperForPushDao().insertPaperForPush(paper);
 
             BackupDatabase.backup(this);
+            DeleteSensitiveTablesFromBackupDB.deleteTables();
 
 
         } catch (NumberFormatException e) {
@@ -3792,8 +3833,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         super.onPause();
         AssessmentApplication.endTestSession(context);
         if (scienceQuestionList != null && scienceQuestionList.size() > 0) {
-            scienceQuestionList.get(queCnt).setEndTime(Assessment_Utility.getCurrentDateTime());
-            List<ScienceQuestion> attemptedQuestion = new ArrayList<>();
+            if (scienceQuestionList.get(queCnt).getEndTime() == null || scienceQuestionList.get(queCnt).getEndTime().equalsIgnoreCase(""))
+                scienceQuestionList.get(queCnt).setEndTime(Assessment_Utility.getCurrentDateTime());
+
+          /*  List<ScienceQuestion> attemptedQuestion = new ArrayList<>();
             for (int i = 0; i < scienceQuestionList.size(); i++) {
                 if (scienceQuestionList.get(i).getIsAttempted()) {
                     attemptedQuestion.add(scienceQuestionList.get(i));
@@ -3809,13 +3852,16 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             intent.putExtra(EXAM_STATUS, "Exam incomplete");
             setResult(5252, intent);
             if (attemptedQuestion.size() > 0) {
-                insertInDB(scienceQuestionList, " Exam incomplete");
+                if (attemptedQuestion.size() == scienceQuestionList.size())
+                    insertInDB(scienceQuestionList, " Exam completed");
+                else insertInDB(scienceQuestionList, " Exam incomplete");
+*/
                /* if (!AssessmentApplication.isTablet) {
                     pushDataToServer.setValue(this, true);
                     pushDataToServer.doInBackground();
                 }*/
-            }       /* if (speech != null)
-            speech.stopListening();*/
+            //}       /* if (speech != null)
+//            speech.stopListening();
         }
     }
 
@@ -3958,7 +4004,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         + "/PrathamBackups/offline_assessment_database.db");
                 if (!FastSave.getInstance().getBoolean(SDCARD_OFFLINE_PATH_SAVED, false))
                     copySDCardDB(f, offlineDB);
-                else startFetchingData();
+//                else startFetchingData();
             } else {
                 startFetchingData();
 //                    checkPermissions();
@@ -4046,6 +4092,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         if (!FastSave.getInstance().getBoolean(Assessment_Constants.INITIAL_ENTRIES, false))
 //                            updateNewEntriesInStatusTable();
                             SplashPresenter.doInitialEntries(context);
+                        com.pratham.assessment.domain.Status status = new com.pratham.assessment.domain.Status();
+                        String key = "AppBuildDate";
+                        String value = "27-07-2021";
+                        SplashPresenter.setStatusTableEntries(status, key, value, context);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -4684,7 +4734,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     super.onPostExecute(aVoid);
                     if (tableCopyCount > 7)
                         FastSave.getInstance().saveBoolean(SDCARD_OFFLINE_PATH_SAVED, true);
-                    progressDialog.dismiss();
+                    if (isActivityRunning && progressDialog != null)
+                        progressDialog.dismiss();
                     BackupDatabase.backup(context);
 //                    checkPermissions();
                     startFetchingData();
@@ -4733,8 +4784,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     protected void onDestroy() {
         AssessmentApplication.endTestSession(context);
         if (scienceQuestionList != null && scienceQuestionList.size() > 0) {
-            scienceQuestionList.get(queCnt).setEndTime(Assessment_Utility.getCurrentDateTime());
-            List<ScienceQuestion> attemptedQuestion = new ArrayList<>();
+            if (scienceQuestionList.get(queCnt).getEndTime() == null || scienceQuestionList.get(queCnt).getEndTime().equalsIgnoreCase(""))
+                scienceQuestionList.get(queCnt).setEndTime(Assessment_Utility.getCurrentDateTime());
+          /*  List<ScienceQuestion> attemptedQuestion = new ArrayList<>();
             for (int i = 0; i < scienceQuestionList.size(); i++) {
                 if (scienceQuestionList.get(i).getIsAttempted())
                     attemptedQuestion.add(scienceQuestionList.get(i));
@@ -4748,13 +4800,16 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             Intent intent = new Intent();
             intent.putExtra(EXAM_STATUS, "Exam incomplete");
             setResult(5252, intent);
-            if (attemptedQuestion.size() > 0) {
-                insertInDB(scienceQuestionList, " Exam incomplete");
-                /*if (!AssessmentApplication.isTablet) {
-                    pushDataToServer.setValue(this, true);
+        */   /* if (attemptedQuestion.size() > 0) {
+                if (attemptedQuestion.size() == scienceQuestionList.size())
+                    insertInDB(scienceQuestionList, " Exam completed");
+                else
+                    insertInDB(scienceQuestionList, " Exam incomplete");
+                *//*if (!AssessmentApplication.isTablet) {
+                    pushDataToServer.setValue(thi s, true);
                     pushDataToServer.doInBackground();
-                } else finish();*/
-            } else finish();
+                } else finish();*//*
+            } else finish();*/
         }
         super.onDestroy();
 

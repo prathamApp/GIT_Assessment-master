@@ -29,7 +29,6 @@ import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlayerInterface;
-import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.Mcq.McqFillInTheBlanksFragment_;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.AudioUtil;
 
@@ -238,30 +237,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
             radioGroupMcq.removeAllViews();
             gridMcq.removeAllViews();
 
-          /*  for (int r = 0; r < options.size(); r++) {
-                if (options.get(r).getChoiceurl() != null && !options.get(r).getChoiceurl().equalsIgnoreCase("")) {
-                    String ansExtension = getFileExtension(options.get(r).getChoiceurl());
-                    if (ansExtension.equalsIgnoreCase("gif") ||
-                            ansExtension.equalsIgnoreCase("png") ||
-                            ansExtension.equalsIgnoreCase("jpg") ||
-                            ansExtension.equalsIgnoreCase("jpeg")) {
-                        imgCnt++;
-                    } else {
-                    }
-                }
-                if (!options.get(r).getChoicename().equalsIgnoreCase("")) {
-                    textCnt++;
-                }
-
-            }*/
             for (int r = 0; r < options.size(); r++) {
-
-                String ans = "$";
-                if (!scienceQuestion.getUserAnswer().equalsIgnoreCase(""))
-                    ans = scienceQuestion.getUserAnswer();
-                String ansId = scienceQuestion.getUserAnswerId();
-
-                //                if (textCnt == options.size() && imgCnt == 0) {
                 if ((options.get(r).getChoiceurl() == null ||
                         options.get(r).getChoiceurl().trim().equalsIgnoreCase(""))
                         && !options.get(r).getChoicename().trim().equalsIgnoreCase("")) {
@@ -294,53 +270,6 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                         textView.setTextColor(Assessment_Utility.selectedColor);
                     });
 
-//                    }
-/*                        radioGroupMcq.setVisibility(View.GONE);
-                        gridMcq.setVisibility(View.VISIBLE);
-                        gridMcq.setColumnCount(2);
-                        final View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_single_text_item, radioGroupMcq, false);
-                        final TextView textView = (TextView) view;
-                        textView.setTextColor(Assessment_Utility.colorStateList);
-                        textView.setId(r);
-                        textView.setElevation(3);
-
-                       *//* if (!options.get(r).getChoiceurl().equalsIgnoreCase("")) {
-                            final String path = options.get(r).getChoiceurl();
-                            radioButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    showZoomDialog(path);
-                                }
-                            });
-                            radioGroupMcq.addView(radioButton);
-//                            radioButton.setText("View Option " + (r + 1));
-//                    radioButton.setText(options.get(r).getChoicename());
-                            if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
-                                radioButton.setChecked(true);
-                                radioButton.setTextColor(Assessment_Utility.selectedColor);
-                            } else {
-                                radioButton.setChecked(false);
-                                radioButton.setTextColor(Color.WHITE);
-                            }
-                        } else {*//*
-                        textView.setText(options.get(r).getChoicename());
-                        if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
-//                            textView.setChecked(true);
-                            textView.setTextColor(Assessment_Utility.selectedColor);
-                        } else {
-//                            textView.setChecked(false);
-                            textView.setTextColor(Color.WHITE);
-                        }
-//                        radioGroupMcq.addView(textView);
-                        gridMcq.addView(textView);
-
-                        if (ans.equals(options.get(r).getChoicename())) {
-//                            textView.setChecked(true);
-                        } else {
-//                            textView.setChecked(false);
-                        }
-//                        }
-                    }*/
                 } else /*if (imgCnt == options.size() && textCnt == 0) {*/
                     if (options.get(r).getChoiceurl() != null && !options.get(r).getChoiceurl().trim().equalsIgnoreCase("") &&
                             options.get(r).getChoicename().trim().equalsIgnoreCase("")) {
@@ -773,6 +702,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
     @Click(R.id.btn_view_hint)
     public void showPara() {
         if (scienceQuestion != null) {
+            ScienceQuestion scienceQuestion = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getQuestionByQID(this.scienceQuestion.getQid());
             if (scienceQuestion.isParaQuestion()) {
                 String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
                 showZoomDialog(getActivity(), "", para);

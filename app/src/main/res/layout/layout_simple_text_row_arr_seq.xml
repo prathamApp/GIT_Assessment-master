@@ -16,10 +16,11 @@
         <TextView
             android:id="@+id/tv_text"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_42sdp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/quicksand_medium"
             android:gravity="center"
+            android:minHeight="@dimen/_42sdp"
             android:paddingLeft="@dimen/_10sdp"
             android:text="text"
             android:textAlignment="center"

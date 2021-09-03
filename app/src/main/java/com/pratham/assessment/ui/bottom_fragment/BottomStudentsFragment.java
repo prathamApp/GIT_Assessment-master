@@ -34,9 +34,8 @@ import com.pratham.assessment.domain.Status;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.interfaces.SplashInterface;
 import com.pratham.assessment.services.AppExitService;
-import com.pratham.assessment.services.LocationService;
-import com.pratham.assessment.ui.bottom_fragment.add_student.create_profile.AddStudentFragment;
 import com.pratham.assessment.ui.bottom_fragment.add_student.EnrollmentNoFragment;
+import com.pratham.assessment.ui.bottom_fragment.add_student.create_profile.AddStudentFragment;
 import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity_;
 import com.pratham.assessment.ui.splash_activity.SplashActivity;
 import com.pratham.assessment.utilities.Assessment_Utility;
@@ -304,8 +303,14 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
                 try {
                     if (!FastSave.getInstance().getBoolean(Assessment_Constants.INITIAL_ENTRIES, false))
                         doInitialEntries(getActivity());
+
+                    com.pratham.assessment.domain.Status status = new com.pratham.assessment.domain.Status();
+                    String key = "AppBuildDate";
+                    String value = "27-07-2021";
+                    setStatusTableEntries(status, key, value);
 //                    if (!FastSave.getInstance().getBoolean(Assessment_Constants.KEY_MENU_COPIED, false))
                     populateMenu();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1174,9 +1179,9 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
     }
 
-    private void requestLocation() {
+/*    private void requestLocation() {
         new LocationService(getActivity()).checkLocation();
-    }
+    }*/
 
     private void setAppVersion(Status status) {
         PackageInfo pInfo = null;

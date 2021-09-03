@@ -706,6 +706,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface, Aud
     @Click(R.id.btn_view_hint)
     public void showPara() {
         if (scienceQuestion != null) {
+            ScienceQuestion scienceQuestion = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getQuestionByQID(this.scienceQuestion.getQid());
             if (scienceQuestion.isParaQuestion()) {
                 String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
                 showZoomDialog(getActivity(), "", para);

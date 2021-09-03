@@ -761,7 +761,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
     }
 
 
-//    @Override
+    //    @Override
     public static void doInitialEntries(Context context) {
         try {
             Status status;
@@ -1406,6 +1406,11 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
             key = "InternalStorageSize";
             value = Assessment_Utility.getInternalStorageSize();
             setStatusTableEntries(status, key, value, context);
+
+
+            key = "AppBuildDate";
+            value = "27-07-2021";
+            setStatusTableEntries(status, key, value, context);
 /*
             if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
                     && !AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key).equalsIgnoreCase("")) {
@@ -1525,6 +1530,10 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
 
                 if (!sharedPreferences.getBoolean(Assessment_Constants.INITIAL_ENTRIES, false))
                     doInitialEntries(context);
+                com.pratham.assessment.domain.Status status = new com.pratham.assessment.domain.Status();
+                String key = "AppBuildDate";
+                String value = "27-07-2021";
+                setStatusTableEntries(status, key, value,context);
                 if (!sharedPreferences.getBoolean(Assessment_Constants.KEY_MENU_COPIED, false))
                     populateMenu();
 
@@ -1648,6 +1657,10 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
         if (!sharedPreferences.getBoolean(Assessment_Constants.SD_CARD_Content_STR, false)) {
             if (!sharedPreferences.getBoolean(Assessment_Constants.INITIAL_ENTRIES, false))
                 doInitialEntries(context);
+            com.pratham.assessment.domain.Status status = new com.pratham.assessment.domain.Status();
+            String key = "AppBuildDate";
+            String value = "27-07-2021";
+            setStatusTableEntries(status, key, value,context);
             copyDBFile();
             try {
                 File db_file;

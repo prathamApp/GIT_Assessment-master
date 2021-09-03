@@ -91,7 +91,7 @@ public class ShowAnswerDialog extends Dialog {
         ll_multiple_select.setVisibility(View.VISIBLE);
         StringBuffer ans = new StringBuffer();
         for (int i = 0; i < userAns.size(); i++) {
-            ans.append(Html.fromHtml(userAns.get(i).getChoicename()) + ",");
+            ans.append(Html.fromHtml(userAns.get(i).getChoicename())).append(",");
         }
         if (ans.length() > 0)
             ans.setLength(ans.length() - 1);

@@ -3,6 +3,7 @@ package com.pratham.assessment.ui.choose_assessment.science.certificate.Certific
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,7 @@ public class CertificateKeywordRatingAdapter extends RecyclerView.Adapter<Certif
         CertificateKeywordRating keywordRating = certificateKeywordRatingList.get(i);
 
         Assessment_Utility.setOdiaFont(context, myViewHolder.question);
-        myViewHolder.question.setText(keywordRating.getCertificatequestion());
+        myViewHolder.question.setText(Html.fromHtml(keywordRating.getCertificatequestion()));
         myViewHolder.ratingBar.setRating(Float.parseFloat(keywordRating.getRating()));
 
     }

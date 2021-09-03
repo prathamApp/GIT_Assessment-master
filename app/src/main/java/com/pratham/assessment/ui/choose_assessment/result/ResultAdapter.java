@@ -151,7 +151,15 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                                 .placeholder(Drawable.createFromPath(localPath))
                         )
                         .into(myViewHolder.questionImg);
-                myViewHolder.questionImg.setOnClickListener(v -> Assessment_Utility.showZoomDialog(context, localPath, ""));
+                myViewHolder.questionImg.setOnClickListener(v -> {
+                    String fileName1 = getFileName(result.getqId(), result.getQuestionImg());
+                    if (result.isQuestionFromSDCard())
+                        localPath = result.getQuestionImg();
+                    else
+                        localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName1;
+//
+                    Assessment_Utility.showZoomDialog(context, localPath, "");
+                });
             } else if (ext.equalsIgnoreCase("jpg") || ext.equalsIgnoreCase("jpeg") || ext.equalsIgnoreCase("png")) {
                 Glide.with(context)
                         .load(localPath)
@@ -164,6 +172,12 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 myViewHolder.questionImg.setOnClickListener(v -> {
                     /*ZoomImageDialog zoomImageDialog = new ZoomImageDialog(context, path, localPath);
                     zoomImageDialog.show();*/
+                    String fileName1 = getFileName(result.getqId(), result.getQuestionImg());
+                    if (result.isQuestionFromSDCard())
+                        localPath = result.getQuestionImg();
+                    else
+                        localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName1;
+
                     Assessment_Utility.showZoomDialog(context, localPath, "");
 
                 });
@@ -171,6 +185,12 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 myViewHolder.questionImg.setImageResource(R.drawable.ic_play);
                 myViewHolder.questionImg.setOnClickListener(v -> {
                     currentView = v;
+                    String fileName1 = getFileName(result.getqId(), result.getQuestionImg());
+                    if (result.isQuestionFromSDCard())
+                        localPath = result.getQuestionImg();
+                    else
+                        localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName1;
+
                     showZoomDialog(context, localPath, "");
 //                        playMedia(localPath, localPath, v, ext);
                 });
@@ -181,6 +201,12 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     myViewHolder.questionImg.setVisibility(View.GONE);
 //                        myViewHolder.questionVideo.setVisibility(View.VISIBLE);
 //                        playMedia(localPath, localPath, myViewHolder.questionVideo, ext);
+                    String fileName1 = getFileName(result.getqId(), result.getQuestionImg());
+                    if (result.isQuestionFromSDCard())
+                        localPath = result.getQuestionImg();
+                    else
+                        localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName1;
+
                     showZoomDialog(context, localPath, "");
                 });
 
@@ -353,6 +379,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 for (int j = 0; j < scienceQuestionChoice.size(); j++) {
                     if (scienceQuestionChoice.get(j).getCorrect().equalsIgnoreCase("true")) {
                         correctAns = scienceQuestionChoice.get(j);
+                        myViewHolder.correctAnswer.setText(Html.fromHtml(correctAns.getChoicename()));
 //                        userAns = scienceQuestionChoice.get(j);
                     }
                     if (scienceQuestionChoice.get(j).getQcid().equalsIgnoreCase(result.getUserAnswerId())) {
@@ -420,7 +447,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                         if (!userAns.getChoicename().equalsIgnoreCase("")) {
                             myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
                             myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
-                            myViewHolder.correctAnswer.setText(userAns.getChoicename());
+                            myViewHolder.correctAnswer.setText(Html.fromHtml(userAns.getChoicename()));
                         }
                         if (!result.getUserAnswer().equalsIgnoreCase("")) {
                             myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
@@ -429,10 +456,11 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     }
                 }
 //                }
-                if (!myViewHolder.correctAnswer.getText().equals("")) {
+                if (!myViewHolder.correctAnswer.getText().toString().equalsIgnoreCase("")) {
 //                    if (userAns.getChoiceurl().equalsIgnoreCase(""))
                     myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
                     myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
+                    myViewHolder.correctAnswer.setText(Html.fromHtml(correctAns.getChoicename()));
                     myViewHolder.correctAnsLabel.setVisibility(View.VISIBLE);
 
                 } else {
@@ -541,86 +569,6 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     }
                 });
                 break;
-           /* case VIDEO:
-                if (result.getQuestion().equalsIgnoreCase(""))
-                    myViewHolder.question.setText(R.string.video);
-                if (result.isAttempted()) {
-                    myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
-                    myViewHolder.question.setVisibility(View.VISIBLE);
-
-                    myViewHolder.userAnswer.setVisibility(View.GONE);
-                    myViewHolder.ll_correct_ans.setVisibility(View.GONE);
-                    myViewHolder.btnUserAnswer.setVisibility(View.GONE);
-                    myViewHolder.image_you_answered.setVisibility(View.VISIBLE);
-                    myViewHolder.image_you_answered.setImageResource(R.drawable.ic_play);
-                    myViewHolder.image_you_answered.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-//                            myViewHolder.image_you_answered.setVisibility(View.GONE);
-//                            myViewHolder.answerVideo.setVisibility(View.VISIBLE);
-                            showZoomDialog(context, result.getUserAnswer(), result.getUserAnswer(), "");
-//                            playMedia(result.getUserAnswer(), result.getUserAnswer(), myViewHolder.answerVideo, "mp4");
-                        }
-                    });
-
-                } else {
-                    myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
-                    myViewHolder.btnUserAnswer.setVisibility(View.GONE);
-                    myViewHolder.userAnswer.setVisibility(View.VISIBLE);
-                    myViewHolder.ll_correct_ans.setVisibility(View.GONE);
-                }
-                break;
-            case AUDIO:
-                if (result.getQuestion().equalsIgnoreCase(""))
-                    myViewHolder.question.setText(R.string.audio);
-                if (result.isAttempted()) {
-                    myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
-                    myViewHolder.question.setVisibility(View.VISIBLE);
-
-                    myViewHolder.userAnswer.setVisibility(View.GONE);
-                    myViewHolder.ll_correct_ans.setVisibility(View.GONE);
-                    myViewHolder.btnUserAnswer.setVisibility(View.GONE);
-                    myViewHolder.image_you_answered.setVisibility(View.VISIBLE);
-                    myViewHolder.image_you_answered.setImageResource(R.drawable.ic_play);
-                    isAudioPlaying = false;
-                    myViewHolder.image_you_answered.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if (prevView != null)
-                                ((ImageView) prevView).setImageResource(R.drawable.ic_play);
-                            currentView = view;
-                            if (prevView != null && view != prevView && isAudioPlaying) {
-                                ((ImageView) prevView).setImageResource(R.drawable.ic_play);
-                                isAudioPlaying = false;
-                                AudioUtil.stopPlayingAudio();
-                                stopPlayer();
-                            }
-                            prevView = view;
-                            if (isAudioPlaying) {
-                                isAudioPlaying = false;
-                                ((ImageView) view).setImageResource(R.drawable.ic_play);
-                                AudioUtil.stopPlayingAudio();
-                                stopPlayer();
-
-                            } else {
-                                isAudioPlaying = true;
-                                ((ImageView) view).setImageResource(R.drawable.ic_pause);
-                                if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
-                                    AudioUtil.playRecording(result.getUserAnswer(), ResultAdapter.this);
-                                else
-                                    AudioUtil.playRecording(result.getUserAnswer(), ResultAdapter.this);
-                            }
-                        }
-                    });
-
-                } else {
-                    myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
-                    myViewHolder.btnUserAnswer.setVisibility(View.GONE);
-                    myViewHolder.userAnswer.setVisibility(View.VISIBLE);
-                    myViewHolder.ll_correct_ans.setVisibility(View.GONE);
-                }
-                break;
-*/
             case TRUE_FALSE:
                 myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
                 myViewHolder.btnUserAnswer.setVisibility(View.GONE);
@@ -628,49 +576,24 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 myViewHolder.image_correct_ans.setVisibility(View.GONE);
 //                myViewHolder.answerVideo.setVisibility(View.GONE);
                 if (result.isAttempted()) {
+                    myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
+                    myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
+
                     if (result.isCorrect()) {
-                        myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
                         myViewHolder.ll_user_ans.setVisibility(View.GONE);
                     } else {
-                        myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
                         myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
 
                     }
+                    myViewHolder.userAnswer.setVisibility(View.VISIBLE);
+
                 }
                 break;
         }
 
     }
 
-    /*private void playMedia(String path, String localPath, View view, String extension) {
-        if (extension.equalsIgnoreCase("mp3")) {
-            if (isQuestionAudioPlaying) {
-                isQuestionAudioPlaying = false;
-                ((ImageView) view).setImageResource(R.drawable.ic_play);
-                AudioUtil.stopPlayingAudio();
-                stopPlayer();
 
-            } else {
-                isQuestionAudioPlaying = true;
-                ((ImageView) view).setImageResource(R.drawable.ic_pause);
-                if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
-                    AudioUtil.playRecording(path, ResultAdapter.this);
-                else AudioUtil.playRecording(localPath, ResultAdapter.this);
-            }
-        } else if (extension.equalsIgnoreCase("mp4") || extension.equalsIgnoreCase("3gp")) {
-            MediaController mediaController = new MediaController(context);
-            if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
-                ((VideoView) view).setVideoPath(path);
-            else ((VideoView) view).setVideoPath(localPath);
-
-            ((VideoView) view).setMediaController(mediaController);
-            mediaController.setAnchorView(view);
-            ((VideoView) view).setZOrderOnTop(true);
-            ((VideoView) view).setZOrderMediaOverlay(true);
-            ((VideoView) view).start();
-        }
-    }
-*/
     private void setImage(ScienceQuestionChoice scienceQuestionChoice, String answer, ImageView view) {
 //        final String path = answer;
         String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), answer);

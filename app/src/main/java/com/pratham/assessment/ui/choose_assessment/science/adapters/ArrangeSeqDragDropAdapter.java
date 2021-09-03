@@ -125,32 +125,27 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
                 }
 
 
-            } else holder.mTitle.setText(Html.fromHtml(scienceQuestionChoice.getChoicename()));
+            } else
+                holder.mTitle.setText(Html.fromHtml(scienceQuestionChoice.getChoicename()));
 
-            holder.ll_options.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() ==
-                            MotionEvent.ACTION_DOWN) {
-                        startDragListener.requestDrag(holder);
-                    }
-                    return false;
+            holder.ll_options.setOnTouchListener((v, event) -> {
+                if (event.getAction() ==
+                        MotionEvent.ACTION_DOWN) {
+                    startDragListener.requestDrag(holder);
                 }
+                return false;
             });
 
-            holder.iv_choice_image.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() ==
-                            MotionEvent.ACTION_DOWN) {
-                        startDragListener.requestDrag(holder);
-                       /* String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getChoiceurl());
-                        final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+            holder.iv_choice_image.setOnTouchListener((v, event) -> {
+                if (event.getAction() ==
+                        MotionEvent.ACTION_DOWN) {
+                    startDragListener.requestDrag(holder);
+                   /* String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getChoiceurl());
+                    final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 */
-                        Assessment_Utility.showZoomDialog(context, localPath, "");
-                    }
-                    return false;
+                    Assessment_Utility.showZoomDialog(context, localPath, "");
                 }
+                return false;
             });
 
             //todo add bubbleshowcase

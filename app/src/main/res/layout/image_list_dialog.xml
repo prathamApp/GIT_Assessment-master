@@ -195,7 +195,6 @@
                         android:id="@+id/tv_duration"
                         android:layout_width="@dimen/_50sdp"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_your_ans"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginHorizontal="@dimen/_5sdp"

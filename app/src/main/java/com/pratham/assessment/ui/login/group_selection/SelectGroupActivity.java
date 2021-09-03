@@ -133,10 +133,10 @@ public class SelectGroupActivity extends BaseActivity {
 
                 Log.d("AppExitService:", "curSession : " + curSession + "      toDateTemp : " + toDateTemp);
 
-                if (toDateTemp != null) {
-                    if (toDateTemp.equalsIgnoreCase("na"))
+//                if (toDateTemp != null) {
+//                    if (toDateTemp.equalsIgnoreCase("na"))
                         AppDatabase.getDatabaseInstance(SelectGroupActivity.this).getSessionDao().UpdateToDate(curSession, Assessment_Utility.getCurrentDateTime());
-                }
+//                }
                 finishAffinity();
 
             }

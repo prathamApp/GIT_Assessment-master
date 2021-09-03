@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.card.MaterialCardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +56,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
         final AssessmentTest assessmentTest = assessmentTests.get(i);
 
-        myViewHolder.title.setText(assessmentTest.getExamname());
+        myViewHolder.title.setText(Html.fromHtml(assessmentTest.getExamname()));
         myViewHolder.game_card_view.setCardBackgroundColor(Assessment_Utility.getRandomColorGradient());
         myViewHolder.game_card_view.setOnClickListener(new View.OnClickListener() {
             @Override

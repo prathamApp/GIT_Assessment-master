@@ -69,6 +69,9 @@ public interface ScienceQuestionDao {
     @Query("SELECT qname FROM ScienceQuestion WHERE qid=:refId ")
     public String getParabyRefId(String refId);
 
+    @Query("SELECT * FROM ScienceQuestion WHERE RefParaID=:refId ")
+    public ScienceQuestion getQuestionByRefId(String refId);
+
     @Query("SELECT * FROM ScienceQuestion WHERE topicid=:topicId and languageid=:langId and subjectid=:subId and examid=:examId")
     public List<ScienceQuestion> getQuestionListByLangIdSubIdTopicIdExamId(String topicId, String langId, String subId, String examId);
 

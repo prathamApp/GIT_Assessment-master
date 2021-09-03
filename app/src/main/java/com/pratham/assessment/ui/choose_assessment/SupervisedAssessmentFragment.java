@@ -126,7 +126,7 @@ public class SupervisedAssessmentFragment extends Fragment {
             cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, capturedImageUri);
             startActivityForResult(cameraIntent, CAMERA_REQUEST);
         } catch (Exception e) {
-             e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -180,11 +180,11 @@ public class SupervisedAssessmentFragment extends Fragment {
                 AddSupervisorToDB(supervisorId, sName, imageName);
             } else Toast.makeText(context, "Enter name", Toast.LENGTH_SHORT).show();
         } else {
-            AnimateCamButton(context, btn_camera);
+            AnimateCamButton(btn_camera);
         }
     }
 
-    public void AnimateCamButton(Context c, final ImageButton imageButton) {
+    public void AnimateCamButton(final ImageButton imageButton) {
         final Animation animShake = AnimationUtils.loadAnimation(context, R.anim.side_shake);
         imageButton.startAnimation(animShake);
     }

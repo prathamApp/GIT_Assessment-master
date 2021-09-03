@@ -43,7 +43,7 @@ public class AssessmentApplication extends Application {
     public static String uploadDataUrl = "http://swap.prathamcms.org/api/Assessment/AssesmentPushData";
     public static String uploadScienceUrl = APIs.baseAzureURL + "api/pushassessment/AssessmentPushData";
     public static String uploadScienceFilesUrl = APIs.baseAzureURL + "api/question/pushFiles";
-    //    public static String uploadScienceFilesUrl = APIs.baseAzureURL + "api/uploadfile/UploadFile";
+    public static String uploadLargeFilesUrl = APIs.baseAzureURL + "api/uploadfile/UploadFile";
     public static String UploadJsonZipURL = APIs.baseAzureURL + "api/pushzip/pushfiles";
     String sdCardPathString = null;
     public static MediaPlayer bubble_mp, bgMusic;
@@ -96,7 +96,7 @@ public class AssessmentApplication extends Application {
                 mydir.mkdirs();
             mydir = new File(assessPath + "/.Assessment/Content");
             if (!mydir.exists())
-                mydir.mkdirs();
+                mydir.mkdirs(); 
          /*   mydir = new File(assessPath + "/.Assessment/English/Game");
             if (!mydir.exists())
                 mydir.mkdirs();*/

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -106,8 +107,8 @@ public class ResultFragment extends Fragment implements ResultListener {
             student_name.setText(studentName);
             String subName = presenter.getSubjectName(examId);
             String topicName = presenter.getTopicName(examId);
-            tv_topic.setText(topicName);
-            tv_subject.setText(subName);
+            tv_topic.setText(Html.fromHtml(topicName));
+            tv_subject.setText(Html.fromHtml(subName));
             ResultAdapter resultAdapter = new ResultAdapter(getActivity(), resultList, this);
             rv_question_answers.setAdapter(resultAdapter);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);

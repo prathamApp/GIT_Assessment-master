@@ -166,96 +166,96 @@ public class PushDataToServer {
     }
 
 
-    @Background
-    public void doInBackground() {
-        onPreExecute();
-        List<Score> scoreList = AppDatabase.getDatabaseInstance(context).getScoreDao().getAllPushScores("ece_assessment");
-        eceScoreData = fillScoreData(scoreList);
-        List<AssessmentPaperForPush> assessmentScoreList = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAllAssessmentPapersForPush();
-        assessmentScoreData = fillAssessmentScoreData(assessmentScoreList);
-        List<Attendance> attendanceList = AppDatabase.getDatabaseInstance(context).getAttendanceDao().getAllPushAttendanceEntries();
-        attendanceData = fillAttendanceData(attendanceList);
-        List<Student> studentList = AppDatabase.getDatabaseInstance(context).getStudentDao().getAllNewStudents();
-        studentData = fillStudentData(studentList);
+        @Background
+        public void doInBackground() {
+            onPreExecute();
+            List<Score> scoreList = AppDatabase.getDatabaseInstance(context).getScoreDao().getAllPushScores("ece_assessment");
+            eceScoreData = fillScoreData(scoreList);
+            List<AssessmentPaperForPush> assessmentScoreList = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAllAssessmentPapersForPush();
+            assessmentScoreData = fillAssessmentScoreData(assessmentScoreList);
+            List<Attendance> attendanceList = AppDatabase.getDatabaseInstance(context).getAttendanceDao().getAllPushAttendanceEntries();
+            attendanceData = fillAttendanceData(attendanceList);
+            List<Student> studentList = AppDatabase.getDatabaseInstance(context).getStudentDao().getAllNewStudents();
+            studentData = fillStudentData(studentList);
 
-        List<Session> sessionList = AppDatabase.getDatabaseInstance(context).getSessionDao().getAllNewSessions();
-        sessionData = fillSessionData(sessionList);
+            List<Session> sessionList = AppDatabase.getDatabaseInstance(context).getSessionDao().getAllNewSessions();
+            sessionData = fillSessionData(sessionList);
 
-        List<SupervisorData> supervisorDataList = AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().getAllSupervisorData();
-        supervisorData = fillSupervisorData(supervisorDataList);
-        List<Modal_Log> logsList = AppDatabase.getDatabaseInstance(context).getLogsDao().getPushAllLogs();
-        logsData = fillLogsData(logsList);
+            List<SupervisorData> supervisorDataList = AppDatabase.getDatabaseInstance(context).getSupervisorDataDao().getAllSupervisorData();
+            supervisorData = fillSupervisorData(supervisorDataList);
+            List<Modal_Log> logsList = AppDatabase.getDatabaseInstance(context).getLogsDao().getPushAllLogs();
+            logsData = fillLogsData(logsList);
 
-        try {
+            try {
 
-            requestJsonObjectScience = generateRequestString(eceScoreData, assessmentScoreData, attendanceData, sessionData,/* learntWords, */supervisorData, logsData, /*assessmentScienceData,*/ studentData);
+                requestJsonObjectScience = generateRequestString(eceScoreData, assessmentScoreData, attendanceData, sessionData,/* learntWords, */supervisorData, logsData, /*assessmentScienceData,*/ studentData);
 
+
+                if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                    if (AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_KOLIBRI_HOTSPOT)) {
+                        try {
+                            JSONObject object = new JSONObject();
+                            object.put("username", "pratham");
+                            object.put("password", "pratham");
+    /*                    new PD_ApiRequest(context, ContentPresenterImpl.this)
+                                .getacilityIdfromRaspberry(COS_Constants.FACILITY_ID, COS_Constants.RASP_IP + "/api/session/", object);*/
+                            AndroidNetworking.post(Assessment_Constants.RASP_IP + "/api/session/")
+                                    .addHeaders("Content-Type", "application/json")
+                                    .addJSONObjectBody(object)
+                                    .build()
+                                    .getAsString(new StringRequestListener() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            isConnectedToRasp = true;
+                                            Gson gson = new Gson();
+                                            Modal_RaspFacility facility = gson.fromJson(response, Modal_RaspFacility.class);
+                                            FastSave.getInstance().saveString(Assessment_Constants.FACILITY_ID, facility.getFacilityId());
+                                            pushDataToRaspberry("" + Assessment_Constants.URL.DATASTORE_RASPBERY_URL.toString(),
+                                                    "" + requestJsonObjectScience, programID, Assessment_Constants.USAGEDATA);
+
+                                        }
+
+                                        @Override
+                                        public void onError(ANError anError) {
+    //                            apiResult.notifyError(requestType/*, null*/);
+                                            isConnectedToRasp = false;
+
+                                            Log.d("Error::", anError.getErrorDetail());
+                                            Log.d("Error::", anError.getMessage());
+                                            Log.d("Error::", anError.getResponse().toString());
+                                        }
+                                    });
+                        } catch (Exception e) {
+                            isConnectedToRasp = false;
+                            e.printStackTrace();
+                        }
+                    }
+                } else isConnectedToRasp = false;
+                programID = AppDatabase.appDatabase.getStatusDao().getValue("programId");
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            //        if (checkEmptyness(requestString))
 
             if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-                if (AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_KOLIBRI_HOTSPOT)) {
-                    try {
-                        JSONObject object = new JSONObject();
-                        object.put("username", "pratham");
-                        object.put("password", "pratham");
-/*                    new PD_ApiRequest(context, ContentPresenterImpl.this)
-                            .getacilityIdfromRaspberry(COS_Constants.FACILITY_ID, COS_Constants.RASP_IP + "/api/session/", object);*/
-                        AndroidNetworking.post(Assessment_Constants.RASP_IP + "/api/session/")
-                                .addHeaders("Content-Type", "application/json")
-                                .addJSONObjectBody(object)
-                                .build()
-                                .getAsString(new StringRequestListener() {
-                                    @Override
-                                    public void onResponse(String response) {
-                                        isConnectedToRasp = true;
-                                        Gson gson = new Gson();
-                                        Modal_RaspFacility facility = gson.fromJson(response, Modal_RaspFacility.class);
-                                        FastSave.getInstance().saveString(Assessment_Constants.FACILITY_ID, facility.getFacilityId());
-                                        pushDataToRaspberry("" + Assessment_Constants.URL.DATASTORE_RASPBERY_URL.toString(),
-                                                "" + requestJsonObjectScience, programID, Assessment_Constants.USAGEDATA);
+                if (!AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_KOLIBRI_HOTSPOT)) {
 
-                                    }
+    //            pushDataToServer(context, requestJsonObject, AssessmentApplication.uploadDataUrl);
 
-                                    @Override
-                                    public void onError(ANError anError) {
-//                            apiResult.notifyError(requestType/*, null*/);
-                                        isConnectedToRasp = false;
+                    pushDataScienceToServer(context, requestJsonObjectScience);
 
-                                        Log.d("Error::", anError.getErrorDetail());
-                                        Log.d("Error::", anError.getMessage());
-                                        Log.d("Error::", anError.getResponse().toString());
-                                    }
-                                });
-                    } catch (Exception e) {
-                        isConnectedToRasp = false;
-                        e.printStackTrace();
-                    }
-                }
-            } else isConnectedToRasp = false;
-            programID = AppDatabase.appDatabase.getStatusDao().getValue("programId");
+                }/* else {//todo raspberry push
+                    pushDataToRaspberry("" + Assessment_Constants.URL.DATASTORE_RASPBERY_URL.toString(),
+                            "" + requestJsonObjectScience, programID, Assessment_Constants.USAGEDATA);
+                }*/
+            } else {
+                onPostExecute();
+            }
 
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
-        //        if (checkEmptyness(requestString))
-
-        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-            if (!AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_KOLIBRI_HOTSPOT)) {
-
-//            pushDataToServer(context, requestJsonObject, AssessmentApplication.uploadDataUrl);
-
-                pushDataScienceToServer(context, requestJsonObjectScience, AssessmentApplication.uploadScienceUrl);
-
-            }/* else {//todo raspberry push
-                pushDataToRaspberry("" + Assessment_Constants.URL.DATASTORE_RASPBERY_URL.toString(),
-                        "" + requestJsonObjectScience, programID, Assessment_Constants.USAGEDATA);
-            }*/
-        } else {
-            onPostExecute();
-        }
-
-    }
 
     private void pushSupervisorImages() {
         new AsyncTask<Void, Void, Void>() {
@@ -372,6 +372,7 @@ public class PushDataToServer {
             }
 
             MultipartBody requestBody = builderNew.build();
+
             final Request request = new Request.Builder()
                     .url(url)
                     .post(requestBody)
@@ -792,7 +793,7 @@ public class PushDataToServer {
     }
 */
 
-    private void pushDataScienceToServer(final Context context, JSONObject requestJsonObject, String url) {
+    private void pushDataScienceToServer(final Context context, JSONObject requestJsonObject) {
         final String filepathstr;
 
         try {

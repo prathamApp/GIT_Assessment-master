@@ -60,11 +60,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,7 +144,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         initiateApp();
     }*/
 
-    public void  initiateApp() {
+    public void initiateApp() {
 
         permissionArray = new String[]{PermissionUtils.Manifest_CAMERA,
                 PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
@@ -251,8 +246,12 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
-
+                Log.d("AppBuildDate1", "run: " + "AppBuildDate");
+                com.pratham.assessment.domain.Status status = new com.pratham.assessment.domain.Status();
+                String key = "AppBuildDate";
+                String value = "27-07-2021";
+                SplashPresenter.setStatusTableEntries(status, key, value, context);
+                Log.d("AppBuildDate1", "run: " + "AppBuildDate");
                 Assessment_Constants.SD_CARD_Content = splashPresenter.getSdCardPath();
                 if (!sharedPreferences.getBoolean(Assessment_Constants.SD_CARD_Content_STR, false)) {
                     if (!Assessment_Constants.SD_CARD_Content)
@@ -450,10 +449,11 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 
                 Log.d("AppExitService:", "curSession : " + curSession + "      toDateTemp : " + toDateTemp);
 
-                if (toDateTemp != null) {
+              /*  if (toDateTemp != null) {
                     if (toDateTemp.equalsIgnoreCase("na"))
-                        AppDatabase.getDatabaseInstance(context).getSessionDao().UpdateToDate(curSession, Assessment_Utility.getCurrentDateTime());
-                }
+               */
+                AppDatabase.getDatabaseInstance(context).getSessionDao().UpdateToDate(curSession, Assessment_Utility.getCurrentDateTime());
+//                }
                 dialog.dismiss();
                 finishAffinity();
 
@@ -546,7 +546,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                 copyFileUsingStream(f, offlineDB);
                 if (!FastSave.getInstance().getBoolean(SDCARD_OFFLINE_PATH_SAVED, false))
                     splashPresenter.copySDCardDB();
-                else showButton();
+//                else showButton();
             } else {
                 showButton();
                 //populateMenu();

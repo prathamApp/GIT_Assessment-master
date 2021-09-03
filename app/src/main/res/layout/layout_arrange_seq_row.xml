@@ -50,11 +50,18 @@
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.5" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rl_arrange_seq"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1.2" />
+            android:layout_weight="1.2"
+            android:fadeScrollbars="false"
+            android:scrollbarSize="@dimen/_7sdp"
+            android:scrollbars="vertical">
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rl_arrange_seq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </ScrollView>
     </LinearLayout>
 </android.support.v7.widget.CardView>

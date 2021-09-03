@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.card.MaterialCardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.MyView
             myViewHolder.game_card_view.setCardBackgroundColor(Color.WHITE);
             myViewHolder.title.setTextColor(Color.BLACK);
         }
-        myViewHolder.title.setText(languages.getLanguagename());
+        myViewHolder.title.setText(Html.fromHtml(languages.getLanguagename()));
 //        myViewHolder.game_card_view.setCardBackgroundColor(Assessment_Utility.getRandomColorGradient());
 
         myViewHolder.game_card_view.setOnClickListener(new View.OnClickListener() {
