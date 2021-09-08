@@ -185,11 +185,8 @@ public class EnrollmentNoFragment extends DialogFragment {
         newEnrolledStudent.setDeviceId(Assessment_Utility.getDeviceId(getActivity()));
         newEnrolledStudent.setStudentUID("NIOS");
         newEnrolledStudent.setIsniosstudent("1");
-        /*AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().insert(newEnrolledStudent);
-        if (student != null) {
-//            Toast.makeText(getActivity(), R.string.profile_is_already_saved, Toast.LENGTH_SHORT).show();
-            Toast.makeText(getActivity(), "Profile is already saved..", Toast.LENGTH_SHORT).show();
-        } else {*/
+//        AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().insert(newEnrolledStudent);
+
             AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().insert(newEnrolledStudent);
             BackupDatabase.backup(getActivity());
 //            Toast.makeText(getActivity(), R.string.profile_created_successfully, Toast.LENGTH_SHORT).show();

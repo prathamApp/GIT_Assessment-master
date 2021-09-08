@@ -145,6 +145,7 @@ public class TopicFragment extends Fragment {
             }
 
         }
+
         return exists;
     }
 
