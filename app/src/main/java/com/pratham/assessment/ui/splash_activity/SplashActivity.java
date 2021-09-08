@@ -546,7 +546,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                 copyFileUsingStream(f, offlineDB);
                 if (!FastSave.getInstance().getBoolean(SDCARD_OFFLINE_PATH_SAVED, false))
                     splashPresenter.copySDCardDB();
-//                else showButton();
+                else showButton();
             } else {
                 showButton();
                 //populateMenu();

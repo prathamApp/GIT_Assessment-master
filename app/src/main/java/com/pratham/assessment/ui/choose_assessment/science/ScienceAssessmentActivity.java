@@ -4004,7 +4004,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         + "/PrathamBackups/offline_assessment_database.db");
                 if (!FastSave.getInstance().getBoolean(SDCARD_OFFLINE_PATH_SAVED, false))
                     copySDCardDB(f, offlineDB);
-//                else startFetchingData();
+                else startFetchingData();
             } else {
                 startFetchingData();
 //                    checkPermissions();
