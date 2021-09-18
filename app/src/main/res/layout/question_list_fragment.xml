@@ -91,18 +91,16 @@
             android:id="@+id/sv_questions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_marginBottom="@dimen/_50sdp"
             android:layout_below="@+id/view1">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_questions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/view1"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="8dp"
                 android:padding="@dimen/_5sdp"
-                app:layout_constraintTop_toBottomOf="@+id/view1"
                 tools:layout_editor_absoluteX="6dp" />
         </ScrollView>
 

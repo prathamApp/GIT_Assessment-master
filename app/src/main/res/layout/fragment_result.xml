@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="0.5"
-                    android:fontFamily="@font/quicksand_bold"
+                    android:fontFamily="@font/pavanam_regular"
                     android:text="@string/subject"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_10sdp" />
@@ -76,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="1"
-                    android:fontFamily="@font/quicksand_bold"
+                    android:fontFamily="@font/pavanam_regular"
                     android:text=""
                     android:textColor="@color/white"
                     android:textSize="@dimen/_10sdp" />
@@ -95,7 +95,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="0.5"
-                    android:fontFamily="@font/quicksand_bold"
+                    android:fontFamily="@font/pavanam_regular"
                     android:text="@string/topic"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_10sdp" />
@@ -106,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="1"
-                    android:fontFamily="@font/quicksand_bold"
+                    android:fontFamily="@font/pavanam_regular"
                     android:text=""
                     android:textColor="@color/white"
                     android:textSize="@dimen/_10sdp" />
@@ -124,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="0.8"
-                    android:fontFamily="@font/quicksand_bold"
+                    android:fontFamily="@font/pavanam_regular"
                     android:text="@string/out_of_marks"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_11sdp" />
@@ -152,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
                     android:layout_weight="0.8"
-                    android:fontFamily="@font/quicksand_bold"
+                    android:fontFamily="@font/pavanam_regular"
                     android:text="@string/marks_obtained"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_11sdp" />
