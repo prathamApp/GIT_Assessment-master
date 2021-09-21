@@ -34,6 +34,7 @@
             android:layout_weight="1"
             android:background="@drawable/ripple_effect"
             android:elevation="5dp"
+            android:fontFamily="@font/ntr"
             android:text="@string/restart"
             android:textSize="@dimen/_12sdp" />
 
@@ -46,6 +47,7 @@
             android:layout_weight="1"
             android:background="@drawable/ripple_effect"
             android:elevation="5dp"
+            android:fontFamily="@font/ntr"
             android:text="@string/exit"
             android:textSize="@dimen/_12sdp" />
 
@@ -58,6 +60,7 @@
             android:layout_weight="1"
             android:background="@drawable/ripple_effect"
             android:elevation="5dp"
+            android:fontFamily="@font/ntr"
             android:text="@string/cancel"
             android:textSize="@dimen/_12sdp"
             android:visibility="visible" />

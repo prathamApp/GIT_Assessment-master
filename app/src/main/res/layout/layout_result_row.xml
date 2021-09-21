@@ -87,7 +87,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
-                    android:fontFamily="@font/pavanam_regular"
+                    android:fontFamily="@font/quicksand_medium"
                     android:gravity="center"
                     android:text="@string/answer"
                     android:textSize="@dimen/_11sdp" />
@@ -157,7 +157,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_5sdp"
-                    android:fontFamily="@font/pavanam_regular"
+                    android:fontFamily="@font/quicksand_medium"
                     android:gravity="center"
                     android:text="@string/answer"
                     android:textSize="@dimen/_11sdp" />

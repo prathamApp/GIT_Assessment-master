@@ -1705,10 +1705,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 //            tempScienceQuestion.setMatchingNameList(tempScienceQuestionList.get(i).getMatchingNameList());
                 tempScienceQuestion.setEndTime(tempScienceQuestionList.get(i).getEndTime());
                 tempScienceQuestion.setMarksPerQuestion(tempScienceQuestionList.get(i).getMarksPerQuestion());
-                //            tempScienceQuestion.setUserAnswerId(tempScienceQuestionList.get(i).getUserAnswerId());
-                //            tempScienceQuestion.setUserAnswer(tempScienceQuestionList.get(i).getUserAnswer());
-                //            tempScienceQuestion.setAttempted(tempScienceQuestionList.get(i).getIsAttempted());
-                //            tempScienceQuestion.setCorrect(tempScienceQuestionList.get(i).getIsCorrect());
+                tempScienceQuestion.setUserAnswerId(tempScienceQuestionList.get(i).getUserAnswerId());
+                tempScienceQuestion.setUserAnswer(tempScienceQuestionList.get(i).getUserAnswer());
+                tempScienceQuestion.setAttempted(tempScienceQuestionList.get(i).getIsAttempted());
+                tempScienceQuestion.setCorrect(tempScienceQuestionList.get(i).getIsCorrect());
                 tempScienceQuestion.setRefParaID(tempScienceQuestionList.get(i).getRefParaID());
                 tempScienceQuestion.setIsQuestionFromSDCard(tempScienceQuestionList.get(i).getIsQuestionFromSDCard());
                 tempScienceQuestion.setPaperId(tempScienceQuestionList.get(i).getPaperid());
@@ -3712,7 +3712,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     score.setUserAnswer(scienceQuestionList.get(i).getUserAnswer());
                 else if (scienceQuestionList.get(i).getUserAnswer().equalsIgnoreCase("") && !scienceQuestionList.get(i).getUserAnswerId().equalsIgnoreCase(""))
                     score.setUserAnswer(scienceQuestionList.get(i).getUserAnswerId());
+                if (score.getUserAnswer() != null)
+                    if (!score.getIsAttempted() && !score.getUserAnswer().equalsIgnoreCase(""))
+                        Toast.makeText(this, "ATTEMPT ERROR 0", Toast.LENGTH_SHORT).show();
                 scores.add(score);
+
             }
             paper.setScoreList(scores);
             int count = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
@@ -4551,9 +4555,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                         scienceQuestion.setPaperid(content_cursor.getString(content_cursor.getColumnIndex("paperid")));
                                         scienceQuestion.setUserAnswerId(content_cursor.getString(content_cursor.getColumnIndex("userAnswerId")));
                                         scienceQuestion.setUserAnswer(content_cursor.getString(content_cursor.getColumnIndex("userAnswer")));
-                                        /*scienceQuestion.setIsAttempted((content_cursor.getInt(content_cursor.getColumnIndex("isAttempted"))) == 1 ? true : false);
+                                        scienceQuestion.setIsAttempted((content_cursor.getInt(content_cursor.getColumnIndex("isAttempted"))) == 1 ? true : false);
                                         scienceQuestion.setIsCorrect((content_cursor.getInt(content_cursor.getColumnIndex("isCorrect"))) == 1 ? true : false);
-                                        */
                                         scienceQuestion.setIsQuestionFromSDCard(true);
                                         scienceQuestion.setIsParaQuestion(content_cursor.getInt((content_cursor.getColumnIndex("IsParaQuestion"))) == 1);
                                         scienceQuestion.setRefParaID(content_cursor.getString(content_cursor.getColumnIndex("RefParaID")));
