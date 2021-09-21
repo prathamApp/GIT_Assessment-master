@@ -17,7 +17,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -229,7 +228,6 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
             questionImage.setVisibility(View.GONE);
             rl_question_img.setVisibility(View.GONE);
         }
-        Toast.makeText(getActivity(), "qid" + scienceQuestion.getQid(), Toast.LENGTH_SHORT).show();
         options.clear();
         options = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
 /*        int imgCnt = 0;
