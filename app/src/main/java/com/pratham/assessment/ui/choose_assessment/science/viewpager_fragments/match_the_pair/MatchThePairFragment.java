@@ -39,6 +39,7 @@ import java.util.List;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_match_the_pair_row)
@@ -118,6 +119,7 @@ public class MatchThePairFragment extends Fragment implements StartDragListener,
 
     public void setMatchPairQuestion() {
         setOdiaFont(getActivity(), question);
+        setTamilFont(getActivity(), question);
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
         final String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
@@ -242,8 +244,10 @@ public class MatchThePairFragment extends Fragment implements StartDragListener,
                 shuffledList.clear();
 
                 shuffledList.addAll(pairList);
-                Collections.shuffle(shuffledList);
-                Collections.shuffle(shuffledList);
+                if (shuffledList.size() > 1)
+                    while (shuffledList.equals(pairList)) {
+                        Collections.shuffle(shuffledList);
+                    }
             } else {
                 if (AnswerList.size() > 0)
                     shuffledList.addAll(AnswerList);

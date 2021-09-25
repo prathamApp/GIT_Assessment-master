@@ -39,8 +39,10 @@ public class BottomQuestionFragment extends DialogFragment {
     Button saveAssessment;
     //    @BindView(R.id.tv_not_answered_color)
     TextView tv_not_answered_color;
+    TextView tv_not_answered;
     //    @BindView(R.id.tv_answered_color)
     TextView tv_answered_color;
+    TextView tv_answered;
     //    @BindView(R.id.rl_root)
     RelativeLayout rl_root;
     /*Context context;*/
@@ -74,10 +76,13 @@ public class BottomQuestionFragment extends DialogFragment {
         rvQuestion = view.findViewById(R.id.rv_questions);
         saveAssessment = view.findViewById(R.id.btn_save);
         tv_not_answered_color = view.findViewById(R.id.tv_not_answered_color);
+        tv_not_answered = view.findViewById(R.id.tv_not_answered);
         tv_answered_color = view.findViewById(R.id.tv_answered_color);
+        tv_answered = view.findViewById(R.id.tv_answered);
         rl_root = view.findViewById(R.id.rl_root);
         rl_root.setBackgroundColor(Assessment_Utility.selectedColor);
-
+        Assessment_Utility.setTamilFont(getActivity(), tv_answered);
+        Assessment_Utility.setTamilFont(getActivity(), tv_not_answered);
         saveAssessment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

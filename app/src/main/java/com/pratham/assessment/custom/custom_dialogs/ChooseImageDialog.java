@@ -5,9 +5,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.widget.Button;
 
-
 import com.pratham.assessment.R;
-
+import com.pratham.assessment.utilities.Assessment_Utility;
 
 
 /**
@@ -27,6 +26,8 @@ public class ChooseImageDialog extends Dialog {
         setContentView(R.layout.layout_image_choose_dialog);
         btn_choose_from_gallery = findViewById(R.id.btn_choose_from_gallery);
         btn_take_photo = findViewById(R.id.btn_take_photo);
+        Assessment_Utility.setTamilFont(context, btn_choose_from_gallery);
+        Assessment_Utility.setTamilFont(context, btn_take_photo);
 
 //        ButterKnife.bind(this);
     }

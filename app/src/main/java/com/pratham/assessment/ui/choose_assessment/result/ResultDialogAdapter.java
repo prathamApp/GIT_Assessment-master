@@ -63,6 +63,7 @@ public class ResultDialogAdapter extends RecyclerView.Adapter<ResultDialogAdapte
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         final ScienceQuestionChoice scienceQuestionChoice = scienceQuestionChoices.get(i);
         Assessment_Utility.setOdiaFont(context, myViewHolder.text);
+        Assessment_Utility.setTamilFont(context, myViewHolder.text);
         myViewHolder.text.setTextColor(Color.BLACK);
         if (type.equalsIgnoreCase("que")) {
             if (!scienceQuestionChoice.getChoiceurl().equalsIgnoreCase("")) {

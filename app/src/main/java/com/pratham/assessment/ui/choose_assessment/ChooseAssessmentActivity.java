@@ -70,6 +70,7 @@ import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
 import static com.pratham.assessment.constants.Assessment_Constants.PUSH_DATA_FROM_DRAWER;
 import static com.pratham.assessment.constants.Assessment_Constants.VIDEOMONITORING;
 import static com.pratham.assessment.utilities.Assessment_Utility.dpToPx;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 
 @EActivity(R.layout.activity_choose_assessment)
 public class ChooseAssessmentActivity extends BaseActivity implements
@@ -577,6 +578,10 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         Button exit_btn = dialog.findViewById(R.id.dia_btn_exit);
         Button restart_btn = dialog.findViewById(R.id.dia_btn_restart);
         Button cancel_btn = dialog.findViewById(R.id.dia_btn_cancel);
+        setTamilFont(context, title);
+        setTamilFont(context, restart_btn);
+        setTamilFont(context, exit_btn);
+        setTamilFont(context, cancel_btn);
         cancel_btn.setVisibility(View.VISIBLE);
         title.setText(R.string.do_you_want_to_exit);
         restart_btn.setText(R.string.no);

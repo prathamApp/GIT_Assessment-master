@@ -49,6 +49,7 @@ import java.util.List;
 import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_image_answer_row)
@@ -139,6 +140,7 @@ public class ImageAnswerFragment extends Fragment implements ImageAnswerContract
                 view_captured_img.setVisibility(View.VISIBLE);
             }
         setOdiaFont(getActivity(), question);
+        setTamilFont(getActivity(), question);
 
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
         if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {

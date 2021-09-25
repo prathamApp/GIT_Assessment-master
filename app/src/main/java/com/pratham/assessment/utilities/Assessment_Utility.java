@@ -47,6 +47,7 @@ import android.support.v4.view.animation.FastOutLinearInInterpolator;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -2317,6 +2318,8 @@ public class Assessment_Utility {
                     ((CheckBox) view).setTypeface(font);
                 } else if (view instanceof RadioButton) {
                     ((RadioButton) view).setTypeface(font);
+                }else if (view instanceof AppCompatTextView) {
+                    ((AppCompatTextView) view).setTypeface(font);
                 } else if (view instanceof TextView) {
                     ((TextView) view).setTypeface(font);
                 }
@@ -2325,6 +2328,24 @@ public class Assessment_Utility {
             e.printStackTrace();
         }
     }
+
+    /*public static void setTamilFont(Context context, View view) {
+        try {
+            String currentLang = FastSave.getInstance().getString("language", "1");
+            if (currentLang.equalsIgnoreCase("13")) {
+                Typeface font = Typeface.createFromAsset(context.getAssets(), "fonts/ntr.ttf");
+                if (view instanceof CheckBox) {
+                    ((CheckBox) view).setTypeface(font);
+                } else if (view instanceof RadioButton) {
+                    ((RadioButton) view).setTypeface(font);
+                } else if (view instanceof TextView) {
+                    ((TextView) view).setTypeface(font);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }*/
 
 
     public static String removeSpecialCharacters(String string) {

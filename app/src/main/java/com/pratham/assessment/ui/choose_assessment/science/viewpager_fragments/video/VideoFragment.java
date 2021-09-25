@@ -54,6 +54,7 @@ import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MED
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_video_row)
@@ -136,6 +137,7 @@ public class VideoFragment extends Fragment implements VideoContract.VideoView {
 
     public void setVideoQuestion() {
         setOdiaFont(getActivity(), question);
+        setTamilFont(getActivity(), question);
         videoList = new ArrayList();
 
         fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());

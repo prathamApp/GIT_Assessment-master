@@ -33,6 +33,7 @@ import java.util.List;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getOptionLocalPath;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 
 public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDragDropAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
     List<ScienceQuestionChoice> draggedList = new ArrayList<>();
@@ -89,6 +90,7 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
 //        if(data.get(position))
 
         setOdiaFont(context, holder.mTitle);
+        setTamilFont(context, holder.mTitle);
         holder.setIsRecyclable(false);
         holder.mTitle.setTextColor(Assessment_Utility.selectedColor);
         Drawable drawable = context.getResources().getDrawable(R.drawable.ic_swap_vertical_small);

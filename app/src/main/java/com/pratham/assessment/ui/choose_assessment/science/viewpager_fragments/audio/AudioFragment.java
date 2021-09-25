@@ -56,6 +56,7 @@ import static com.pratham.assessment.utilities.Assessment_Utility.formatMilliSec
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_audio_row)
@@ -173,6 +174,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface, Aud
         audioList = new ArrayList();
 
         setOdiaFont(getActivity(), question);
+        setTamilFont(getActivity(), question);
         if (scienceQuestion.getIsAttempted() && scienceQuestion.getMatchingNameList() != null) {
             presenter.setAttemptedList(scienceQuestion);
 

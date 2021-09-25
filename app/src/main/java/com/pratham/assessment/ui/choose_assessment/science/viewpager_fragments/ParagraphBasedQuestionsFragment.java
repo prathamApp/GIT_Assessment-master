@@ -33,6 +33,7 @@ import java.io.InputStream;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 
 @EFragment(R.layout.layout_paragraph_based_question_row)
 public class ParagraphBasedQuestionsFragment extends Fragment {
@@ -109,6 +110,7 @@ public class ParagraphBasedQuestionsFragment extends Fragment {
     public void setParaBasedQuestions() {
 
         setOdiaFont(getActivity(), question);
+        setTamilFont(getActivity(), question);
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
         if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);

@@ -2574,9 +2574,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
           chooseImageDialog.btn_take_photo.setOnClickListener(new View.OnClickListener() {
               @Override
-              public void onClick(View v) {
+              public void onClick(View v2) {
                   chooseImageDialog.cancel();
-                  if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
+                  if ((Build.VER    SION.SDK_INT >= Build.VERSION_CODES.M)) {
                       String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA};
 
                       if (!isPermissionsGranted(ScienceAssessmentActivity.this, permissionArray)) {
@@ -3195,9 +3195,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         if (scienceQuestionList.get(i).getIsAttempted())
                             attemptedQuestion.add(scienceQuestionList.get(i));
                     }
-                    if (attemptedQuestion.size() == scienceQuestionList.size())
-                        insertInDB(scienceQuestionList, " Exam completed");
-                    else insertInDB(scienceQuestionList, " Exam incomplete");
+                    if (attemptedQuestion.size() > 0)
+                        if (attemptedQuestion.size() == scienceQuestionList.size())
+                            insertInDB(attemptedQuestion, " Exam completed");
+                        else insertInDB(attemptedQuestion, " Exam incomplete");
 
 
                     Intent intent = new Intent();
@@ -3651,8 +3652,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             setResult(5252, intent);
             if (attemptedQuestion.size() > 0) {
                 if (attemptedQuestion.size() == scienceQuestionList.size())
-                    insertInDB(scienceQuestionList, " Exam completed");
-                else insertInDB(scienceQuestionList, " Exam incomplete");
+                    insertInDB(attemptedQuestion, " Exam completed");
+                else insertInDB(attemptedQuestion, " Exam incomplete");
 
                 if (!AssessmentApplication.isTablet) {
                     pushDataOnSubmit();

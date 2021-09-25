@@ -22,6 +22,7 @@ import java.util.List;
 
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getOptionLocalPath;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 
 public class MatchPairAdapter extends RecyclerView.Adapter<MatchPairAdapter.MyViewHolder> {
     List<ScienceQuestionChoice> pairList;
@@ -111,7 +112,7 @@ public class MatchPairAdapter extends RecyclerView.Adapter<MatchPairAdapter.MyVi
                 RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, 190);
                 param.addRule(RelativeLayout.CENTER_IN_PARENT);
-                holder.imageView.setPadding(5,5,5,5);
+                holder.imageView.setPadding(5, 5, 5, 5);
                 holder.imageView.setLayoutParams(param);
             }
           /*  Glide.with(context)
@@ -127,6 +128,7 @@ public class MatchPairAdapter extends RecyclerView.Adapter<MatchPairAdapter.MyVi
             holder.imageView.setOnClickListener(v -> Assessment_Utility.showZoomDialog(context, localPath, ""));
             holder.gifView.setOnClickListener(v -> Assessment_Utility.showZoomDialog(context, localPath, ""));
         } else {
+            setTamilFont(context, holder.text);
             holder.text.setMovementMethod(new ScrollingMovementMethod());
             holder.rl_img.setVisibility(View.GONE);
             if (scienceQuestionChoice.getChoicename() != null && !scienceQuestionChoice.getChoicename().equalsIgnoreCase(""))

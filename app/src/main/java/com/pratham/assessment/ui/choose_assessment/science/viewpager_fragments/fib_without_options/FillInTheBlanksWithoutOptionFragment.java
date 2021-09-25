@@ -42,6 +42,7 @@ import static com.pratham.assessment.ui.choose_assessment.science.ScienceAssessm
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getQuestionLocalPath;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_fill_in_the_blanks_wo_option_row)
@@ -126,6 +127,7 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
 
         setOdiaFont(getActivity(), question);
+        setTamilFont(getActivity(), question);
 
         correctArr = new boolean[scienceQuestion.getAnswer().
                 replaceAll(STT_REGEX_3, "")

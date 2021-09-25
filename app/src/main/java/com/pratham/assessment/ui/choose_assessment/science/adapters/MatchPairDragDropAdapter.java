@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 
 public class MatchPairDragDropAdapter extends RecyclerView.Adapter<MatchPairDragDropAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
     List<ScienceQuestionChoice> draggedList = new ArrayList<>();
@@ -117,7 +118,7 @@ public class MatchPairDragDropAdapter extends RecyclerView.Adapter<MatchPairDrag
                     RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT, 190);
                     param.addRule(RelativeLayout.CENTER_IN_PARENT);
-                    holder.imageView.setPadding(5,5,5,5);
+                    holder.imageView.setPadding(5, 5, 5, 5);
                     holder.imageView.setLayoutParams(param);
                 }
 
@@ -134,6 +135,7 @@ public class MatchPairDragDropAdapter extends RecyclerView.Adapter<MatchPairDrag
                 holder.imageView.setOnClickListener(v -> Assessment_Utility.showZoomDialog(context, localPath, ""));
                 holder.gifView.setOnClickListener(v -> Assessment_Utility.showZoomDialog(context, localPath, ""));
             } else {
+                setTamilFont(context, holder.mTitle);
                 holder.rl_img.setVisibility(View.GONE);
                 if (scienceQuestionChoice.getMatchingname() != null && !scienceQuestionChoice.getMatchingname().equalsIgnoreCase(""))
                     holder.mTitle.setText(Html.fromHtml(scienceQuestionChoice.getMatchingname()));

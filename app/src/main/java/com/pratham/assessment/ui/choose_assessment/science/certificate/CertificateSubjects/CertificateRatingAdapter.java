@@ -54,6 +54,7 @@ public class CertificateRatingAdapter extends RecyclerView.Adapter<CertificateRa
         CertificateRatingModalClass topicList = questionList.get(i);
 
         Assessment_Utility.setOdiaFont(context, myViewHolder.question);
+        Assessment_Utility.setTamilFont(context, myViewHolder.question);
         myViewHolder.question.setText(Html.fromHtml(topicList.getCertificateQuestion()));
         myViewHolder.ratingBar.setRating(topicList.getRating());
 

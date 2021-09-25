@@ -53,6 +53,7 @@ import static com.pratham.assessment.constants.Assessment_Constants.VIDEO;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHolder> implements AudioPlayerInterface {
@@ -71,7 +72,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView question, userAnswer, correctAnswer, correctAnsLabel, btnUserAnswer, btnCorrectAnswer, tv_you_answered_label;
+        TextView question, userAnswer, tv_correctAnswer, correctAnsLabel, btnUserAnswer, btnCorrectAnswer, tv_you_answered_label;
         CardView cardView;
         ImageView questionImg;
         ImageView iv_correct_wrong_indicator, image_you_answered, image_correct_ans;
@@ -84,7 +85,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
             tv_you_answered_label = itemView.findViewById(R.id.tv_you_answered_label);
             questionImg = itemView.findViewById(R.id.question_img);
             userAnswer = itemView.findViewById(R.id.tv_you_answered);
-            correctAnswer = itemView.findViewById(R.id.tv_correct_answer);
+            tv_correctAnswer = itemView.findViewById(R.id.tv_correct_answer);
             correctAnsLabel = itemView.findViewById(R.id.tv_correct_answer_label);
             btnUserAnswer = itemView.findViewById(R.id.btn_you_answered);
             btnCorrectAnswer = itemView.findViewById(R.id.btn_correct_Ans);
@@ -112,12 +113,19 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 //        myViewHolder.setIsRecyclable(false);
 
         setOdiaFont(context, myViewHolder.question);
+        setTamilFont(context, myViewHolder.question);
         setOdiaFont(context, myViewHolder.userAnswer);
-        setOdiaFont(context, myViewHolder.correctAnswer);
+        setTamilFont(context, myViewHolder.userAnswer);
+        setOdiaFont(context, myViewHolder.tv_correctAnswer);
+        setTamilFont(context, myViewHolder.tv_correctAnswer);
         setOdiaFont(context, myViewHolder.correctAnsLabel);
+        setTamilFont(context, myViewHolder.correctAnsLabel);
         setOdiaFont(context, myViewHolder.btnUserAnswer);
+        setTamilFont(context, myViewHolder.btnUserAnswer);
         setOdiaFont(context, myViewHolder.btnCorrectAnswer);
+        setTamilFont(context, myViewHolder.btnCorrectAnswer);
         setOdiaFont(context, myViewHolder.tv_you_answered_label);
+        setTamilFont(context, myViewHolder.tv_you_answered_label);
 
         if (resultList.size() < 5)
             resultListener.showDone(true);
@@ -270,7 +278,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
             myViewHolder.userAnswer.setTextColor(color);
 
         }
-        myViewHolder.correctAnswer.setText(Html.fromHtml(result.getCorrectAnswer()));
+        myViewHolder.tv_correctAnswer.setText(Html.fromHtml(result.getCorrectAnswer()));
         if (result.isCorrect()) {
             myViewHolder.iv_correct_wrong_indicator.setImageResource(R.drawable.ic_check_black);
             myViewHolder.iv_correct_wrong_indicator.setBackgroundColor(context.getResources().getColor(R.color.green));
@@ -282,8 +290,8 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
         } else {
             myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
             myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
-            if (!myViewHolder.correctAnswer.getText().equals(""))
-                myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
+            if (!myViewHolder.tv_correctAnswer.getText().equals(""))
+                myViewHolder.tv_correctAnswer.setVisibility(View.VISIBLE);
             myViewHolder.iv_correct_wrong_indicator.setImageResource(R.drawable.ic_close_black_24dp);
             myViewHolder.iv_correct_wrong_indicator.setBackgroundColor(context.getResources().getColor(R.color.colorRed));
             myViewHolder.cardView.setBackground(context.getResources().getDrawable(R.drawable.red_bg));
@@ -303,6 +311,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
                 if (result.isAttempted()) {
                     if (result.isCorrect()) {
+                        myViewHolder.ll_user_ans.setVisibility(View.GONE);
                         myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
                     } else {
                         myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
@@ -379,7 +388,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 for (int j = 0; j < scienceQuestionChoice.size(); j++) {
                     if (scienceQuestionChoice.get(j).getCorrect().equalsIgnoreCase("true")) {
                         correctAns = scienceQuestionChoice.get(j);
-                        myViewHolder.correctAnswer.setText(Html.fromHtml(correctAns.getChoicename()));
+                        myViewHolder.tv_correctAnswer.setText(Html.fromHtml(correctAns.getChoicename()));
 //                        userAns = scienceQuestionChoice.get(j);
                     }
                     if (scienceQuestionChoice.get(j).getQcid().equalsIgnoreCase(result.getUserAnswerId())) {
@@ -391,12 +400,13 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     if (correctAns.getChoiceurl().equalsIgnoreCase("")) {
                         myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
                         myViewHolder.image_correct_ans.setVisibility(View.GONE);
-                        myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_correctAnswer.setVisibility(View.VISIBLE);
+                        myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
                     } else {
                         setImage(correctAns, correctAns.getChoiceurl(), myViewHolder.image_correct_ans);
 //                            setImage(userAns, getImage(result.getUserAnswerId()), myViewHolder.image_you_answered);
                         myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
-                        myViewHolder.correctAnswer.setVisibility(View.GONE);
+                        myViewHolder.tv_correctAnswer.setVisibility(View.GONE);
 //                                myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
                         myViewHolder.image_correct_ans.setVisibility(View.VISIBLE);
                     }
@@ -439,15 +449,15 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     if (userAns.getCorrect().equalsIgnoreCase("true")) {
                         if (!userAns.getChoiceurl().equalsIgnoreCase("")) {
                             myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
-                            myViewHolder.correctAnswer.setVisibility(View.GONE);
+                            myViewHolder.tv_correctAnswer.setVisibility(View.GONE);
                             myViewHolder.image_correct_ans.setVisibility(View.VISIBLE);
                             setImage(correctAns, correctAns.getChoiceurl(), myViewHolder.image_correct_ans);
                             setImage(userAns, getImage(result.getUserAnswerId()), myViewHolder.image_you_answered);
                         }
                         if (!userAns.getChoicename().equalsIgnoreCase("")) {
                             myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
-                            myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
-                            myViewHolder.correctAnswer.setText(Html.fromHtml(userAns.getChoicename()));
+                            myViewHolder.tv_correctAnswer.setVisibility(View.VISIBLE);
+                            myViewHolder.tv_correctAnswer.setText(Html.fromHtml(userAns.getChoicename()));
                         }
                         if (!result.getUserAnswer().equalsIgnoreCase("")) {
                             myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
@@ -456,15 +466,15 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     }
                 }
 //                }
-                if (!myViewHolder.correctAnswer.getText().toString().equalsIgnoreCase("")) {
+                if (!myViewHolder.tv_correctAnswer.getText().toString().equalsIgnoreCase("")) {
 //                    if (userAns.getChoiceurl().equalsIgnoreCase(""))
                     myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
-                    myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
-                    myViewHolder.correctAnswer.setText(Html.fromHtml(correctAns.getChoicename()));
+                    myViewHolder.tv_correctAnswer.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_correctAnswer.setText(Html.fromHtml(correctAns.getChoicename()));
                     myViewHolder.correctAnsLabel.setVisibility(View.VISIBLE);
 
                 } else {
-                    myViewHolder.correctAnswer.setVisibility(View.GONE);
+                    myViewHolder.tv_correctAnswer.setVisibility(View.GONE);
 //                    myViewHolder.correctAnsLabel.setVisibility(View.GONE);
 
                 }
@@ -503,18 +513,18 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 myViewHolder.btnUserAnswer.setVisibility(View.GONE);
                 if (result.isCorrect()) {
                     if (!result.getCorrectAnswer().equalsIgnoreCase("")) {
-                        myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_correctAnswer.setVisibility(View.VISIBLE);
                         myViewHolder.userAnswer.setVisibility(View.GONE);
                     } else {
                         myViewHolder.ll_correct_ans.setVisibility(View.GONE);
                         myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
-                        myViewHolder.correctAnswer.setVisibility(View.GONE);
+                        myViewHolder.tv_correctAnswer.setVisibility(View.GONE);
 
                     }
                 } else {
                     if (!result.getCorrectAnswer().equalsIgnoreCase("")) {
 
-                        myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
+                        myViewHolder.tv_correctAnswer.setVisibility(View.VISIBLE);
                         myViewHolder.userAnswer.setVisibility(View.VISIBLE);
                     } else {
                         myViewHolder.ll_correct_ans.setVisibility(View.GONE);
@@ -577,7 +587,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 //                myViewHolder.answerVideo.setVisibility(View.GONE);
                 if (result.isAttempted()) {
                     myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
-                    myViewHolder.correctAnswer.setVisibility(View.VISIBLE);
+                    myViewHolder.tv_correctAnswer.setVisibility(View.VISIBLE);
 
                     if (result.isCorrect()) {
                         myViewHolder.ll_user_ans.setVisibility(View.GONE);
@@ -665,12 +675,14 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
     private void showButtons(MyViewHolder myViewHolder, boolean attempted) {
         if (attempted) {
+            myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
             myViewHolder.btnUserAnswer.setVisibility(View.VISIBLE);
         } else {
             myViewHolder.btnUserAnswer.setVisibility(View.GONE);
         }
+        myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
         myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
-        myViewHolder.correctAnswer.setVisibility(View.GONE);
+        myViewHolder.tv_correctAnswer.setVisibility(View.GONE);
         myViewHolder.userAnswer.setVisibility(View.GONE);
 
     }

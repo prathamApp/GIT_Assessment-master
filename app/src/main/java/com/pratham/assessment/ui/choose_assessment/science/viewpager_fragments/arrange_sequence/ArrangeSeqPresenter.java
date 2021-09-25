@@ -3,10 +3,8 @@ package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.
 import android.content.Context;
 import android.util.Log;
 
-import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
-import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.fib_without_options.FIB_WithoutOption_Contract;
 
 import org.androidannotations.annotations.EBean;
 
@@ -42,7 +40,7 @@ public class ArrangeSeqPresenter implements ArrangeSequenceContract.ArrangeSeqPr
 
         }
 
-        List list1 = new ArrayList();
+//        List list1 = new ArrayList();
         List<ScienceQuestionChoice> shuffledList = new ArrayList<>();
 //        List<ScienceQuestionChoice> pairList = AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
         List<ScienceQuestionChoice> pairList = scienceQuestion.getLstquestionchoice();
@@ -52,16 +50,13 @@ public class ArrangeSeqPresenter implements ArrangeSequenceContract.ArrangeSeqPr
                 list1.add(pairList.get(p).getChoicename());
             }*/
 
-
             if (scienceQuestion.getMatchingNameList() == null) {
-                shuffledList.clear();
 
                 shuffledList.addAll(pairList);
                 if (shuffledList.size() > 1)
                     while (shuffledList.equals(pairList)) {
                         Collections.shuffle(shuffledList);
                     }
-//                Collections.shuffle(shuffledList);
             } else {
                 if (AnswerList.size() > 0)
                     shuffledList.addAll(AnswerList);

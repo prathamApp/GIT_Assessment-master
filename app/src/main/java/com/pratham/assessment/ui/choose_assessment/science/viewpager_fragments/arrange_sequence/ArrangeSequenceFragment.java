@@ -35,6 +35,7 @@ import java.util.List;
 
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_arrange_seq_row)
@@ -95,6 +96,7 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
     public void setArrangeSeqQuestion() {
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
         setOdiaFont(getActivity(), question);
+        setTamilFont(getActivity(), question);
 
         final String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
         final String localPath = Assessment_Utility.getQuestionLocalPath(scienceQuestion);

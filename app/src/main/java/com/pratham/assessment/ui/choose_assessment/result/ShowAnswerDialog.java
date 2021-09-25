@@ -96,6 +96,7 @@ public class ShowAnswerDialog extends Dialog {
         if (ans.length() > 0)
             ans.setLength(ans.length() - 1);
         Assessment_Utility.setOdiaFont(context, multipleSelectAns);
+        Assessment_Utility.setTamilFont(context, multipleSelectAns);
         multipleSelectAns.setText(ans);
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +150,7 @@ public class ShowAnswerDialog extends Dialog {
         }
         wrongCnt = userAns.size() - correctCnt;
         tv_correct_wrong_cnt.setText(context.getResources().getString(R.string.correct) + " : " + correctCnt + "  " + context.getResources().getString(R.string.wrong) + " : " + wrongCnt);
-        ResultDialogAdapter adapter = new ResultDialogAdapter(context, scienceQuestionChoice, "que");
+        ResultDialogAdapter adapter = new ResultDialogAdapter(context, userAns, "que");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         list1.setLayoutManager(linearLayoutManager);
         list1.setAdapter(adapter);

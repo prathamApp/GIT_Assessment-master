@@ -47,6 +47,7 @@ import java.util.List;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getOptionLocalPath;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_mcq_fill_in_the_blanks_with_options_row)
@@ -144,6 +145,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
         presenter.setView(this);
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
         setOdiaFont(getActivity(), question);
+        setTamilFont(getActivity(), question);
 
         if (question != null)
             question.setMovementMethod(new ScrollingMovementMethod());
@@ -251,6 +253,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                     textView.setText(Html.fromHtml(options.get(r).getChoicename()));
 
                     setOdiaFont(getActivity(), textView);
+                    setTamilFont(getActivity(), textView);
 
                     gridMcq.addView(textView);
                     if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
@@ -372,6 +375,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                         textView.setText(Html.fromHtml(options.get(r).getChoicename()));
 
                         setOdiaFont(getActivity(), textView);
+                        setTamilFont(getActivity(), textView);
 
                         if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
                             textView.setTextColor(Assessment_Utility.selectedColor);

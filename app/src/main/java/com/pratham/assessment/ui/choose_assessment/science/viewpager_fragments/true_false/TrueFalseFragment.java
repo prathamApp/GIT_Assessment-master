@@ -33,6 +33,7 @@ import java.util.List;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_true_false_row)
@@ -122,6 +123,7 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
         options = new ArrayList<>();
 
         setOdiaFont(getActivity(), question);
+        setTamilFont(getActivity(), question);
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
         String fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //                String localPath = Environment.getExternalStorageDirectory() + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
@@ -304,7 +306,8 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
             radioButtonFalse.setTextColor(getActivity().getResources().getColor(R.color.white));
 
         }
-
+        setTamilFont(getActivity(), radioButtonFalse);
+        setTamilFont(getActivity(), radioButtonTrue);
     }
 
     @Override

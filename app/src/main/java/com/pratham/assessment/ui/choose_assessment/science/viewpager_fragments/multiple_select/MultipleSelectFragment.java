@@ -35,6 +35,7 @@ import java.util.List;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getOptionLocalPath;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_multiple_select_row)
@@ -117,6 +118,7 @@ public class MultipleSelectFragment extends Fragment implements MultipleSelectCo
     public void setMultipleSelectQuestion() {
 
         setOdiaFont(getActivity(), question);
+        setTamilFont(getActivity(), question);
 
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
         final String localPath = Assessment_Utility.getQuestionLocalPath(scienceQuestion);
@@ -155,6 +157,7 @@ public class MultipleSelectFragment extends Fragment implements MultipleSelectCo
             checkBox.setButtonTintList(Assessment_Utility.colorStateList);
             checkBox.setTextColor(getActivity().getResources().getColor(R.color.white));
             setOdiaFont(getActivity(), checkBox);
+            setTamilFont(getActivity(), checkBox);
             if (!choices.get(j).getChoicename().equalsIgnoreCase(""))
                 checkBox.setText(Html.fromHtml(choices.get(j).getChoicename()));
 

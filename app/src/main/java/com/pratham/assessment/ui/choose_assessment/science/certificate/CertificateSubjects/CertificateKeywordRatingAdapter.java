@@ -53,6 +53,7 @@ public class CertificateKeywordRatingAdapter extends RecyclerView.Adapter<Certif
         CertificateKeywordRating keywordRating = certificateKeywordRatingList.get(i);
 
         Assessment_Utility.setOdiaFont(context, myViewHolder.question);
+        Assessment_Utility.setTamilFont(context, myViewHolder.question);
         myViewHolder.question.setText(Html.fromHtml(keywordRating.getCertificatequestion()));
         myViewHolder.ratingBar.setRating(Float.parseFloat(keywordRating.getRating()));
 

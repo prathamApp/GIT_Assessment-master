@@ -58,6 +58,7 @@ import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
 import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(resName = "layout_text_paragraph_item")
@@ -168,6 +169,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
     public void setTextPara() {
         setWords();
         setOdiaFont(getActivity(), question);
+        setTamilFont(getActivity(), question);
 //        question.setText(scienceQuestion.getQname());
         if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
             questionImage.setVisibility(View.VISIBLE);
