@@ -416,6 +416,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         TextView title = dialog.findViewById(R.id.dia_title);
         Button exit_btn = dialog.findViewById(R.id.dia_btn_exit);
         Button restart_btn = dialog.findViewById(R.id.dia_btn_restart);
+        Button dia_btn_cancel = dialog.findViewById(R.id.dia_btn_cancel);
 
 //        title.setText(R.string.do_you_want_to_exit);
 //        restart_btn.setText(R.string.yes);
@@ -423,6 +424,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         title.setText("Do you want to exit?");
         restart_btn.setText("Yes");
         exit_btn.setText("No");
+        dia_btn_cancel.setText("Cancel");
         dialog.show();
 
         exit_btn.setOnClickListener(new View.OnClickListener() {

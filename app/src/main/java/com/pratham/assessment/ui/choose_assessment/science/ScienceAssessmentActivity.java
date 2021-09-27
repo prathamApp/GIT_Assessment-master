@@ -2125,9 +2125,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        ExamTime = 1;
-        /*if (ExamTime == 0)
-            ExamTime = 30;*/
+//        ExamTime = 1;
+        if (ExamTime == 0)
+            ExamTime = 30;
         final int timer = ExamTime * 60000;
 
         int captureTime = ExamTime / 3;
