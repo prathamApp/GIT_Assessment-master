@@ -3542,7 +3542,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             String currentSession = FastSave.getInstance().getString("CurrentSession", "");
             String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
 
-
             ArrayList<Score> scores = new ArrayList<>();
             for (int i = 0; i < scienceQuestionList.size(); i++) {
                 Score score = new Score();
