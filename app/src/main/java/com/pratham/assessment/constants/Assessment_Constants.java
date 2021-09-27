@@ -157,7 +157,7 @@ public class Assessment_Constants {
 
     public static final String STT_REGEX = "[\"\\-+\\.'^?!@#%-_;&*,:|।<>()]";
     public static final String STT_REGEX_2 = "[\"\\-+\\.'^?!@#%-_;&*,:<>()]";
-    public static final String STT_REGEX_3="[\\-+.\"^?!@#%&*,:]";
+    public static final String STT_REGEX_3 = "[\\-+.\"^?!@#%&*,:]";
 
     //Assessment question types
     public static final String MULTIPLE_CHOICE = "1";

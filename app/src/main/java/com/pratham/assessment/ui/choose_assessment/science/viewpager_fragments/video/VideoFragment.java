@@ -379,18 +379,7 @@ public class VideoFragment extends Fragment implements VideoContract.VideoView {
          }
      }
  */
-    private void showCapturedVideo() {
-        try {
-            showAnswerVideo();
-          /*  videoName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO + ".mp4";
-            filePath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + videoName;
-         */
-            assessmentAnswerListener.setAnswerInActivity("", filePath, scienceQuestion.getQid(), null);
-//        checkAssessment(queCnt);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
     @Override
