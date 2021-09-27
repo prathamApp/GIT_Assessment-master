@@ -2452,9 +2452,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     if (answer != null && !answer.equalsIgnoreCase("")) {
                         scienceQuestionList.get(i).setUserAnswer(answer);
                         scienceQuestionList.get(i).setUserAnswerId(ansId);
-                    } else {
-                        scienceQuestionList.get(i).setUserAnswer(null);
-                        scienceQuestionList.get(i).setUserAnswerId(null);
                     }
                     break;
                 }
@@ -3571,7 +3568,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     score.setUserAnswer(scienceQuestionList.get(i).getUserAnswerId());
                 if (score.getUserAnswer() != null)
                     if (!score.getIsAttempted() && !score.getUserAnswer().equalsIgnoreCase(""))
-                        Log.d("ERRORinsertInDB", "insertInDB: ATTEMPT ERROR 0");
+                        Toast.makeText(context, "ATTEMPT ERROR", Toast.LENGTH_SHORT).show();
                 scores.add(score);
 
             }
