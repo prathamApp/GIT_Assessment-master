@@ -298,7 +298,7 @@ public class MatchPairDragDropAdapter extends RecyclerView.Adapter<MatchPairDrag
             Log.d("sss", draggedList.toString());
 //        dragDropListener.setList(draggedList, data.get(0).getQid());
 //        questionTypeListener.setAnswer("", "", data.get(0).getQid(), draggedList);
-            assessmentAnswerListener.setAnswerInActivity("", "", data.get(0).getQid(), draggedList);
+            assessmentAnswerListener.setAnswerInActivity("", data.get(0).getQid(), draggedList,0);
         } catch (Exception e) {
             e.printStackTrace();
         }

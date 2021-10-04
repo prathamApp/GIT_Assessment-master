@@ -249,7 +249,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                 Log.d("AppBuildDate1", "run: " + "AppBuildDate");
                 com.pratham.assessment.domain.Status status = new com.pratham.assessment.domain.Status();
                 String key = "AppBuildDate";
-                String value = "27-07-2021";
+                String value = "28-09-2021";
                 SplashPresenter.setStatusTableEntries(status, key, value, context);
                 Log.d("AppBuildDate1", "run: " + "AppBuildDate");
                 Assessment_Constants.SD_CARD_Content = splashPresenter.getSdCardPath();

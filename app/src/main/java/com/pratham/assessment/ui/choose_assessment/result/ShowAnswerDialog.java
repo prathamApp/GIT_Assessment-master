@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
@@ -129,7 +130,7 @@ public class ShowAnswerDialog extends Dialog {
     private void setRecycler() {
     }
 
-    public ShowAnswerDialog(Context context, List<ScienceQuestionChoice> userAns, List<ScienceQuestionChoice> scienceQuestionChoice) {
+    public ShowAnswerDialog(Context context, List<ScienceQuestionChoice> userAns, List<ScienceQuestionChoice> scienceQuestionChoice, String type) {
         super(context, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth);
         setContentView(R.layout.layout_answer_dialog);
 //        ButterKnife.bind(this);
@@ -150,7 +151,11 @@ public class ShowAnswerDialog extends Dialog {
         }
         wrongCnt = userAns.size() - correctCnt;
         tv_correct_wrong_cnt.setText(context.getResources().getString(R.string.correct) + " : " + correctCnt + "  " + context.getResources().getString(R.string.wrong) + " : " + wrongCnt);
-        ResultDialogAdapter adapter = new ResultDialogAdapter(context, userAns, "que");
+        ResultDialogAdapter adapter;
+        if (type.equalsIgnoreCase(Assessment_Constants.MATCHING_PAIR))
+            adapter = new ResultDialogAdapter(context, scienceQuestionChoice, "que");
+        else adapter = new ResultDialogAdapter(context, userAns, "que");
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         list1.setLayoutManager(linearLayoutManager);
         list1.setAdapter(adapter);

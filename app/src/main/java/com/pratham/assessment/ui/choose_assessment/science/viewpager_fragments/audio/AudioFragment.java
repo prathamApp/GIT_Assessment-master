@@ -681,7 +681,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface, Aud
 
                         Log.d("TAG", "onActivityResult: " + audioList.size());
 
-                        assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), answers);
+                        assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), answers, 0);
 
                     }
                     this.audioList = audioList;

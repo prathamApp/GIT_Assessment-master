@@ -35,7 +35,6 @@ import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ImageListDialog_;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
-import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.video.VideoFragment_;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.PermissionUtils;
 import com.pratham.assessment.utilities.RealPathUtil;
@@ -463,7 +462,7 @@ public class VideoFragment extends Fragment implements VideoContract.VideoView {
 
                         Log.d("TAG", "onActivityResult: " + vidList.size());
 
-                        assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), answers);
+                        assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), answers, 0);
                         if (vidList.size() > 0) {
                             btn_show_recorded_video.setVisibility(View.VISIBLE);
                         } else btn_show_recorded_video.setVisibility(View.GONE);

@@ -208,7 +208,7 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment
             @Override
             public void afterTextChanged(Editable s) {
 //                Log.d("@@@"+scienceQuestion.getQid(), s+"");
-                assessmentAnswerListener.setAnswerInActivity("", s.toString(), scienceQuestion.getQid(), null);
+                assessmentAnswerListener.setAnswerInActivity(s.toString(), scienceQuestion.getQid(), null,0 );
             }
         });
     }

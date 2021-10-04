@@ -223,9 +223,11 @@ public class ResultFragment extends Fragment implements ResultListener {
             }
             if (qCnt > 0) {
                 AssessmentPaperForPush assessmentPaperForPush = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByPaperId(paperId);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("assessmentPaperForPush", assessmentPaperForPush);
-                Assessment_Utility.showFragment(getActivity(), new CertificateFragment_(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
+                if (assessmentPaperForPush != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("assessmentPaperForPush", assessmentPaperForPush);
+                    Assessment_Utility.showFragment(getActivity(), new CertificateFragment_(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
+                } else Objects.requireNonNull(getActivity()).finish();
             } else Objects.requireNonNull(getActivity()).finish();
 
         }

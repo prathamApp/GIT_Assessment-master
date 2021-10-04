@@ -253,6 +253,6 @@ public class MultipleSelectFragment extends Fragment implements MultipleSelectCo
 
     @Override
     public void setAnswer(List<ScienceQuestionChoice> choices) {
-        assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), choices);
+        assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), choices, 0);
     }
 }

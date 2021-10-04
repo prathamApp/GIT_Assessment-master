@@ -1409,7 +1409,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
 
 
             key = "AppBuildDate";
-            value = "27-07-2021";
+            value = "28-09-2021";
             setStatusTableEntries(status, key, value, context);
 /*
             if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
@@ -1532,7 +1532,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                     doInitialEntries(context);
                 com.pratham.assessment.domain.Status status = new com.pratham.assessment.domain.Status();
                 String key = "AppBuildDate";
-                String value = "27-07-2021";
+                String value = "28-09-2021";
                 setStatusTableEntries(status, key, value,context);
                 if (!sharedPreferences.getBoolean(Assessment_Constants.KEY_MENU_COPIED, false))
                     populateMenu();
@@ -1659,7 +1659,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                 doInitialEntries(context);
             com.pratham.assessment.domain.Status status = new com.pratham.assessment.domain.Status();
             String key = "AppBuildDate";
-            String value = "27-07-2021";
+            String value = "28-09-2021";
             setStatusTableEntries(status, key, value,context);
             copyDBFile();
             try {

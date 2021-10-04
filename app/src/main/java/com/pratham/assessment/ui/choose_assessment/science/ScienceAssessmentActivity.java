@@ -248,7 +248,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
     int totalMarks = 0, outOfMarks = 0;
     String examStartTime, examEndTime;
-    String answer = "", ansId = "";
+    String answer = "";
     String questionType = "";
     CountDownTimer mCountDownTimer;
     String supervisorId, subjectId;
@@ -340,7 +340,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             Status status = new Status();
             SplashPresenter.setStatusTableEntries(status, key, currentSession, context);
             key = "AppBuildDate";
-            String value = "27-07-2021";
+            String value = "28-09-2021";
             SplashPresenter.setStatusTableEntries(status, key, value, context);
 
             Attendance attendance = new Attendance();
@@ -436,14 +436,13 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             scienceQuestion.setLstquestionchoice((ArrayList<ScienceQuestionChoice>) AppDatabase.getDatabaseInstance(this).getScienceQuestionChoicesDao().getQuestionChoicesByQID(attemptedList.get(i).getQid()));
 //            scienceQuestion.setMatchingNameList(attemptedList.get(i).getMatchingNameList());
             if (scienceQuestion.getIsAttempted()) {
+                List<ScienceQuestionChoice> choices = new ArrayList<>();
                 if (attemptedList.get(i).getQtid().equalsIgnoreCase(MULTIPLE_SELECT) ||
-                        attemptedList.get(i).getQtid().equalsIgnoreCase(MULTIPLE_CHOICE) ||
                         attemptedList.get(i).getQtid().equalsIgnoreCase(MATCHING_PAIR) ||
                         attemptedList.get(i).getQtid().equalsIgnoreCase(ARRANGE_SEQUENCE) ||
                         attemptedList.get(i).getQtid().equalsIgnoreCase(AUDIO) ||
                         attemptedList.get(i).getQtid().equalsIgnoreCase(VIDEO) ||
                         attemptedList.get(i).getQtid().equalsIgnoreCase(IMAGE_ANSWER)) {
-                    List<ScienceQuestionChoice> choices = new ArrayList<>();
 
                    /* switch (attemptedList.get(i).getQtid()) {
                         case MATCHING_PAIR:
@@ -456,15 +455,23 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             if (an.equalsIgnoreCase(scienceQuestion.getLstquestionchoice().get(m).getQcid())) {
                                 if (attemptedList.get(i).getQtid().equalsIgnoreCase(MULTIPLE_SELECT)) {
                                     scienceQuestion.getLstquestionchoice().get(m).setMyIscorrect("true");
-                                    choices.add(scienceQuestion.getLstquestionchoice().get(m));
-                                } else
-                                    choices.add(scienceQuestion.getLstquestionchoice().get(m));
+                                }
+                                choices.add(scienceQuestion.getLstquestionchoice().get(m));
                             }
                         }
-//                            }
                         scienceQuestion.setMatchingNameList(choices);
-//                            break;
                     }
+                } else {
+                    String[] ans = attemptedList.get(i).getUserAnswer().split(",");
+
+                    for (int m = 0; m < scienceQuestion.getLstquestionchoice().size(); m++) {
+                        if (attemptedList.get(i).getQtid().equalsIgnoreCase(MULTIPLE_CHOICE) ||
+                                attemptedList.get(i).getQtid().equalsIgnoreCase(TRUE_FALSE)) {
+                            if (scienceQuestion.getLstquestionchoice().get(m).getChoicename().equalsIgnoreCase(ans[0]))
+                                choices.add(scienceQuestion.getLstquestionchoice().get(m));
+                        }
+                    }
+                    scienceQuestion.setMatchingNameList(choices);
                 }
             }
             scienceQuestion.setQtid(attemptedList.get(i).getQtid());
@@ -704,7 +711,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
     private void downloadPaperPattern(/*final String examId, final String langId,
                                       final String subId*/) {
-        progressDialog.show();
+        if (isActivityRunning)
+            progressDialog.show();
         progressDialog.setMessage(getString(R.string.downloading_paper_pattern));
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
@@ -2443,15 +2451,15 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
 
     @Override
-    public void setAnswerInActivity(String ansId, String answer, String
-            qid, List<ScienceQuestionChoice> list) {
-        if (!ansId.equalsIgnoreCase("") || !answer.equalsIgnoreCase("")) {
+    public void setAnswerInActivity(String answer, String
+            qid, List<ScienceQuestionChoice> list, int marks) {
+        if (answer != null && !answer.equalsIgnoreCase("")) {
             for (int i = 0; i < scienceQuestionList.size(); i++) {
                 if (scienceQuestionList.get(i).getQid().equalsIgnoreCase(qid)) {
                     scienceQuestionList.get(i).setIsAttempted(true);
-                    if (answer != null && !answer.equalsIgnoreCase("")) {
+                    if (!answer.equalsIgnoreCase("")) {
                         scienceQuestionList.get(i).setUserAnswer(answer);
-                        scienceQuestionList.get(i).setUserAnswerId(ansId);
+                        scienceQuestionList.get(i).setUserAnswerId(marks + "");
                     }
                     break;
                 }
@@ -2487,7 +2495,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             if (scienceQuestionList.get(i).getQtid().equalsIgnoreCase(TRUE_FALSE)) {
                                 scienceQuestionList.get(i).setUserAnswer(scienceQuestionList.get(i).getMatchingNameList().get(0).getChoicename().toLowerCase());
                             } else {
-                                scienceQuestionList.get(i).setUserAnswer(scienceQuestionList.get(i).getMatchingNameList().get(0).getQcid());
+                                scienceQuestionList.get(i).setUserAnswer(scienceQuestionList.get(i).getMatchingNameList().get(0).getChoicename());
                             }
                             scienceQuestionList.get(i).setUserAnswerId(scienceQuestionList.get(i).getMatchingNameList().get(0).getQcid());
                         }
@@ -2510,8 +2518,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 }
             }
         }
-        if (ansId.equalsIgnoreCase(""))
-            this.ansId = "-1";
         if (scienceQuestionList.size() > 0 && queCnt < scienceQuestionList.size())
             checkAssessment(queCnt);
     }
@@ -2648,8 +2654,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             case MULTIPLE_CHOICE:
             case TRUE_FALSE:
                 if (scienceQuestion.getIsAttempted()) {
-                    if (scienceQuestion.getMatchingNameList() != null) {
-                        if (scienceQuestion.getMatchingNameList().get(0).getCorrect().equalsIgnoreCase("true") || scienceQuestion.getUserAnswerId().equalsIgnoreCase(ansId)) {
+                    if (scienceQuestion.getMatchingNameList() != null && scienceQuestion.getMatchingNameList().size() > 0) {
+                        if (scienceQuestion.getMatchingNameList().get(0).getCorrect().equalsIgnoreCase("true")) {
                             scienceQuestionList.get(queCnt).setIsCorrect(true);
                             scienceQuestionList.get(queCnt).
                                     setMarksPerQuestion(scienceQuestionList.get(queCnt).getOutofmarks());
@@ -2690,7 +2696,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 break;
             case FILL_IN_THE_BLANK:
                 if (scienceQuestion.getIsAttempted()) {
-                    if (scienceQuestion.getAnswer() != null && (scienceQuestion.getAnswer().trim().equalsIgnoreCase(answer.trim()))) {
+                    if (scienceQuestion.getAnswer() != null && (scienceQuestion.getAnswer().trim().equalsIgnoreCase(scienceQuestion.getUserAnswer()))) {
                         scienceQuestionList.get(queCnt).setIsCorrect(true);
                         scienceQuestionList.get(queCnt).
                                 setMarksPerQuestion(scienceQuestionList.get(queCnt).getOutofmarks());
@@ -2841,7 +2847,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 break;
             case TEXT_PARAGRAPH:
                 if (scienceQuestion.getIsAttempted()) {
-                    if (!answer.equalsIgnoreCase("")) {
+                    if (!scienceQuestion.getUserAnswer().equalsIgnoreCase("")) {
                         scienceQuestionList.get(queCnt).setIsCorrect(true);
                         //marks calculated are saved in ansId
                         scienceQuestionList.get(queCnt).
@@ -2876,7 +2882,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     if (splittedAns.length > 0)
                         for (int i = 0; i < splittedAns.length; i++) {
 //                            if (answer.matches(splittedAns[i])) {
-                            String uAns = answer.toLowerCase();
+                            String uAns = scienceQuestion.getUserAnswer().toLowerCase();
                             String corAns = splittedAns[i].toLowerCase();
                             if (uAns.contains(corAns) || corAns.contains(uAns)) {
                                 correctKeywords++;
@@ -2985,7 +2991,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             tempScienceQuestion.setRefParaID(scienceQuestionList.get(queCnt).getRefParaID());
             tempScienceQuestion.setIsQuestionFromSDCard(scienceQuestionList.get(queCnt).getIsQuestionFromSDCard());
             tempScienceQuestion.setPaperId(scienceQuestionList.get(queCnt).getPaperid());
-
             tempScienceQuestion.setParaQuestion(scienceQuestionList.get(queCnt).isParaQuestion());
             tempScienceQuestion.setSessionID(currentSession);
             tempScienceQuestion.setStudentID(currentStudentID);
@@ -3124,6 +3129,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     Log.d("delete count", "doInBackground: " + count + count1);
                     List<ScienceQuestion> attemptedQuestion = new ArrayList<>();
                     for (int i = 0; i < scienceQuestionList.size(); i++) {
+                        if (scienceQuestionList.get(i).getUserAnswer() != null
+                                && !scienceQuestionList.get(i).getUserAnswer().equalsIgnoreCase(""))
+                            if (!scienceQuestionList.get(i).getIsAttempted())
+                                scienceQuestionList.get(i).setIsAttempted(true);
                         checkAssessment(i);
                         if (scienceQuestionList.get(i).getIsAttempted())
                             attemptedQuestion.add(scienceQuestionList.get(i));
@@ -3486,6 +3495,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             protected void onPreExecute() {
                 super.onPreExecute();
                 for (int i = 0; i < scienceQuestionList.size(); i++) {
+                    if (scienceQuestionList.get(i).getUserAnswer() != null
+                            && !scienceQuestionList.get(i).getUserAnswer().equalsIgnoreCase(""))
+                        if (!scienceQuestionList.get(i).getIsAttempted())
+                            scienceQuestionList.get(i).setIsAttempted(true);
                     checkAssessment(i);
                     if (scienceQuestionList.get(i).getIsAttempted())
                         attemptedQuestion.add(scienceQuestionList.get(i));
@@ -3733,18 +3746,14 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 Log.d("delete count", "doInBackground: " + count + count1);
 
             }
-        } /*else if (Assessment_Constants.VIDEOMONITORING) {
+        }
+        if (scienceQuestionList != null && scienceQuestionList.size() > 0)
+            if (scienceQuestionList.get(queCnt) != null)
+                if (scienceQuestionList.get(queCnt).getUserAnswer() != null
+                        && !scienceQuestionList.get(queCnt).getUserAnswer().equalsIgnoreCase(""))
+                    if (!scienceQuestionList.get(queCnt).getIsAttempted())
+                        scienceQuestionList.get(queCnt).setIsAttempted(true);
 
-            //******* Video monitoring *******
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if (serviceIntent != null)
-                        startCameraService();
-                }
-            }, 1000);
-        }*/
 //todo        resetSpeechRecognizer(); remove speech=null from onStop
         if (mediaProgressDialog != null && isActivityRunning && mediaProgressDialog.isShowing())
             if (mediaDownloadCnt >= downloadMediaList.size()) {
@@ -3943,7 +3952,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             SplashPresenter.doInitialEntries(context);
                         com.pratham.assessment.domain.Status status = new com.pratham.assessment.domain.Status();
                         String key = "AppBuildDate";
-                        String value = "27-07-2021";
+                        String value = "28-09-2021";
                         SplashPresenter.setStatusTableEntries(status, key, value, context);
                     } catch (Exception e) {
                         e.printStackTrace();

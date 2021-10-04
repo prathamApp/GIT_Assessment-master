@@ -469,7 +469,7 @@ public class ImageAnswerFragment extends Fragment implements ImageAnswerContract
 
                         Log.d("TAG", "onActivityResult: " + imageList.size());
 
-                        assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), answers);
+                        assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), answers,0 );
                         if (imageList.size() > 0) {
                             view_captured_img.setVisibility(View.VISIBLE);
                         }

@@ -325,7 +325,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 });
                 myViewHolder.btnUserAnswer.setOnClickListener(v -> {
                     List<ScienceQuestionChoice> userAns = result.getUserAnsList();
-                    ShowAnswerDialog showAnswerDialog = new ShowAnswerDialog(context, userAns, scienceQuestionChoice);
+                    ShowAnswerDialog showAnswerDialog = new ShowAnswerDialog(context, userAns, scienceQuestionChoice, scienceQuestion.getQtid());
                     showAnswerDialog.show();
                 });
                 if (!result.isAttempted()) {
@@ -368,6 +368,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     myViewHolder.btnUserAnswer.setVisibility(View.GONE);
                     myViewHolder.userAnswer.setVisibility(View.VISIBLE);
                 }
+                if (result.isCorrect()) myViewHolder.ll_user_ans.setVisibility(View.GONE);
+                else myViewHolder.ll_user_ans.setVisibility(View.VISIBLE);
+
                 break;
           /*  case ARRANGE_SEQUENCE:
                 showButtons(myViewHolder, result.isAttempted());

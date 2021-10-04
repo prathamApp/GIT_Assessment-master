@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AssessmentAnswerListener {
 
-    void setAnswerInActivity(String ansId, String answer, String qid, List<ScienceQuestionChoice> list);
+    void setAnswerInActivity(String answer, String qid, List<ScienceQuestionChoice> list, int marks);
 
     void removeSupervisorFragment();
 

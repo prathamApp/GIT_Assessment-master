@@ -326,7 +326,6 @@ public class PushDataToServer {
     }
 
     private void pushMediaToServer(String url, String type, List<DownloadMedia> pushList) {
-//        if (!type.equalsIgnoreCase(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING)) {
         try {
 
             final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
@@ -392,7 +391,6 @@ public class PushDataToServer {
                     onPostExecute();
 //                Toast.makeText(context, "Media push failed..", Toast.LENGTH_SHORT).show();
             }
-//            return new JSONObject(response.body().string());
 
         } catch (UnknownHostException | UnsupportedEncodingException e) {
             Log.e(TAG, "Error: " + e.getLocalizedMessage());
@@ -467,6 +465,7 @@ public class PushDataToServer {
             metaDataObj.put("CurrentSession", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("CurrentSession"));
             metaDataObj.put("SdCardPath", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("SdCardPath"));
             metaDataObj.put("AppStartDateTime", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("AppStartDateTime"));
+            metaDataObj.put("AppBuildDate", AppDatabase.getDatabaseInstance(context).getStatusDao().getValue("AppBuildDate"));
 
 
             sessionObj.put("scoreData", assessmentScoreData);

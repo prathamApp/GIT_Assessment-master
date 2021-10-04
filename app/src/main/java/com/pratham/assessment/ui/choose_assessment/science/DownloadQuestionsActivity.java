@@ -798,7 +798,7 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
     }
 
     @Override
-    public void setAnswerInActivity(String ansId, String answer, String qid, List<ScienceQuestionChoice> list) {
+    public void setAnswerInActivity(String answer, String qid, List<ScienceQuestionChoice> list, int marks) {
 
     }
 

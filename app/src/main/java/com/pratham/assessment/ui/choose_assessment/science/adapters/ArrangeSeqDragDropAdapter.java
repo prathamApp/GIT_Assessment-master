@@ -226,7 +226,7 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
             }
             notifyItemMoved(fromPosition, toPosition);
             /* draggedList = data;*/
-            assessmentAnswerListener.setAnswerInActivity("", "", qid, data);
+            assessmentAnswerListener.setAnswerInActivity("", qid, data, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }

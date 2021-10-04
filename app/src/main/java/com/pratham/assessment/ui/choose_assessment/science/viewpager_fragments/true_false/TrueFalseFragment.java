@@ -229,7 +229,7 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
                     ans.add(options.get(0));
                 scienceQuestion.setMatchingNameList(ans);
 //                assessmentAnswerListener.setAnswerInActivity("", radioButtonTrue.getText().toString(), scienceQuestion.getQid(), null);
-                assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), ans);
+                assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), ans,0 );
 
                 radioButtonTrue.setSelected(true);
                 radioButtonTrue.setBackground(getActivity().getResources().getDrawable(R.drawable.rounded_corner_dialog));
@@ -248,7 +248,7 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
                     ans.add(options.get(1));
                 scienceQuestion.setMatchingNameList(ans);
 //                assessmentAnswerListener.setAnswerInActivity("", radioButtonTrue.getText().toString(), scienceQuestion.getQid(), null);
-                assessmentAnswerListener.setAnswerInActivity("", "", scienceQuestion.getQid(), ans);
+                assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), ans,0 );
 
                 radioButtonFalse.setSelected(true);
                 radioButtonFalse.setTextColor(Assessment_Utility.selectedColor);

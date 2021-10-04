@@ -3,7 +3,6 @@ package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -11,25 +10,17 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.nex3z.flowlayout.FlowLayout;
-import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.domain.ScienceQuestion;
@@ -45,14 +36,10 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
@@ -501,7 +488,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
         setCorrectViewColor();
 //        if (getPercentage() > 35) scienceQuestion.setIsCorrect(true);
 
-        assessmentAnswerListener.setAnswerInActivity("" + calculateMarks(), sttResult.toString(), scienceQuestion.getQid(), null);
+        assessmentAnswerListener.setAnswerInActivity(sttResult.toString(), scienceQuestion.getQid(), null, calculateMarks());
 
     }
 
@@ -567,7 +554,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
 //        addLearntWords(splitWordsPunct, wordsResIdList);
 //        addScore(0, "Words:" + word, correctWordCount, correctArr.length, wordTime, " ");
         this.sttResult.append(" ").append(sttRes);
-        assessmentAnswerListener.setAnswerInActivity("" + calculateMarks(), this.sttResult.toString(), scienceQuestion.getQid(), null);
+        assessmentAnswerListener.setAnswerInActivity(this.sttResult.toString(), scienceQuestion.getQid(), null, calculateMarks());
 
     }
 
@@ -657,7 +644,7 @@ public class TextParagraphFragment extends Fragment implements STT_Result_New.st
     @Override
     public void setResult(String sttRes) {
         this.sttResult.append(" ").append(sttRes);
-        assessmentAnswerListener.setAnswerInActivity("" + calculateMarks(), this.sttResult.toString(), scienceQuestion.getQid(), null);
+        assessmentAnswerListener.setAnswerInActivity(this.sttResult.toString(), scienceQuestion.getQid(), null, calculateMarks());
 
     }
 

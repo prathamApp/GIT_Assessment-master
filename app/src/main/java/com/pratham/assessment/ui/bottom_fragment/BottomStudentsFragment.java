@@ -306,7 +306,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
                     com.pratham.assessment.domain.Status status = new com.pratham.assessment.domain.Status();
                     String key = "AppBuildDate";
-                    String value = "27-07-2021";
+                    String value = "28-09-2021";
                     setStatusTableEntries(status, key, value);
 //                    if (!FastSave.getInstance().getBoolean(Assessment_Constants.KEY_MENU_COPIED, false))
                     populateMenu();

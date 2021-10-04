@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +63,7 @@ public class ResultDialogAdapter extends RecyclerView.Adapter<ResultDialogAdapte
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
         final ScienceQuestionChoice scienceQuestionChoice = scienceQuestionChoices.get(i);
+        myViewHolder.text.setMovementMethod(new ScrollingMovementMethod());
         Assessment_Utility.setOdiaFont(context, myViewHolder.text);
         Assessment_Utility.setTamilFont(context, myViewHolder.text);
         myViewHolder.text.setTextColor(Color.BLACK);
