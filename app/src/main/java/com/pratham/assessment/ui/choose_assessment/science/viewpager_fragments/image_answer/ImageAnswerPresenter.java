@@ -1,15 +1,8 @@
 package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.image_answer;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.androidannotations.annotations.EBean;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static com.pratham.assessment.constants.Assessment_Constants.STT_REGEX_3;
-import static com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.fib_without_options.FillInTheBlanksWithoutOptionFragment.correctArr;
 
 @EBean
 public class ImageAnswerPresenter implements ImageAnswerContract.ImageAnswerPresenter {

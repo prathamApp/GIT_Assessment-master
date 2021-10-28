@@ -86,6 +86,7 @@ public class Assessment_Constants {
 
     public static String SUPERVISED = "supervised";
     public static String PRACTICE = "practice";
+    public static String BOTH = "both";
 
     //new
     public static String SELECTED_LANGUAGE = "1";

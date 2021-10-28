@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.AssessmentTest;
-import com.pratham.assessment.ui.choose_assessment.ChoseAssessmentClicked;
+import com.pratham.assessment.ui.choose_assessment.choose_subject.ChoseAssessmentClicked;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;

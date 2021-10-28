@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.domain.AssessmentLanguages;
-import com.pratham.assessment.ui.choose_assessment.ChoseAssessmentClicked;
+import com.pratham.assessment.ui.choose_assessment.choose_subject.ChoseAssessmentClicked;
 import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 

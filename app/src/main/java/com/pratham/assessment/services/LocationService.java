@@ -26,7 +26,9 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.Status;
+
 import org.json.JSONObject;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -65,10 +67,10 @@ public class LocationService implements GoogleApiClient.ConnectionCallbacks, Goo
                         try {
                             Status statusObj = new Status();
 
-                            AppDatabase.getDatabaseInstance(AssessmentApplication.getInstance()).getStatusDao().updateValue("Latitude", ""+location.getLatitude());
+                            AppDatabase.getDatabaseInstance(AssessmentApplication.getInstance()).getStatusDao().updateValue("Latitude", "" + location.getLatitude());
 //                        BaseActivity.statusDao.insert(statusObj);
 
-                            AppDatabase.getDatabaseInstance(AssessmentApplication.getInstance()).getStatusDao().updateValue("Longitude","" + location.getLongitude());
+                            AppDatabase.getDatabaseInstance(AssessmentApplication.getInstance()).getStatusDao().updateValue("Longitude", "" + location.getLongitude());
 
 //                        BaseActivity.statusDao.insert(statusObj);
 
@@ -80,14 +82,13 @@ public class LocationService implements GoogleApiClient.ConnectionCallbacks, Goo
                             AppDatabase.getDatabaseInstance(AssessmentApplication.getInstance()).getStatusDao().updateValue("GPSDateTime", "" + gpsDateTime);
 
 //                        BaseActivity.statusDao.insert(statusObj);
-                            if(!AssessmentApplication.LocationFlg) {
+                            if (!AssessmentApplication.LocationFlg) {
                                 String requestString = generateRequestString();
                                 pushDataToServer(requestString, AssessmentApplication.uploadDataUrl);
                             }
                             Log.d(TAG, "onLocationUpdated:" + location.getLatitude() + ":::" + location.getLongitude());
 
-                        }
-                        catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }

@@ -9,9 +9,6 @@ import android.support.annotation.NonNull;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -19,9 +16,6 @@ import com.pratham.assessment.R;
 import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.TopicSelectListener;
-
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.List;

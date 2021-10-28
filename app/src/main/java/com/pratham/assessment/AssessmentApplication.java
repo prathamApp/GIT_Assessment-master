@@ -4,12 +4,15 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDelegate;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.isupatches.wisefy.WiseFy;
@@ -33,8 +36,9 @@ import java.util.TimerTask;
 import java.util.UUID;
 
 import static com.pratham.assessment.constants.Assessment_Constants.PREFS_VERSION;
+import static com.pratham.assessment.utilities.Assessment_Utility.setLocaleByLanguageId;
 
-public class AssessmentApplication extends Application {
+public class AssessmentApplication extends  Application {
 
 
     public static final boolean isTablet = false;
@@ -102,6 +106,7 @@ public class AssessmentApplication extends Application {
                 mydir.mkdirs();*/
         }
         Log.d("COS.pradigipath", "COS.pradigipath: " + Assessment_Constants.STORING_IN + "++" + assessPath);
+        setLocaleByLanguageId(this, FastSave.getInstance().getString("language", "1"));
 
 //        new UCEHandler.Builder(this).addCommaSeparatedEmailAddresses("ankita.lakhamade27@gmail.com").setTrackActivitiesEnabled(true).build();
 
@@ -333,6 +338,47 @@ public class AssessmentApplication extends Application {
     public void onTerminate() {
         super.onTerminate();
         endTestSession(this);
+    }
+    public static void setLocaleByLanguageId(Context context, String langCode) {
+
+        if (langCode.equalsIgnoreCase(Assessment_Constants.ENGLISH_ID))
+            langCode = "en";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.HINDI_ID))
+            langCode = "hi";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.MARATHI_ID))
+            langCode = "mr";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.KANNADA_ID))
+            langCode = "kn";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.TELUGU_ID))
+            langCode = "te";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.BENGALI_ID))
+            langCode = "bn";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.GUJARATI_ID))
+            langCode = "gu";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.PUNJABI_ID))
+            langCode = "pa";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.TAMIL_ID))
+            langCode = "ta";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.ODIA_ID))
+            langCode = "or";
+        //todo add Malayalam id
+     /*   if (langCode.equalsIgnoreCase(Assessment_Constants.))
+            langCode = "ml";*/
+        if (langCode.equalsIgnoreCase(Assessment_Constants.ASSAMESE_ID))
+            langCode = "as";
+        if (langCode.equalsIgnoreCase(Assessment_Constants.URDU_ID))
+            langCode = "ur";
+
+     /*   Locale myLocale = new Locale(lang);
+        Locale.setDefault(myLocale);*/
+        Locale myLocale = new Locale(langCode);
+        Locale.setDefault(myLocale);
+        Resources resources = context.getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(new Locale(langCode));
+        resources.updateConfiguration(config, dm);
+
     }
 
 }

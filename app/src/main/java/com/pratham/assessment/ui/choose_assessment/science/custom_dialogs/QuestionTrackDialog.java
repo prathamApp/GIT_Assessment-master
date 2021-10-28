@@ -4,8 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
@@ -13,10 +11,6 @@ import android.widget.TextView;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.ScienceQuestion;
-import com.pratham.assessment.ui.choose_assessment.science.adapters.QuestionTrackerAdapter;
-
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
 

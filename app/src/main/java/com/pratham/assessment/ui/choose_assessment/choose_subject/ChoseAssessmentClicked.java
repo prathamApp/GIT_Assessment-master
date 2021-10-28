@@ -1,4 +1,4 @@
-package com.pratham.assessment.ui.choose_assessment;
+package com.pratham.assessment.ui.choose_assessment.choose_subject;
 
 import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentSubjects;

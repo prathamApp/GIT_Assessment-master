@@ -1,4 +1,4 @@
-package com.pratham.assessment.ui.choose_assessment;
+package com.pratham.assessment.ui.choose_assessment.choose_subject;
 
 import android.content.Context;
 import android.os.Handler;

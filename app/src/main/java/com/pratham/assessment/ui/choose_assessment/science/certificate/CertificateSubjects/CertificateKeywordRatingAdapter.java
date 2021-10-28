@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.CertificateKeywordRating;
-import com.pratham.assessment.domain.CertificateRatingModalClass;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;

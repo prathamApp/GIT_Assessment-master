@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/subjects_bg"
-        tools:context=".ui.choose_assessment.ChooseAssessmentActivity">
+        tools:context=".ui.choose_assessment.choose_subject.ChooseAssessmentActivity">
 
         <!--<android.support.v7.widget.Toolbar
             android:id="@+id/my_toolbar"

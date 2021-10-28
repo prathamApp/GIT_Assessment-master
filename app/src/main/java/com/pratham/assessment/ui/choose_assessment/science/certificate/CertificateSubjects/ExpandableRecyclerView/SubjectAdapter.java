@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pratham.assessment.R;
-import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment_;

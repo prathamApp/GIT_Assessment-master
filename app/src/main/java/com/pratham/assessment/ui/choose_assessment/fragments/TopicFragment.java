@@ -23,7 +23,7 @@ import com.pratham.assessment.domain.AssessmentTest;
 import com.pratham.assessment.domain.AssessmentTestModal;
 import com.pratham.assessment.domain.NIOSExam;
 import com.pratham.assessment.domain.NIOSExamTopics;
-import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
+import com.pratham.assessment.ui.choose_assessment.choose_subject.ChooseAssessmentActivity;
 import com.pratham.assessment.constants.APIs;
 import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
@@ -37,11 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_EXAM_ID;
-import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_EXAM_NAME;
-import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_LANGUAGE_ID;
-import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_SUBJECT_ID;
-import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_SUBJECT_NAME;
 import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
 
 /*import butterknife.BindView;

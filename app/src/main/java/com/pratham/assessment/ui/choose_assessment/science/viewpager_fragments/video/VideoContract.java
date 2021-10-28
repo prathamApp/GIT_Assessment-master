@@ -1,7 +1,6 @@
 package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.video;
 
 import com.pratham.assessment.domain.ScienceQuestion;
-import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.audio.AudioContract;
 
 import java.util.List;
 

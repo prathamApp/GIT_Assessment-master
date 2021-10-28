@@ -86,7 +86,7 @@ import com.pratham.assessment.custom.gif_viewer.GifView;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.domain.StorageInfo;
-import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
+import com.pratham.assessment.ui.choose_assessment.choose_subject.ChooseAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.result.ResultActivity;
 import com.pratham.assessment.ui.choose_assessment.science.DownloadQuestionsActivity;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
@@ -908,6 +908,15 @@ public class Assessment_Utility {
     public static String getDeviceSerialID() {
         return Build.SERIAL;
     }
+
+    public static void updateApp(Context context) {
+        try {
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.pratham.assessment&hl=en")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /*public static void setFont(Context context, TextView view) {
         Typeface font = null;
@@ -2318,7 +2327,7 @@ public class Assessment_Utility {
                     ((CheckBox) view).setTypeface(font);
                 } else if (view instanceof RadioButton) {
                     ((RadioButton) view).setTypeface(font);
-                }else if (view instanceof AppCompatTextView) {
+                } else if (view instanceof AppCompatTextView) {
                     ((AppCompatTextView) view).setTypeface(font);
                 } else if (view instanceof TextView) {
                     ((TextView) view).setTypeface(font);

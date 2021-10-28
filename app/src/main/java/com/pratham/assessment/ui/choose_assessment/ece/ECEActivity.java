@@ -96,8 +96,7 @@ public class ECEActivity extends BaseActivity implements DiscreteScrollView.OnIt
                     } else {
                         ImageView view = findViewById(idArr[i]);
                         view.setBackground(getResources().getDrawable(R.drawable.ece_top_bg));
-//                        view.setBackgroundColor(getResources().getColor(R.color.colorRed));
-
+//                        view.setBackgroundColor(getResources().getColor(R.color.colorRed))
                     }
                 }
                 ImageView view = findViewById(idArr[adapterPosition]);

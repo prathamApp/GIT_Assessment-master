@@ -19,10 +19,10 @@ import butterknife.OnClick;*/
 public class ECELoginDialog extends Dialog {
 
     //    @ViewById(R.id.userName)
-    android.support.design.widget.TextInputEditText userNameET;
+    public android.support.design.widget.TextInputEditText userNameET;
 
     //    @ViewById(R.id.password)
-    android.support.design.widget.TextInputEditText passwordET;
+    public android.support.design.widget.TextInputEditText passwordET;
     //    @ViewById(R.id.btn_supervised)
     Button btn_supervised;
     //    @ViewById(R.id.btn_unsupervised)

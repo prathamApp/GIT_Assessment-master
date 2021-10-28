@@ -30,9 +30,7 @@ public interface SplashContract {
 
         void versionObtained(String latestVersion);
 
-        void copyZipAndPopulateMenu();
 
-//        void pushData();
 
         void copyDataBase();
 
@@ -40,7 +38,6 @@ public interface SplashContract {
 
         boolean getSdCardPath();
 
-        void populateSDCardMenu();
 
         void updateNewEntriesInStatusTable();
 

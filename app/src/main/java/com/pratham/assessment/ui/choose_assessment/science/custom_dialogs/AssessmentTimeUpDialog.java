@@ -1,6 +1,5 @@
 package com.pratham.assessment.ui.choose_assessment.science.custom_dialogs;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -9,14 +8,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.pratham.assessment.R;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.QuestionTrackerListener;
-
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.ViewById;
 
 /*import butterknife.BindView;
 import butterknife.ButterKnife;

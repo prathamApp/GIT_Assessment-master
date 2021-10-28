@@ -45,7 +45,7 @@ import com.pratham.assessment.domain.Village;
 import com.pratham.assessment.interfaces.SplashInterface;
 import com.pratham.assessment.ui.bottom_fragment.add_student.AvatarAdapter;
 import com.pratham.assessment.ui.bottom_fragment.add_student.AvatarClickListener;
-import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
+import com.pratham.assessment.ui.choose_assessment.choose_subject.ChooseAssessmentActivity;
 import com.pratham.assessment.ui.splash_activity.SplashActivity;
 import com.pratham.assessment.constants.APIs;
 import com.pratham.assessment.constants.Assessment_Constants;

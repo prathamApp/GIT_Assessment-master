@@ -1,17 +1,14 @@
 package com.pratham.assessment.ui.splash_activity;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
@@ -63,7 +60,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
 import static com.pratham.assessment.constants.Assessment_Constants.SDCARD_OFFLINE_PATH_SAVED;
 import static com.pratham.assessment.utilities.Assessment_Utility.copyFileUsingStream;
 
@@ -108,41 +104,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 //        splashPresenter = new SplashPresenter(this, this);
         context = SplashActivity.this;
         btn_start_game.setVisibility(View.GONE);
-//        iv_logo_pradigi.setVisibility(View.GONE);
-       /* try {
-            Bundle bundle = new Bundle();
-            bundle = this.getIntent().getExtras();
-            String studId = String.valueOf(bundle.getString("studentId"));
-            String appNm = String.valueOf(bundle.getString("appName"));
-            String studName = String.valueOf(bundle.getString("studentName"));
-            String sub = String.valueOf(bundle.getString("subjectName"));
-            String lang = String.valueOf(bundle.getString("subjectLanguage"));
-            String subLevel = String.valueOf(bundle.getString("subjectLevel"));
-            Toast.makeText(this, "Id : " + studId + " AppName : "
-                    + appNm + " StudentName : " + studName + " Subject : " + sub + "Language : " + lang
-                    + " Level : " + subLevel, Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
         initiateApp();
     }
-
-  /*  @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
-        ButterKnife.bind(this);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        dialog = new ProgressDialog(this);
-        fpath = "";
-        appname = "";
-        splashPresenter = new SplashPresenter(this, this);
-        context = SplashActivity.this;
-        btn_start_game.setVisibility(View.GONE);
-//        iv_logo_pradigi.setVisibility(View.GONE);
-        initiateApp();
-    }*/
 
     public void initiateApp() {
 
@@ -167,79 +130,6 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 //        ImageViewAnimatedChange(this, iv_logo);
     }
 
-/*    public void ImageViewAnimatedChange(Context c, final ImageView iv_logo) {
-        final Animation anim_in = AnimationUtils.loadAnimation(c, R.anim.zoom_in_new);
-        anim_in.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                ImageViewAnimatedChangeSecond(c, iv_logo);
-            }
-        });
-        iv_logo.setAnimation(anim_in);
-    }
-
-    public void ImageViewAnimatedChangeSecond(Context c, final ImageView iv_logo) {
-        final Animation anim_out = AnimationUtils.loadAnimation(c, R.anim.zoom_out_new);
-        iv_logo.setAnimation(anim_out);
-        anim_out.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                pradigiAnimation(c, iv_logo_pradigi);
-            }
-        });
-    }
-
-    public void pradigiAnimation(Context c, final ImageView iv_logo_pradigi) {
-        final Animation anim_in = AnimationUtils.loadAnimation(c, R.anim.item_animation_from_bottom);
-        iv_logo_pradigi.setVisibility(View.VISIBLE);
-
-        anim_in.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA,
-                        PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
-                        PermissionUtils.Manifest_RECORD_AUDIO,
-                        PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
-                        PermissionUtils.Manifest_ACCESS_FINE_LOCATION
-                };
-
-                if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                    if (!isPermissionsGranted(SplashActivity.this, permissionArray)) {
-                        askCompactPermissions(permissionArray, SplashActivity.this);
-                    } else {
-                        splashPresenter.checkVersion();
-                    }
-                } else {
-                    splashPresenter.checkVersion();
-                }
-            }
-        });
-        iv_logo_pradigi.setAnimation(anim_in);
-    }*/
 
     @Override
     public void showButton() {
@@ -252,21 +142,14 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                 String value = "28-09-2021";
                 SplashPresenter.setStatusTableEntries(status, key, value, context);
                 Log.d("AppBuildDate1", "run: " + "AppBuildDate");
-                Assessment_Constants.SD_CARD_Content = splashPresenter.getSdCardPath();
-                if (!sharedPreferences.getBoolean(Assessment_Constants.SD_CARD_Content_STR, false)) {
-                    if (!Assessment_Constants.SD_CARD_Content)
-                        splashPresenter.copyZipAndPopulateMenu();
-                    else
-                        splashPresenter.populateSDCardMenu();
-                } else
-                    gotoNextActivity();
+                gotoNextActivity();
             }
         }, 2000);
     }
 
     @Override
     public void showUpdateDialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+   /*     final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Upgrade to radio_button_bg better version !");
         builder.setCancelable(false);
         builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
@@ -283,7 +166,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                 }
             }
         });
-        builder.show();
+        builder.show();*/
     }
 
     @Override
@@ -528,12 +411,6 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             } else {
                 splashPresenter.updateNewEntriesInStatusTable();
                 appDatabase = AppDatabase.getDatabaseInstance(this);
-               /* appDatabase = Room.databaseBuilder(this,
-                        AppDatabase.class, AppDatabase.DB_NAME)
-                        .allowMainThreadQueries()
-                        .build();*/
-//                showButton();
-//                getSdCardPath();
             }
             String offlineDBPath = Assessment_Utility.getExternalPath(this) + "/.Assessment/offline_assessment_database.db";
             File f = new File(offlineDBPath);
@@ -574,16 +451,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 
     @Override
     public void gotoNextActivity() {
-/*        if (Assessment_Constants.SMART_PHONE && !Assessment_Constants.SD_CARD_Content) {
-            Assessment_Constants.ext_path = COSApplication.contentSDPath + "/.LLA/English/";
-            dismissProgressDialog();
-        } else {*/
-
         try {
             context.startService(new Intent(context, AppExitService.class));
-            dismissProgressDialog();
-
-
             if (!AssessmentApplication.isTablet) {
                 if (!FastSave.getInstance().getBoolean(Assessment_Constants.VOICES_DOWNLOAD_INTENT, false))
                     show_STT_Dialog();
@@ -595,24 +464,10 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
-
-       /* if (AssessmentApplication.isTablet)
-            startActivity(new Intent(context, SelectGroupActivity.class));
-        else showBottomFragment();*/
-
-//                    startActivity(new Intent(context, MenuActivity.class));
-
-
-// startActivity(new Intent(context, MainActivity.class));
-//        }
     }
 
     public void showBottomFragment() {
         try {
-
             fragmentBottomOpenFlg = true;
             firstPause = false;
             if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
@@ -694,10 +549,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 
                             } else {
                                 if (isActivityRunning) {
-
-//                                    Toast.makeText(context, R.string.no_students_to_pull, Toast.LENGTH_SHORT).show();
                                     Toast.makeText(context, "No students to pull", Toast.LENGTH_SHORT).show();
-//                                subjectView.setSubjectToSpinner();
                                     BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
                                     if (isActivityRunning && !bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
                                         bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
@@ -716,7 +568,6 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                                     bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
                                 }
                             }
-
                         }
                     }
 

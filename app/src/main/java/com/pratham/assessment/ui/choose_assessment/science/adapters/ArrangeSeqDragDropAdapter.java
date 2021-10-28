@@ -254,22 +254,6 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
 
     }
 
-  /*  @Override
-    public void onRowSelected(MyViewHolder myViewHolder) {
-//       myViewHolder.rowView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.ripple_rectangle));
-        *//*  myViewHolder.mTitle.setTextColor(Assessment_Utility.selectedColor);
-     *//*
-        myViewHolder.rowView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.gradient_selector));
-        myViewHolder.mTitle.setTextColor(Assessment_Utility.selectedColor);
-    }
-
-    @Override
-    public void onRowClear(MyViewHolder myViewHolder) {
-//        myViewHolder.rowView.setBackgroundColor(Color.WHITE);
-       *//* myViewHolder.rowView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.gradient_selector));
-        myViewHolder.mTitle.setTextColor(Assessment_Utility.selectedColor);*//*
-
-    }*/
 }
 
 

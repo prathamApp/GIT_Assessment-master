@@ -1,4 +1,4 @@
-package com.pratham.assessment.ui.choose_assessment;
+package com.pratham.assessment.ui.choose_assessment.choose_subject;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -47,11 +46,12 @@ import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.AssessmentTest;
 import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.interfaces.DataPushListener;
+import com.pratham.assessment.ui.choose_assessment.ECELoginDialog;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity_;
+import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
 import com.pratham.assessment.ui.choose_assessment.fragments.LanguageFragment_;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment_;
-import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity_;
-import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
@@ -216,78 +216,75 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         presenter.copyListData();
 
 
-        navigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.menu_Subject:
-                        menu_icon.setImageDrawable(getDrawable(R.drawable.ic_menu));
-                        rlSubject.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                        rl_no_exams.setVisibility(View.GONE);
-                        frameLayout.setVisibility(View.GONE);
-                        tv_choose_assessment.setText("Choose subject");
+        navigation.setNavigationItemSelectedListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.menu_Subject:
+                    menu_icon.setImageDrawable(getDrawable(R.drawable.ic_menu));
+                    rlSubject.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    rl_no_exams.setVisibility(View.GONE);
+                    frameLayout.setVisibility(View.GONE);
+                    tv_choose_assessment.setText("Choose subject");
 //                        toggle_btn.setVisibility(View.VISIBLE);
-                        clearContentList();
-                        presenter.copyListData();
+                    clearContentList();
+                    presenter.copyListData();
 
-                        break;
+                    break;
 
-                    case R.id.menu_certificate:
-                        startActivity(new Intent(ChooseAssessmentActivity.this, AssessmentCertificateActivity.class));
-                        break;
+                case R.id.menu_certificate:
+                    startActivity(new Intent(ChooseAssessmentActivity.this, AssessmentCertificateActivity.class));
+                    break;
 
-                    case R.id.menu_language:
+                case R.id.menu_language:
 //                        toggle_btn.setVisibility(View.GONE);
+                    menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back));
+
+                  /*  if (toggle_btn.getVisibility() != View.VISIBLE)
                         menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back));
-
-                      /*  if (toggle_btn.getVisibility() != View.VISIBLE)
-                            menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_arrow_back));
-                        else
-                            menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu));
+                    else
+                        menu_icon.setImageDrawable(getResources().getDrawable(R.drawable.ic_menu));
 */
-                        rlSubject.setVisibility(View.GONE);
-                        frameLayout.setVisibility(View.VISIBLE);
-                        Assessment_Utility.showFragment(ChooseAssessmentActivity.this, new LanguageFragment_(), R.id.nav_frame_layout,
-                                null, LanguageFragment_.class.getSimpleName());
-                        break;
-                    case R.id.menu_download_offline_language:
-                        Intent intent = new Intent(Intent.ACTION_MAIN);
-                        intent.setComponent(new ComponentName("com.google.android.googlequicksearchbox",
-                                "com.google.android.voicesearch.greco3.languagepack.InstallActivity"));
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        break;
+                    rlSubject.setVisibility(View.GONE);
+                    frameLayout.setVisibility(View.VISIBLE);
+                    Assessment_Utility.showFragment(ChooseAssessmentActivity.this, new LanguageFragment_(), R.id.nav_frame_layout,
+                            null, LanguageFragment_.class.getSimpleName());
+                    break;
+                case R.id.menu_download_offline_language:
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.setComponent(new ComponentName("com.google.android.googlequicksearchbox",
+                            "com.google.android.voicesearch.greco3.languagepack.InstallActivity"));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    break;
 /*                    case R.id.menu_video_monitoring:
-                        Menu menu = navigation.getMenu();
-                        MenuItem nav_video = menu.findItem(R.id.menu_video_monitoring);
-                        if (!videoMonitoring) {
-                            videoMonitoring = true;
-                            Assessment_Constants.VIDEOMONITORING = true;
-                            nav_video.setTitle("Video monitoring(ON)");
-                            Toast.makeText(ChooseAssessmentActivity.this, "Video monitoring : ON", Toast.LENGTH_SHORT).show();
-                        } else {
-                            videoMonitoring = false;
-                            Assessment_Constants.VIDEOMONITORING = false;
-                            nav_video.setTitle("Video monitoring(OFF)");
-                            Toast.makeText(ChooseAssessmentActivity.this, "Video monitoring : OFF", Toast.LENGTH_SHORT).show();
+                    Menu menu = navigation.getMenu();
+                    MenuItem nav_video = menu.findItem(R.id.menu_video_monitoring);
+                    if (!videoMonitoring) {
+                        videoMonitoring = true;
+                        Assessment_Constants.VIDEOMONITORING = true;
+                        nav_video.setTitle("Video monitoring(ON)");
+                        Toast.makeText(ChooseAssessmentActivity.this, "Video monitoring : ON", Toast.LENGTH_SHORT).show();
+                    } else {
+                        videoMonitoring = false;
+                        Assessment_Constants.VIDEOMONITORING = false;
+                        nav_video.setTitle("Video monitoring(OFF)");
+                        Toast.makeText(ChooseAssessmentActivity.this, "Video monitoring : OFF", Toast.LENGTH_SHORT).show();
 
-                        }
-                        break;*/
-                    case R.id.menu_push_data:
-                        PUSH_DATA_FROM_DRAWER = true;
-                        pushDataToServer.setValue(ChooseAssessmentActivity.this, false);
-                        pushDataToServer.doInBackground();
-                        break;
-                    case R.id.menu_push_db:
-                        pushDataBaseZipToServer.setValue(context, false);
-                        pushDataBaseZipToServer.doInBackground();
-                        break;
-                }
-                drawerLayout.closeDrawer(GravityCompat.START);
-
-                return false;
+                    }
+                    break;*/
+                case R.id.menu_push_data:
+                    PUSH_DATA_FROM_DRAWER = true;
+                    pushDataToServer.setValue(ChooseAssessmentActivity.this, false);
+                    pushDataToServer.doInBackground();
+                    break;
+                case R.id.menu_push_db:
+                    pushDataBaseZipToServer.setValue(context, false);
+                    pushDataBaseZipToServer.doInBackground();
+                    break;
             }
+            drawerLayout.closeDrawer(GravityCompat.START);
+
+            return false;
         });
 
 
@@ -411,35 +408,6 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     }*/
 
 
-    private void showSupervisionDialog() {
-        loggedCrl = null;
-       /* if (Assessment_Constants.SELECTED_SUBJECT.equalsIgnoreCase("ece")) {
-            eceLoginDialog.btn_unsupervised.setVisibility(View.GONE);
-        } else eceLoginDialog.btn_unsupervised.setVisibility(View.VISIBLE);
-*/
-
-       /* eceLoginDialog.btn_supervised.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-*/
-      /*          String userName = eceLoginDialog.userNameET.getText().toString(), password = eceLoginDialog.passwordET.getText().toString();
-                getLoggedInCrl(userName, password);
-                if (loggedCrl != null) {
-                    String loggedCrlId = loggedCrl.getCRLId();*/
-        /*Intent intent = new Intent(ChooseAssessmentActivity.this, SupervisedAssessmentActivity_.class);
-        intent.putExtra("crlId", "");
-//                    intent.putExtra("subId", sub);
-        startActivity(intent);*/
-//                    eceLoginDialog.dismiss();
-            /*    }
-            }
-        });*/
-
-
-//        eceLoginDialog.show();
-
-    }
-
     @Click(R.id.menu_icon)
     public void openMenu() {
      /*   if (toggle_btn.getVisibility() != View.VISIBLE)
@@ -462,24 +430,6 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         }
 
     }
-
-
-
-
-   /* private void makeSubjectsNonClickable(boolean clickable) {
-        if (clickable) {
-            for (int i = 0; i < recyclerView.getChildCount(); i++) {
-                recyclerView.getChildAt(i).setEnabled(true);
-                recyclerView.getChildAt(i).setClickable(true);
-            }
-        } else {
-            for (int i = 0; i < recyclerView.getChildCount(); i++) {
-                recyclerView.getChildAt(i).setEnabled(false);
-                recyclerView.getChildAt(i).setClickable(false);
-            }
-        }
-    }*/
-
 
     @Override
     public void clearContentList() {
@@ -589,29 +539,23 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         cancel_btn.setText(R.string.restart);
         dialog.show();
 
-        exit_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                AssessmentApplication.endTestSession(context);
-                VIDEOMONITORING = false;
-                finishAffinity();
+        exit_btn.setOnClickListener(v -> {
+            dialog.dismiss();
+            AssessmentApplication.endTestSession(context);
+            VIDEOMONITORING = false;
+            finishAffinity();
 
-            }
         });
 
-        cancel_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                VIDEOMONITORING = false;
-                finishAffinity();
-                try {
-                    ProcessPhoenix.triggerRebirth(ChooseAssessmentActivity.this);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-//                startActivity(new Intent(ChooseAssessmentActivity.this, SplashActivity_.class));
+        cancel_btn.setOnClickListener(v -> {
+            VIDEOMONITORING = false;
+            finishAffinity();
+            try {
+                ProcessPhoenix.triggerRebirth(ChooseAssessmentActivity.this);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+//                startActivity(new Intent(ChooseAssessmentActivity.this, SplashActivity_.class));
         });
         restart_btn.setOnClickListener(new View.OnClickListener() {
             @Override

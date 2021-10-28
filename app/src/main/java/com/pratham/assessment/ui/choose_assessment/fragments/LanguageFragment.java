@@ -15,7 +15,7 @@ import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.AssessmentLanguages;
-import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity;
+import com.pratham.assessment.ui.choose_assessment.choose_subject.ChooseAssessmentActivity;
 import com.pratham.assessment.constants.APIs;
 
 import org.androidannotations.annotations.AfterViews;

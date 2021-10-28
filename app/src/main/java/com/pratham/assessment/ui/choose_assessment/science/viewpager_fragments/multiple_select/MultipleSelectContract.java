@@ -3,7 +3,6 @@ package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.
 import android.widget.CompoundButton;
 
 import com.pratham.assessment.domain.ScienceQuestionChoice;
-import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.fib_without_options.FIB_WithoutOption_Contract;
 
 import java.util.List;
 

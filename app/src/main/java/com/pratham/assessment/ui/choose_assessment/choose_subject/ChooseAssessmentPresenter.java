@@ -1,12 +1,9 @@
-package com.pratham.assessment.ui.choose_assessment;
+package com.pratham.assessment.ui.choose_assessment.choose_subject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
@@ -48,7 +45,6 @@ import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
-import static com.pratham.assessment.BaseActivity.appDatabase;
 import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_LANGUAGE_ID;
 import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_PROGRAM_ID;
 import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_SUBJECT_ID;
@@ -576,8 +572,6 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
     }*/
 
 
-
-
     @Override
     public void versionObtained(String latestVersion) {
         if (latestVersion != null) {
@@ -647,7 +641,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
         String currentVersion = Assessment_Utility.getCurrentVersion(context);
         Log.d("version::", "Current version = " + currentVersion);
         try {
-            latestVersion = new GetLatestVersion(this).execute().get();
+            latestVersion = new GetLatestVersion(this,context).execute().get();
             Log.d("version::", "Latest version = " + latestVersion);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -676,7 +670,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                 txt_push_dialog_msg.setText(R.string.this_app_version_is_older_please_update_the_app);
                 ok_btn.setOnClickListener(view -> {
                     pushDialog.dismiss();
-                    updateApp();
+                    Assessment_Utility.updateApp(context);
                 });
                 eject_btn.setOnClickListener(view -> {
                     pushDialog.dismiss();
@@ -709,29 +703,14 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
             AlertDialog b = dialogBuilder.create();
             b.show();*/
-            }
+            } else
+                Toast.makeText(context, R.string.error_in_loading_check_internet_connection, Toast.LENGTH_SHORT).show();
+
         } else {
             Toast.makeText(context, R.string.error_in_loading_check_internet_connection, Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void updateApp() {
-        try {
-            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.pratham.assessment&hl=en")));
-        } catch (Exception e) {
-          /*  Modal_Log log = new Modal_Log();
-            log.setCurrentDateTime(new Utility().GetCurrentDate());
-            log.setErrorType("ERROR");
-            log.setExceptionMessage(e.getMessage());
-            log.setExceptionStackTrace(e.getStackTrace().toString());
-            log.setMethodName("MainActivity" + "_" + "checkVersion");
-            log.setDeviceId("");
-            AppDatabase.getDatabaseInstance(ApplicationController.getInstance()).getLogDao().insertLog(log);
-            BackupDatabase.backup(ApplicationController.getInstance());
-*/
-            e.printStackTrace();
-        }
-    }
 }
 
 /*    public void getAPIContent(final String requestType, String url) {

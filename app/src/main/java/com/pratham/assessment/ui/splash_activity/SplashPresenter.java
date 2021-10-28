@@ -8,6 +8,8 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -16,14 +18,20 @@ import android.provider.Settings;
 import android.support.annotation.WorkerThread;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
+import com.pratham.assessment.R;
+import com.pratham.assessment.async.GetLatestVersion;
 import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
+import com.pratham.assessment.custom.custom_dialogs.PushDataDialog;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.AssessmentLanguages;
@@ -63,6 +71,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
@@ -88,40 +98,59 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
 
     @Override
     public void checkVersion() {
-       /* String currentVersion = Assessment_Utility.getCurrentVersion(context);
-        String updatedVersion = sharedPreferences.getString(CURRENT_VERSION, "-1");
-        if (updatedVersion != null) {
-            if (updatedVersion.equalsIgnoreCase("-1")) {
-                if (Assessment_Utility.isDataConnectionAvailable(context)) {
-                    try {
-                        new GetLatestVersion(this).execute().get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else splashView.startApp();
-            } else {
-                if (updatedVersion != null && currentVersion != null && isCurrentVersionEqualsPlayStoreVersion(currentVersion, updatedVersion)) {
-                    splashView.showUpdateDialog();
-                } else
-                    splashView.startApp();
-            }
-        } else*/
-        splashView.startApp();
+        try {
+            new GetLatestVersion(this, context).execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            splashView.startApp();
 
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            splashView.startApp();
+
+        }
     }
 
     @Override
     public void versionObtained(String latestVersion) {
-       /* if (latestVersion != null) {
-            sharedPreferences.edit().putString(CURRENT_VERSION, latestVersion).apply();
-            checkVersion();
+        // Force Update Code
+        String currentVersion = Assessment_Utility.getCurrentVersion(context);
+        if (latestVersion != null) {
+            if ((!currentVersion.equals(latestVersion))) {
+                PushDataDialog pushDialog = new PushDataDialog(context);
+
+                pushDialog.setContentView(R.layout.app_push_data_dialog);
+                Objects.requireNonNull(pushDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                pushDialog.setCancelable(false);
+                pushDialog.setCanceledOnTouchOutside(false);
+                pushDialog.show();
+                TextView txt_push_dialog_msg;
+                Button ok_btn, eject_btn;
+                txt_push_dialog_msg = pushDialog.findViewById(R.id.txt_push_dialog_msg);
+                ok_btn = pushDialog.findViewById(R.id.ok_btn);
+                eject_btn = pushDialog.findViewById(R.id.eject_btn);
+                ok_btn.setVisibility(View.VISIBLE);
+                eject_btn.setVisibility(View.VISIBLE);
+                ok_btn.setText(R.string.update);
+                eject_btn.setText(R.string.cancel);
+                txt_push_dialog_msg.setText(R.string.this_app_version_is_older_please_update_the_app);
+                ok_btn.setOnClickListener(view -> {
+                    pushDialog.dismiss();
+                    splashView.startApp();
+                    Assessment_Utility.updateApp(context);
+                });
+                eject_btn.setOnClickListener(view -> {
+                    pushDialog.dismiss();
+                    splashView.startApp();
+                });
+                pushDialog.show();
+
+            } else
+                splashView.startApp();
+
         } else {
             splashView.startApp();
-        }*/
+        }
     }
 
     @Override
@@ -1511,7 +1540,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
     }
 
 
-    @WorkerThread
+  /*  @WorkerThread
     @Override
     public void copyZipAndPopulateMenu() {
         try {
@@ -1533,7 +1562,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                 com.pratham.assessment.domain.Status status = new com.pratham.assessment.domain.Status();
                 String key = "AppBuildDate";
                 String value = "28-09-2021";
-                setStatusTableEntries(status, key, value,context);
+                setStatusTableEntries(status, key, value, context);
                 if (!sharedPreferences.getBoolean(Assessment_Constants.KEY_MENU_COPIED, false))
                     populateMenu();
 
@@ -1543,7 +1572,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @Override
     public void updateNewEntriesInStatusTable() {
@@ -1651,7 +1680,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
         }
     }
 
-    @Override
+  /*  @Override
     public void populateSDCardMenu() {
 //        updateNewEntriesInStatusTable();
         if (!sharedPreferences.getBoolean(Assessment_Constants.SD_CARD_Content_STR, false)) {
@@ -1660,7 +1689,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
             com.pratham.assessment.domain.Status status = new com.pratham.assessment.domain.Status();
             String key = "AppBuildDate";
             String value = "28-09-2021";
-            setStatusTableEntries(status, key, value,context);
+            setStatusTableEntries(status, key, value, context);
             copyDBFile();
             try {
                 File db_file;
@@ -1715,7 +1744,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
             BackupDatabase.backup(context);
             splashView.gotoNextActivity();
         }
-    }
+    }*/
 
     private void copyFile(Context context, String path) {
         AssetManager assetManager = context.getAssets();

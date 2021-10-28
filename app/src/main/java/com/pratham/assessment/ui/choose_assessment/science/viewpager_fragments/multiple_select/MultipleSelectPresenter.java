@@ -1,12 +1,9 @@
 package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.multiple_select;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.pratham.assessment.domain.ScienceQuestionChoice;
-import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.EBean;
 

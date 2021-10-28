@@ -109,7 +109,7 @@ public class PushDBZipToServer {
                 String filePathStr = Environment.getExternalStorageDirectory().toString()
                         + "/PrathamBackups/" + AppDatabase.DB_NAME; // file path to save
 
-                String fielName = "" + Assessment_Utility.getUUID();
+                String fielName = "" + Assessment_Utility.getUUID() + "_" + Assessment_Utility.getDeviceId(context);
 
                 zip(fileNameListStrings, filePathStr + ".zip", new File(filePathStr));
 

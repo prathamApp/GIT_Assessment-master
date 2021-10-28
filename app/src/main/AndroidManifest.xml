@@ -84,7 +84,7 @@
             android:name=".ui.choose_assessment.ece.ECEActivity_"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.choose_assessment.ChooseAssessmentActivity_"
+            android:name=".ui.choose_assessment.choose_subject.ChooseAssessmentActivity_"
             android:screenOrientation="portrait">
          <!--   <intent-filter>
                 <action android:name="com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity_" />

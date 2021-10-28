@@ -1,9 +1,12 @@
 package com.pratham.assessment.async;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentContract;
+import com.pratham.assessment.ui.choose_assessment.choose_subject.ChooseAssessmentContract;
+import com.pratham.assessment.ui.splash_activity.SplashContract;
 
 import org.jsoup.Jsoup;
 
@@ -12,14 +15,25 @@ public class GetLatestVersion extends AsyncTask<String, String, String> {
 
     String latestVersion;
     ChooseAssessmentContract.ChooseAssessmentPresenter chooseAssessmentPresenter;
+    SplashContract.SplashPresenter splashPresenter;
+    ProgressDialog dialog;
+    Context context;
 
-    public GetLatestVersion(ChooseAssessmentContract.ChooseAssessmentPresenter chooseAssessmentPresenter) {
+    public GetLatestVersion(ChooseAssessmentContract.ChooseAssessmentPresenter chooseAssessmentPresenter, Context context) {
         this.chooseAssessmentPresenter = chooseAssessmentPresenter;
+        this.context = context;
+    }
+
+    public GetLatestVersion(SplashContract.SplashPresenter splashPresenter, Context context) {
+        this.splashPresenter = splashPresenter;
+        this.context = context;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        dialog = new ProgressDialog(context);
+        dialog.show();
 //        COS_Utility.showDialogInApiCalling(dialog, SplashActivity.this, "Checking if new version is available!");
     }
 
@@ -46,6 +60,10 @@ public class GetLatestVersion extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        chooseAssessmentPresenter.versionObtained(latestVersion);
+        dialog.dismiss();
+        if (chooseAssessmentPresenter != null)
+            chooseAssessmentPresenter.versionObtained(latestVersion);
+        if (splashPresenter != null)
+            splashPresenter.versionObtained(latestVersion);
     }
 }

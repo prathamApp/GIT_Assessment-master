@@ -29,8 +29,8 @@ import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.Attendance;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Student;
-import com.pratham.assessment.ui.choose_assessment.ChooseAssessmentActivity_;
 import com.pratham.assessment.constants.Assessment_Constants;
+import com.pratham.assessment.ui.choose_assessment.choose_subject.ChooseAssessmentActivity_;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;

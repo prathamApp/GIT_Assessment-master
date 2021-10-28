@@ -16,8 +16,6 @@ import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
 
-import static android.graphics.Color.WHITE;
-
 public class QuestionTrackerAdapter extends RecyclerView.Adapter<QuestionTrackerAdapter.MyViewHolder> {
     List<ScienceQuestion> scienceQuestionList;
     Context context;
