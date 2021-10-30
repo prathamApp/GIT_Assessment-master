@@ -3116,7 +3116,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
 
     //old rating logic
-   /* private float calculateRating(int q1Total, int q1CorrectCnt) {
+    private float calculateRating(int q1Total, int q1CorrectCnt) {
         float ratings = 0;
         try {
             if (q1Total == 0) ratings = (float) 1;
@@ -3138,9 +3138,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         }
         return ratings;
     }
-*/
     //new rating
-    private float calculateRating(int q1Total, int q1CorrectCnt) {
+   /* private float calculateRating(int q1Total, int q1CorrectCnt) {
         float ratings = 0;
         try {
             if (q1Total == 0) ratings = (float) 1;
@@ -3162,7 +3161,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         }
         return ratings;
     }
-
+*/
     private void saveAttemptedQuestionsInDB() {
         scienceQuestionList.get(queCnt).setEndTime(Assessment_Utility.getCurrentDateTime());
         new AsyncTask<Object, Void, Object>() {

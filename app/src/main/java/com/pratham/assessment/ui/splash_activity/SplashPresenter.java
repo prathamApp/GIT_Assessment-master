@@ -98,7 +98,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
 
     @Override
     public void checkVersion() {
-        try {
+       /* try {
             new GetLatestVersion(this, context).execute().get();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -108,7 +108,9 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
             e.printStackTrace();
             splashView.startApp();
 
-        }
+        }*/
+        splashView.startApp();
+
     }
 
     @Override
