@@ -3075,6 +3075,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         }
         return calculateRating(totalTopicQuestions, correctQuestions);
 //        Log.d("calculateQuestions", "calculateQuestions: " + rating);
+//        Log.d("calculateQuestions", "calculateQuestions: " + rating);
     }
 
 
