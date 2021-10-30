@@ -3067,31 +3067,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         return kList;
     }
 
-   /* private String calculateRatingTopicWise() {
-        StringBuilder ratingJson = new StringBuilder("");
-
-        if (certificateTopicLists != null && certificateTopicLists.size() > 0) {
-            ratingJson = new StringBuilder("[");
-
-            for (int i = 0; i < certificateTopicLists.size(); i++) {
-                float rating = cal2222culateQuestions(certificateTopicLists.get(i).getTopicid());
-                ratingJson.append("{\"topicid\":" + "\"").append(certificateTopicLists.get(i).getTopicid())
-                        .append("\"").append(",\n")
-                        .append("\"certificatequestion\":").append("\"").append(certificateTopicLists.get(i).getCertificatequestion())
-                        .append("\"").append(",\n")
-                        .append("\"rating\":").append("\"").append(rating)
-                        .append("\"").append(",\n")
-                        .append("\"examId\":" + "\"").append(selectedExamId).append("\"")
-                        .append("},");
-
-            }
-            ratingJson.deleteCharAt(ratingJson.length() - 1);
-            ratingJson.append("]");
-            Log.d("ratingJson", "calculateRatingTopicWise: " + ratingJson);
-        }
-        return String.valueOf(ratingJson);
-    }*/
-
     private float calculateQuestions(String topicId) {
         int totalTopicQuestions = 0, correctQuestions = 0;
 
