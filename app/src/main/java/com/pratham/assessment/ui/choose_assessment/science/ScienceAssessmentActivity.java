@@ -2793,10 +2793,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             insertInDB(" Exam completed");
                         else insertInDB(" Exam incomplete");
 
-                  /*  Intent intent = new Intent();
-                    intent.putExtra(EXAM_STATUS, "Exam completed");
-                    setResult(5252, intent);*/
-
                     BackupDatabase.backup(ScienceAssessmentActivity.this);
                 } catch (Exception e) {
                     e.printStackTrace();
