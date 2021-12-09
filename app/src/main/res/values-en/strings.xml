@@ -409,7 +409,13 @@
     <string name="loading_exams">Loading Exams</string>
     <string name="db_push_failed">Db push failed</string>
     <string name="db_pushed_successfully">Db pushed successfully</string>
-
+    <string name="push_db_file">Push DB file</string>
+    <string name="recommended_level">Recommended Level:</string>
+    <string name="level">Level</string>
+    <string name="competency">Competency</string>
+    <string name="date">Date:</string>
+    <string name="enrollment_no">Enrollment number:</string>
+    <string name="yes_no">Yes/ No</string>
     <!-- <string name="hello_blank_fragment">Hello blank fragment</string>
      <string name="thank_you_for_giving_assessment">Thank you \n for giving assessment.</string>
      <string name="video_monitoring_is">Video monitoring is</string>

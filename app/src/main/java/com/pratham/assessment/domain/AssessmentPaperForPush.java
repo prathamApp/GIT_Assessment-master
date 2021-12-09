@@ -50,6 +50,27 @@ public class AssessmentPaperForPush implements Serializable {
     @Embedded
     ArrayList<Score> scoreList;
 
+
+    private int recommendedLevel;
+    private boolean isDiagnosticTest;
+
+
+    public int getRecommendedLevel() {
+        return recommendedLevel;
+    }
+
+    public void setRecommendedLevel(int recommendedLevel) {
+        this.recommendedLevel = recommendedLevel;
+    }
+
+    public boolean isDiagnosticTest() {
+        return isDiagnosticTest;
+    }
+
+    public void setDiagnosticTest(boolean diagnosticTest) {
+        isDiagnosticTest = diagnosticTest;
+    }
+
     public String getExamTime() {
         return examTime;
     }

@@ -233,9 +233,10 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
         myViewHolder.btnCorrectAnswer.setOnClickListener(v -> {
             ResultModalClass result1 = resultList.get(myViewHolder.getAdapterPosition());
-
+            ScienceQuestion question = getQuestion(result1.getqId());
             List<ScienceQuestionChoice> scienceQuestionChoice = AppDatabase.
-                    getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(result1.getqId());
+                    getDatabaseInstance(context).getScienceQuestionChoicesDao()
+                    .getQuestionChoicesByQIDAndVersion(result1.getqId(), question.getAppVersion());
             String /*corrImg = "",*/ localPath;
             for (int i1 = 0; i1 < scienceQuestionChoice.size(); i1++) {
                 if (scienceQuestionChoice.get(i1).getCorrect().equalsIgnoreCase("true")) {
@@ -299,7 +300,8 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
 
         final ScienceQuestion scienceQuestion = getQuestion(result.getqId());
         final List<ScienceQuestionChoice> scienceQuestionChoice = AppDatabase
-                .getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(result.getqId());
+                .getDatabaseInstance(context).getScienceQuestionChoicesDao()
+                .getQuestionChoicesByQIDAndVersion(result.getqId(),scienceQuestion.getAppVersion());
         switch (scienceQuestion.getQtid()) {
             case ARRANGE_SEQUENCE:
             case MATCHING_PAIR:

@@ -5,7 +5,6 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-
 import com.pratham.assessment.domain.Modal_Log;
 
 import java.util.List;
@@ -23,6 +22,12 @@ public interface LogDao {
 
     @Query("select * from Logs")
     public List<Modal_Log> getAllLogs();
+
+    @Query("select * from logs where currentDateTime like :date and (errorType like :dataPush or errorType like :dbPush) order by currentDateTime desc")
+    public List<Modal_Log> getPushLog(String dataPush, String dbPush, String date);
+
+    @Query("select * from logs  where errorType like :data_push order by currentDateTime desc limit 1")
+    public Modal_Log getRecentPushed(String data_push);
 
     @Query("select * from Logs where sentFlag=0")
     public List<Modal_Log> getPushAllLogs();

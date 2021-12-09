@@ -6,8 +6,8 @@ import android.support.v4.provider.DocumentFile;
 import android.util.Log;
 
 import com.pratham.assessment.AssessmentApplication;
-import com.pratham.assessment.domain.EventMessage;
 import com.pratham.assessment.constants.Assessment_Constants;
+import com.pratham.assessment.domain.EventMessage;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -50,23 +50,25 @@ public class CopyDbToOTG extends AsyncTask {
             //copy db files
 //            File activityPhotosFile = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH);
             File currentDB = AssessmentApplication.getInstance().getDatabasePath(DB_NAME);
-            File parentPath = currentDB.getParentFile();
+            if (currentDB != null) {
+                File parentPath = currentDB.getParentFile();
 
-            for (File f : parentPath.listFiles()) {
-                DocumentFile file = thisTabletFolder.findFile(f.getName());
-                if (file != null) file.delete();
-                file = thisTabletFolder.createFile("image", f.getName());
-                OutputStream out = AssessmentApplication.getInstance().getContentResolver().openOutputStream(file.getUri());
-                FileInputStream in = new FileInputStream(f.getAbsolutePath());
-                byte[] buffer = new byte[1024];
-                int read;
-                while ((read = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, read);
+                for (File f : parentPath.listFiles()) {
+                    DocumentFile file = thisTabletFolder.findFile(f.getName());
+                    if (file != null) file.delete();
+                    file = thisTabletFolder.createFile("image", f.getName());
+                    OutputStream out = AssessmentApplication.getInstance().getContentResolver().openOutputStream(file.getUri());
+                    FileInputStream in = new FileInputStream(f.getAbsolutePath());
+                    byte[] buffer = new byte[1024];
+                    int read;
+                    while ((read = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, read);
+                    }
+                    in.close();
+                    // You have now copied the file
+                    out.flush();
+                    out.close();
                 }
-                in.close();
-                // You have now copied the file
-                out.flush();
-                out.close();
             }
 
             File activityPhotosFile = new File(actPhotoPath);

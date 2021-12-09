@@ -117,6 +117,7 @@ import java.net.URLConnection;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.text.DateFormat;
 import java.text.Normalizer;
 import java.text.ParseException;
@@ -226,13 +227,18 @@ public class Assessment_Utility {
                 e.printStackTrace();
             }
         } else {
-            Glide.with(context)
-                    .load(localPath)
-                    .apply(new RequestOptions()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .skipMemoryCache(true)
-                            .placeholder(Drawable.createFromPath(localPath)))
-                    .into(questionImage);
+            try {
+                Glide.with(context)
+                        .load(localPath)
+                        .apply(new RequestOptions()
+
+                                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                .skipMemoryCache(true)
+                                .placeholder(Drawable.createFromPath(localPath)))
+                        .into(questionImage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -824,6 +830,18 @@ public class Assessment_Utility {
         Calendar cal = Calendar.getInstance();
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.ENGLISH);
         return dateFormat.format(cal.getTime());
+    }
+
+    private static volatile SecureRandom numberGenerator = null;
+    private static final long MSB = 0x8000000000000000L;
+
+    public static String uniqueNumber() {
+        SecureRandom ng = numberGenerator;
+        if (ng == null) {
+            numberGenerator = ng = new SecureRandom();
+        }
+
+        return Long.toHexString(MSB | ng.nextLong()) + Long.toHexString(MSB | ng.nextLong());
     }
 
     public static int convertDpToPixels(float dp, Context context) {

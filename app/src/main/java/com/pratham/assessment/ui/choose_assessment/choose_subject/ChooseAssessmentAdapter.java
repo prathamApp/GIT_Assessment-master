@@ -60,7 +60,7 @@ public class ChooseAssessmentAdapter extends RecyclerView.Adapter<ChooseAssessme
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         //final ContentView gamesList = gamesViewList.get(position);
         selectedLang = FastSave.getInstance().getString(LANGUAGE, "1");
         final AssessmentSubjects assessList = assessmentViewList.get(position);

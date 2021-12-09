@@ -18,9 +18,11 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.custom_dialogs.PushDataDialog;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
+import com.pratham.assessment.domain.Modal_Log;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.Background;
@@ -54,6 +56,7 @@ public class PushDBZipToServer {
     TextView txt_push_cnt;
     RelativeLayout rl_btn;
     Button ok_btn;
+    Modal_Log push_log;
 
     public PushDBZipToServer(Context context) {
         this.context = context;
@@ -87,6 +90,12 @@ public class PushDBZipToServer {
     @Background
     public void doInBackground() {
         onPreExecute();
+        push_log = new Modal_Log();
+        push_log.setCurrentDateTime(Assessment_Utility.getCurrentDateTime());
+        push_log.setDeviceId(Assessment_Utility.getDeviceId(context));
+        push_log.setLogDetail("Apk version : " + Assessment_Utility.getCurrentVersion(context));
+        push_log.setErrorType("DB_PUSH");
+
         pushZipToServer(context, APIs.push_db_zip);
 
     }
@@ -109,7 +118,8 @@ public class PushDBZipToServer {
                 String filePathStr = Environment.getExternalStorageDirectory().toString()
                         + "/PrathamBackups/" + AppDatabase.DB_NAME; // file path to save
 
-                String fielName = "" + Assessment_Utility.getUUID() + "_" + Assessment_Utility.getDeviceId(context);
+                String fileName = Assessment_Utility.getUUID() + "_" +
+                        Assessment_Utility.getDeviceId(context) + "_" + FastSave.getInstance().getString("currentStudentID", "");
 
                 zip(fileNameListStrings, filePathStr + ".zip", new File(filePathStr));
 
@@ -134,7 +144,7 @@ public class PushDBZipToServer {
  */
                 AndroidNetworking.upload(url[0])
                         .addHeaders("Content-Type", "file/zip")
-                        .addMultipartFile("" + fielName, new File(filePathStr + ".zip"))
+                        .addMultipartFile("" + fileName, new File(filePathStr + ".zip"))
                         .setPriority(Priority.HIGH)
                         .build()
                         .getAsJSONObject(new JSONObjectRequestListener() {
@@ -259,22 +269,32 @@ public class PushDBZipToServer {
     protected void onPostExecute() {
         // super.onPostExecute(o);
         try {
+            if (autoPush)
+                push_log.setMethodName("auto push");
+            else push_log.setMethodName("manual push");
             ok_btn.setVisibility(View.VISIBLE);
             if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                 txt_push_dialog_msg.setText(R.string.no_internet_connection);
+                push_log.setExceptionMessage("push failed no internet");
+
             } else {
                 if (!dataPushed) {
                     push_lottie.setAnimation("error_cross.json");
                     push_lottie.playAnimation();
                     txt_push_dialog_msg.setText(R.string.db_push_failed);
+                    push_log.setExceptionMessage("push failed");
+
                 } else if (isTablet || !autoPush) {
                     push_lottie.setAnimation("success.json");
                     push_lottie.playAnimation();
                     txt_push_dialog_msg.setText(R.string.db_pushed_successfully);
+                    push_log.setExceptionMessage("push successful");
 
                 }
             }
             PUSH_DATA_FROM_DRAWER = false;
+            AppDatabase.getDatabaseInstance(context).getLogsDao().insertLog(push_log);
+            BackupDatabase.backup(context);
         } catch (Exception e) {
             e.printStackTrace();
         }

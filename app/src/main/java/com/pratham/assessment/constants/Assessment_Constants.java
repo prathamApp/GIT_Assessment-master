@@ -1,5 +1,7 @@
 package com.pratham.assessment.constants;
 
+import android.os.Environment;
+
 public class Assessment_Constants {
     public static final String INITIAL_ENTRIES = "initial_entries";
     public static final String KEY_ASSET_COPIED = "key_asset_copied";
@@ -103,6 +105,8 @@ public class Assessment_Constants {
     public static String STORE_SUPERVISOR_IMAGE_PATH = "/.Assessment/Content/SupervisorImages";
     public static String STORE_STUDENT_IMAGE_PATH = "/.Assessment/Content/StudentImages";
     public static String STORE_STUDENT_PDF_PATH = "/.Assessment/Content/StudentPDFs";
+    public static String STORE_STUDENT_DIAGNOSTIC_PDF_PATH = Environment.getExternalStorageDirectory() + "/PrathamBackups/StudentPDFs";
+    public static String STORE_STUDENT_DIAGNOSTIC_PDF_OLD_PATH = Environment.getExternalStorageDirectory() + "/PrathamBackups/StudentOldPDFs";
     public static String STORE_PUSH_JSON_PATH = "/.Assessment/Content/PushJson";
     public static String DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING = "videoMonitoring";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO = "answerVideo";
@@ -125,7 +129,8 @@ public class Assessment_Constants {
 
 //    public static boolean GROUP_LOGIN = false;
 
-    public static String loadOnlineImagePath = "http://pef1.prathamskills.org//";
+    //    public static String loadOnlineImagePath = "http://pef1.prathamskills.org//";
+    public static String loadOnlineImagePath = "";
     public static boolean isShowcaseDisplayed = false;
 
     public static String ENGLISH_CODE = "en";
@@ -178,6 +183,8 @@ public class Assessment_Constants {
 
     public static String StudentPhotoPath = "";
 
+    public static final String APP_BUILD_DATE = "19-11-2021";
+
 
     public static enum URL {
         BROWSE_BY_ID(BASE_URL + "get?id="),
@@ -213,5 +220,4 @@ public class Assessment_Constants {
         }
 
     }
-
 }

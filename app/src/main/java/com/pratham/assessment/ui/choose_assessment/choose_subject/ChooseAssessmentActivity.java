@@ -47,11 +47,13 @@ import com.pratham.assessment.domain.AssessmentTest;
 import com.pratham.assessment.domain.Crl;
 import com.pratham.assessment.interfaces.DataPushListener;
 import com.pratham.assessment.ui.choose_assessment.ECELoginDialog;
-import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity_;
-import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
+import com.pratham.assessment.ui.choose_assessment.data_push_status.PushStatusActivity_;
+import com.pratham.assessment.ui.choose_assessment.exam_status.ExamStatusActivity_;
 import com.pratham.assessment.ui.choose_assessment.fragments.LanguageFragment_;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment;
 import com.pratham.assessment.ui.choose_assessment.fragments.TopicFragment_;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity_;
+import com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
@@ -127,6 +129,13 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         View view = navigation.getHeaderView(0);
         TextView name = view.findViewById(R.id.userName);
         name.setText(Html.fromHtml(studentName));
+        TextView enrollmentId = view.findViewById(R.id.tv_enrollment_id);
+
+        if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false)) {
+            enrollmentId.setVisibility(View.VISIBLE);
+            enrollmentId.setText(Html.fromHtml(currentStudentID));
+        } else enrollmentId.setVisibility(View.GONE);
+
 
         Assessment_Constants.SELECTED_LANGUAGE = FastSave.getInstance().getString(LANGUAGE, "1");
         swipe_to_refresh.setColorSchemeColors(getResources().getColor(R.color.catcho_primary));
@@ -157,11 +166,11 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             nav_push.setVisible(false);
         }
 
-        MenuItem nav_certificate = menu.findItem(R.id.menu_certificate);
+     /*   MenuItem nav_certificate = menu.findItem(R.id.menu_certificate);
         if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false)) {
             nav_certificate.setVisible(false);
         } else nav_certificate.setVisible(true);
-
+*/
 
        /* if (!AssessmentApplication.isTablet) {
             if (Assessment_Constants.VIDEOMONITORING) {
@@ -272,6 +281,12 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
                     }
                     break;*/
+                case R.id.menu_sync_status:
+                    startActivity(new Intent(ChooseAssessmentActivity.this, PushStatusActivity_.class));
+                    break;
+                case R.id.menu_exam_status:
+                    startActivity(new Intent(ChooseAssessmentActivity.this, ExamStatusActivity_.class));
+                    break;
                 case R.id.menu_push_data:
                     PUSH_DATA_FROM_DRAWER = true;
                     pushDataToServer.setValue(ChooseAssessmentActivity.this, false);
@@ -286,8 +301,6 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
             return false;
         });
-
-
     }
 
 

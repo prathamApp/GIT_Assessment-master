@@ -24,8 +24,8 @@ public interface CertificateKeywordRatingDao {
     @Query("DELETE FROM CertificateKeywordRating where subjectid=:subjectId and examid=:examId")
     public void deleteQuestionByExamIdSubId(String subjectId, String examId);
 
- @Query("DELETE FROM CertificateKeywordRating where subjectid=:subjectId and examid=:examId and paperId=:paperId")
-    public void deleteQuestionByExamIdSubIdPaperId(String subjectId, String examId,String paperId);
+    @Query("DELETE FROM CertificateKeywordRating where subjectid=:subjectId and examid=:examId and paperId=:paperId")
+    public void deleteQuestionByExamIdSubIdPaperId(String subjectId, String examId, String paperId);
 
     @Query("select * from CertificateKeywordRating")
     public List<CertificateKeywordRating> getAllCertificateQuestions();
@@ -51,4 +51,9 @@ public interface CertificateKeywordRatingDao {
     @Query("update CertificateKeywordRating set sentFlag=1 where sentFlag=0")
     public void setSentFlag();
 
+    @Query("select min(questionLevel) from CertificateKeywordRating where isCorrect=0 and paperId=:paperId")
+    public int getRecommendedLowestLevel(String paperId);
+
+ @Query("select max(questionLevel) from CertificateKeywordRating where isCorrect=1 and paperId=:paperId")
+    public int getRecommendedHighestLevel(String paperId);
 }

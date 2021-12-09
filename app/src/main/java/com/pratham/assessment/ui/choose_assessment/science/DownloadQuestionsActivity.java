@@ -36,6 +36,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.custom.NonSwipeableViewPager;
 import com.pratham.assessment.custom.circular_progress_view.CircleView;
@@ -51,8 +53,6 @@ import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.bottomFragment.BottomQuestionFragment;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.ViewpagerAdapter;
-import com.pratham.assessment.constants.APIs;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.robinhood.ticker.TickerView;
 
@@ -651,11 +651,11 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
                     List<ScienceQuestion> scienceQuestions;
                     //                if (!assessmentPaperPatterns.getSubjectid().equalsIgnoreCase("30") || !assessmentPaperPatterns.getSubjectname().equalsIgnoreCase("aser")) {
 //                    if (assessmentPaperPatterns.getIsRandom()) {
-                        scienceQuestions = AppDatabase.getDatabaseInstance(context).
-                                getScienceQuestionDao().getQuestionListByPattern(Assessment_Constants.SELECTED_LANGUAGE,
-                                subjectId, assessmentPatternDetails.get(j).getTopicid(),
-                                assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(),
-                                 noOfQues,"");
+                    scienceQuestions = AppDatabase.getDatabaseInstance(context).
+                            getScienceQuestionDao().getQuestionListByPattern(Assessment_Constants.SELECTED_LANGUAGE,
+                            subjectId, assessmentPatternDetails.get(j).getTopicid(),
+                            assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(),
+                            noOfQues, "");
                     /*} else {
                         scienceQuestions = AppDatabase.getDatabaseInstance(context).
                                 getScienceQuestionDao().getQuestionListByPatternRandomly(Assessment_Constants.SELECTED_LANGUAGE,
@@ -694,7 +694,9 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
             for (int i = 0; i < scienceQuestionList.size(); i++) {
                 scienceQuestionList.get(i).setPaperid(assessmentSession);
                 String qid = scienceQuestionList.get(i).getQid();
-                ArrayList<ScienceQuestionChoice> scienceQuestionChoiceList = (ArrayList<ScienceQuestionChoice>) AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(qid);
+                String version = scienceQuestionList.get(i).getAppVersion();
+                ArrayList<ScienceQuestionChoice> scienceQuestionChoiceList = (ArrayList<ScienceQuestionChoice>)
+                        AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQIDAndVersion(qid, version);
                 scienceQuestionList.get(i).setLstquestionchoice(scienceQuestionChoiceList);
             }
 

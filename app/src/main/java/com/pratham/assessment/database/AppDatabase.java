@@ -72,7 +72,7 @@ import com.pratham.assessment.domain.Village;
         AssessmentTest.class, AssessmentPaperForPush.class,
         AssessmentPaperPattern.class, AssessmentPatternDetails.class,
         SupervisorData.class, DownloadMedia.class, TempScienceQuestion.class,
-        NIOSExam.class, NIOSExamTopics.class, CertificateTopicList.class, CertificateKeywordRating.class}, version = 17/*,exportSchema = false*/)
+        NIOSExam.class, NIOSExamTopics.class, CertificateTopicList.class, CertificateKeywordRating.class}, version = 19/*,exportSchema = false*/)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
 
@@ -152,8 +152,8 @@ public abstract class AppDatabase extends RoomDatabase {
                         .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4,
                                 MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8,
                                 MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12,
-                                MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15,MIGRATION_15_16,
-                                MIGRATION_14_15,MIGRATION_16_17)
+                                MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16,
+                                MIGRATION_14_15, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19)
                         .allowMainThreadQueries().build();
 
             }
@@ -529,6 +529,50 @@ public abstract class AppDatabase extends RoomDatabase {
                 database.execSQL("ALTER TABLE ScienceQuestionChoice add IsQuestionFromSDCard INTEGER not null DEFAULT 0");
 
                 Log.d("$$$", "after MIGRATION_16_17");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    static final Migration MIGRATION_17_18 = new Migration(17, 18) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_17_18");
+            try {
+                database.execSQL("ALTER TABLE CertificateKeywordRating add isCorrect INTEGER not null DEFAULT 0");
+                database.execSQL("ALTER TABLE CertificateKeywordRating add questionLevel INTEGER not null DEFAULT 0");
+                database.execSQL("ALTER TABLE AssessmentPaperPattern add isDiagnosticTest INTEGER not null DEFAULT 0");
+                database.execSQL("ALTER TABLE ScienceQuestion add AppVersion TEXT");
+                database.execSQL("ALTER TABLE TempScienceQuestion add AppVersion TEXT");
+                database.execSQL("ALTER TABLE ScienceQuestionChoice add AppVersionChoice TEXT");
+                database.execSQL("ALTER TABLE Score add AppVersion TEXT");
+                database.execSQL("ALTER TABLE Score add AppVersionChoice TEXT");
+                database.execSQL("ALTER TABLE Score add qname TEXT");
+                database.execSQL("ALTER TABLE Score add correctAnsId TEXT");
+                database.execSQL("ALTER TABLE Score add correctAns TEXT");
+
+                Log.d("$$$", "after MIGRATION_17_18");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
+    static final Migration MIGRATION_18_19 = new Migration(18, 19) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_18_19");
+            try {
+                //TODO ----UNcoMMent new fields frOm push data************
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add recommendedLevel INTEGER not null DEFAULT 0");
+                database.execSQL("ALTER TABLE AssessmentPaperForPush add isDiagnosticTest INTEGER not null DEFAULT 0");
+
+
+                Log.d("$$$", "after MIGRATION_18_19");
             } catch (Exception e) {
                 e.printStackTrace();
             }

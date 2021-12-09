@@ -6,7 +6,6 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 public class ScienceQuestionChoice implements Serializable {
@@ -23,6 +22,16 @@ public class ScienceQuestionChoice implements Serializable {
     @Ignore
     private String myIscorrect = "false";
     private boolean IsQuestionFromSDCard;
+
+    private String AppVersionChoice;
+
+    public String getAppVersionChoice() {
+        return AppVersionChoice;
+    }
+
+    public void setAppVersionChoice(String appVersionChoice) {
+        AppVersionChoice = appVersionChoice;
+    }
 
     public String getMyIscorrect() {
         return myIscorrect;

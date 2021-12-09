@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.pratham.assessment.R;
 import com.pratham.assessment.ui.choose_assessment.choose_subject.ChooseAssessmentContract;
 import com.pratham.assessment.ui.splash_activity.SplashContract;
 
@@ -33,6 +34,9 @@ public class GetLatestVersion extends AsyncTask<String, String, String> {
     protected void onPreExecute() {
         super.onPreExecute();
         dialog = new ProgressDialog(context);
+        dialog.setMessage(context.getResources().getString(R.string.loading_please_wait));
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
         dialog.show();
 //        COS_Utility.showDialogInApiCalling(dialog, SplashActivity.this, "Checking if new version is available!");
     }
@@ -51,7 +55,6 @@ public class GetLatestVersion extends AsyncTask<String, String, String> {
                     .ownText();
             Log.d("latest::", latestVersion);
         } catch (Exception e) {
-//            COS_Utility.dismissDialog(dialog);
             e.printStackTrace();
         }
         return latestVersion;

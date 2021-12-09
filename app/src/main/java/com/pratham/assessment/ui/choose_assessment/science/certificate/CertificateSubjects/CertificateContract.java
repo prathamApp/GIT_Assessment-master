@@ -11,10 +11,17 @@ public interface CertificateContract {
 //        void getPaper(String examId,String subjectid);
 
         void setView(CertificateContract.CertificateView certificateView);
+
+        void getIsDiagnosticTest(String examId);
+
+        void getRecommendedLevel(String paperId);
     }
 
     interface CertificateView {
         void setStudentName(String name);
 
+        void setIsDiagnosticTest(boolean isDiagnosticTest);
+
+        void setRecommendedLevel(int level);
     }
 }

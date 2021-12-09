@@ -1,10 +1,15 @@
 package com.pratham.assessment.async;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -114,7 +119,7 @@ public class PushDataToServer {
     List<DownloadMedia> downloadMediaList = new ArrayList<>();
     List<DownloadMedia> supervisorMediaList = new ArrayList<>();
     List<DownloadMedia> videoRecordingList = new ArrayList<>();
-    private int pushCnt = 0, videoMonCnt = 0, supervisorCnt = 0, answerMediaCnt = 0;
+    private int paperPushCnt = 0, scorePushCount = 0, videoMonCnt = 0, supervisorCnt = 0, answerMediaCnt = 0;
     private int totalVideoMonCnt = 0, totalSupervisorCnt = 0, totalAnswerMediaCnt = 0;
     //    ProgressDialog progressDialog;
     JSONObject requestJsonObjectScience;
@@ -124,6 +129,7 @@ public class PushDataToServer {
     RelativeLayout rl_btn;
     Button ok_btn;
     private int BUFFER = 10000;
+    Modal_Log push_log;
 
     public PushDataToServer(Context context) {
         dataPushListener = (DataPushListener) context;
@@ -154,6 +160,37 @@ public class PushDataToServer {
         if (!autoPush)
             pushDialog.show();
 
+        if (autoPush) {
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(context.getApplicationContext(), "notify_001");
+
+            NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+            bigText.bigText("pushing data in background");
+            bigText.setBigContentTitle("Assessment app");
+
+            mBuilder.setSmallIcon(R.drawable.assessment_logo);
+            mBuilder.setContentTitle("Assessment app");
+            mBuilder.setContentText("pushing data in background");
+            mBuilder.setPriority(Notification.PRIORITY_MAX);
+            mBuilder.setStyle(bigText);
+
+            NotificationManager mNotificationManager =
+                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+// === Removed some obsoletes
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                String channelId = "notify_001";
+                NotificationChannel channel = new NotificationChannel(
+                        channelId,
+                        "Channel human readable title",
+                        NotificationManager.IMPORTANCE_HIGH);
+                mNotificationManager.createNotificationChannel(channel);
+                mBuilder.setChannelId(channelId);
+            }
+
+            mNotificationManager.notify(0, mBuilder.build());
+        }
+
         push_lottie = pushDialog.findViewById(R.id.push_lottie);
         txt_push_dialog_msg = pushDialog.findViewById(R.id.txt_push_dialog_msg);
         txt_push_cnt = pushDialog.findViewById(R.id.txt_push_cnt);
@@ -171,7 +208,7 @@ public class PushDataToServer {
     public void doInBackground() {
         onPreExecute();
         List<Score> scoreList = AppDatabase.getDatabaseInstance(context).getScoreDao().getAllPushScores("ece_assessment");
-        eceScoreData = fillScoreData(scoreList);
+        eceScoreData = fillECEScoreData(scoreList);
         List<AssessmentPaperForPush> assessmentScoreList = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAllAssessmentPapersForPush();
         assessmentScoreData = fillAssessmentScoreData(assessmentScoreList);
         List<Attendance> attendanceList = AppDatabase.getDatabaseInstance(context).getAttendanceDao().getAllPushAttendanceEntries();
@@ -188,6 +225,12 @@ public class PushDataToServer {
         logsData = fillLogsData(logsList);
 
         try {
+
+            push_log = new Modal_Log();
+            push_log.setCurrentDateTime(Assessment_Utility.getCurrentDateTime());
+            push_log.setDeviceId(Assessment_Utility.getDeviceId(context));
+            push_log.setExceptionStackTrace("Apk version : " + Assessment_Utility.getCurrentVersion(context));
+            push_log.setErrorType("DATA_PUSH");
 
             requestJsonObjectScience = generateRequestString(eceScoreData, assessmentScoreData, attendanceData, sessionData,/* learntWords, */supervisorData, logsData, /*assessmentScienceData,*/ studentData);
 
@@ -213,7 +256,6 @@ public class PushDataToServer {
                                         FastSave.getInstance().saveString(Assessment_Constants.FACILITY_ID, facility.getFacilityId());
                                         pushDataToRaspberry("" + Assessment_Constants.URL.DATASTORE_RASPBERY_URL.toString(),
                                                 "" + requestJsonObjectScience, programID, Assessment_Constants.USAGEDATA);
-
                                     }
 
                                     @Override
@@ -563,7 +605,7 @@ public class PushDataToServer {
         return attendanceData;
     }
 
-    private JSONArray fillScoreData(List<Score> scoreList) {
+    private JSONArray fillECEScoreData(List<Score> scoreList) {
         JSONArray scoreData = new JSONArray();
         JSONObject _obj;
         try {
@@ -602,7 +644,7 @@ public class PushDataToServer {
         JSONObject _obj_paper = null;
         JSONArray scoreData = new JSONArray();
         JSONArray ratingData = new JSONArray();
-        pushCnt = paperList.size();
+        paperPushCnt = paperList.size();
         JSONObject _obj_score;
         JSONObject _obj_rating;
         try {
@@ -610,6 +652,7 @@ public class PushDataToServer {
                 _obj_paper = new JSONObject();
                 AssessmentPaperForPush _paper = paperList.get(p);
                 List<Score> scoreList = AppDatabase.getDatabaseInstance(context).getScoreDao().getAllNewScores(paperList.get(p).getPaperId(), paperList.get(p).getSessionID());
+                scorePushCount = scoreList.size();
                 List<CertificateKeywordRating> ratingList = AppDatabase.getDatabaseInstance(context).getCertificateKeywordRatingDao().getAllCertificateQuestionsNew(paperList.get(p).getPaperId());
                 if (scoreList.size() > 0) {
                     _obj_paper.put("languageId", _paper.getLanguageId());
@@ -634,6 +677,9 @@ public class PushDataToServer {
                     _obj_paper.put("question10Rating", _paper.getQuestion10Rating());
 //                    _obj_paper.put("certificateQuestionRatings", _paper.getCertificateQuestionRatings());
                     _obj_paper.put("isniosstudent", _paper.getIsniosstudent());
+                    _obj_paper.put("isDiagnosticTest", _paper.isDiagnosticTest());
+                    _obj_paper.put("recommendedLevel", _paper.getRecommendedLevel());
+
 
                     scoreData = new JSONArray();
                     for (int i = 0; i < scoreList.size(); i++) {
@@ -657,7 +703,11 @@ public class PushDataToServer {
                         _obj_score.put("paperId", _score.getPaperId());
                         _obj_score.put("RedirectedFromApp", _score.getRedirectedFromApp());
                         _obj_score.put("RedirectedAppSessionId", _score.getRedirectedAppSessionId());
-
+                        _obj_score.put("qname", _score.getQname());
+                        _obj_score.put("AppVersion", _score.getAppVersion());
+                        _obj_score.put("AppVersionChoice", _score.getAppVersionChoice());
+                        _obj_score.put("correctAnsId", _score.getCorrectAnsId());
+                        _obj_score.put("correctAns", _score.getCorrectAns());
                         scoreData.put(_obj_score);
                     }
                 }
@@ -676,7 +726,8 @@ public class PushDataToServer {
                         _obj_rating.put("languageId", _rating.getLanguageId());
                         _obj_rating.put("studentId", _rating.getStudentId());
                         _obj_rating.put("rating", _rating.getRating());
-
+                        _obj_rating.put("isCorrect", _rating.isCorrect());
+                        _obj_rating.put("questionLevel", _rating.getQuestionLevel());
                         ratingData.put(_obj_rating);
                     }
                 }
@@ -979,30 +1030,66 @@ public class PushDataToServer {
     protected void onPostExecute() {
         // super.onPostExecute(o);
         try {
+            if (autoPush) {
+                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(0);
+                push_log.setMethodName("auto push");
+            } else push_log.setMethodName("manual push");
+
             ok_btn.setVisibility(View.VISIBLE);
             if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                 if (isTablet || !autoPush)
                     txt_push_dialog_msg.setText(R.string.no_internet_connection);
+                push_log.setExceptionMessage("push failed no internet");
             } else {
                 if (!dataPushed) {
                     push_lottie.setAnimation("error_cross.json");
                     push_lottie.playAnimation();
                     txt_push_dialog_msg.setText(R.string.data_push_failed);
-                } else if (isTablet || !autoPush) {
-                    push_lottie.setAnimation("success.json");
-                    push_lottie.playAnimation();
-                    String msg1 = "", msg2 = "";
-                    msg1 = "Date-time: " + getCurrentDateTime() + "\n" + context.getString(R.string.papers_pushed) + pushCnt;
+                    push_log.setExceptionMessage("push failed");
+
+                } else {
+                    push_log.setExceptionMessage("push successful");
+                    if (isTablet || !autoPush) {
+                        push_lottie.setAnimation("success.json");
+                        push_lottie.playAnimation();
+                        String msg1 = "", msg2 = "";
+                        msg1 = "Date-time: " + getCurrentDateTime() + "\n" + context.getString(R.string.papers_pushed)
+                                + " " + paperPushCnt + "\n" + "Score pushed: " + scorePushCount;
 //                    if (answerMediaPushed && supervisorImagesPushed && videoMonImagesPushed) {
-                    int mediaCnt = supervisorCnt + answerMediaCnt + videoMonCnt;
-                    int totalMediaCnt = totalSupervisorCnt + totalAnswerMediaCnt + totalVideoMonCnt;
-                    msg2 = context.getString(R.string.media_pushed) + mediaCnt + "/" + totalMediaCnt;
-                    txt_push_dialog_msg.setText(msg1);
-                    txt_push_cnt.setVisibility(View.VISIBLE);
-                    txt_push_cnt.setText(msg2);
+                        int mediaCnt = supervisorCnt + answerMediaCnt + videoMonCnt;
+                        int totalMediaCnt = totalSupervisorCnt + totalAnswerMediaCnt + totalVideoMonCnt;
+                        msg2 = context.getString(R.string.media_pushed) + mediaCnt + "/" + totalMediaCnt;
+                        txt_push_dialog_msg.setText(msg1);
+                        txt_push_cnt.setVisibility(View.VISIBLE);
+                        txt_push_cnt.setText(msg2);
+
+                    }
                 }
+
             }
             PUSH_DATA_FROM_DRAWER = false;
+
+            int scoreTotalCnt = AppDatabase.getDatabaseInstance(context).getScoreDao().getScoresCount();
+            int scorePushedCnt = AppDatabase.getDatabaseInstance(context).getScoreDao().getScoresPushedCount();
+            String score = +scorePushedCnt + "/" + scoreTotalCnt;
+
+            int paperTotalCnt = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getPaperCount();
+            int paperPushedCnt = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getPaperPushedCount();
+            String paper = paperPushedCnt + "/" + paperTotalCnt;
+
+            int mediaTotalCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaCount();
+            int mediaPushedCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaPushedCount();
+            String media = mediaPushedCnt + "/" + mediaTotalCnt;
+
+            StringBuilder pushAllCount = new StringBuilder();
+            pushAllCount.append("{ \"push_time\":\"").append(push_log.getCurrentDateTime()).append("\",");
+            pushAllCount.append("\"score_pushed\":\"").append(score).append("\",");
+            pushAllCount.append("\"paper_pushed\":\"").append(paper).append("\",");
+            pushAllCount.append("\"media_pushed\":\"").append(media).append("\"}");
+            push_log.setLogDetail(pushAllCount.toString());
+            AppDatabase.getDatabaseInstance(context).getLogsDao().insertLog(push_log);
+            BackupDatabase.backup(context);
         } catch (Exception e) {
             e.printStackTrace();
         }

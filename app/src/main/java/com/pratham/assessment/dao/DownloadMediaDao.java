@@ -32,6 +32,11 @@ public interface DownloadMediaDao {
     @Delete
     void deleteAll(DownloadMedia... downloadMedia);
 
+    @Query("select count(*) from DownloadMedia")
+    int getMediaCount();
+
+    @Query("select count(*) from DownloadMedia where sentFlag=1")
+    int getMediaPushedCount();
 
     @Query("select * from DownloadMedia where qId=:qid and paperId=:paperId and mediaType=:type and sentFlag=0")
     DownloadMedia getMediaByQidAndPaperId(String qid, String paperId, String type);

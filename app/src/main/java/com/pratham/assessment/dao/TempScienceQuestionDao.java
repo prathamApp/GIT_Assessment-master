@@ -36,6 +36,16 @@ public interface TempScienceQuestionDao {
                                           String sessionId, String DeviceID, String ScoredMarks, String paperTotalMarks,
                                           String paperStartDateTime, String paperEndDateTime, String label);
 
+    @Query("UPDATE TempScienceQuestion SET languageid=:langId, subjectid=:subId,topicid=:topicId," +
+            " lessonid=:lessonId,qtid=:qtId,qname=:qName,answer=:answer,ansdesc=:ansDesc,qlevel=:qLevel," +
+            "hint=:hint, addedby=:addedBy,addedtime=:addedTime, updatedby=:updatedBy ,updatedtime=:updatedTime," +
+            " IsParaQuestion=:isParaQ , RefParaID=:refParaId , photourl=:photoUrl,AppVersion=:appVersion where qid=:qid")
+    public int updateQuestionForVersion(String langId, String subId, String topicId, String lessonId,
+                                        String qtId, String qName, String answer, String ansDesc, String qLevel, String hint, String addedBy,
+                                        String addedTime, String updatedBy, String updatedTime, String appVersion, String photoUrl,
+                                        boolean isParaQ, String refParaId, String qid
+    );
+
 
     @Query("DELETE FROM TempScienceQuestion WHERE examid=:examId and languageid=:langId and subjectid=:subId and paperId=:paperId and StudentID=:studId")
     public int deleteByLangIdSubIdTopicIdPaperIdStudId(String examId, String langId, String subId, String paperId, String studId);
@@ -43,5 +53,10 @@ public interface TempScienceQuestionDao {
     @Query("DELETE FROM TempScienceQuestion WHERE examid=:examId and languageid=:langId and subjectid=:subId  and StudentID=:studId")
     public int deleteByLangIdSubIdTopicIdStudId(String examId, String langId, String subId, String studId);
 
+    @Query("UPDATE TempScienceQuestion SET qname = replace( qname, '\n', '<br/>' ) WHERE qname LIKE '%\n%'")
+    public void replaceNewLineForQuestions();
+
+    @Query("UPDATE TempScienceQuestion SET qname = replace( qname, '/n', '<br/>' ) WHERE qname LIKE '%/n%'")
+    public void replaceNewLineForQuestions2();
 
 }

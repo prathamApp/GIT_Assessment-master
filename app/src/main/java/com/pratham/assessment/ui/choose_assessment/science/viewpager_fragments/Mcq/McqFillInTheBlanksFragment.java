@@ -231,7 +231,8 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
             rl_question_img.setVisibility(View.GONE);
         }
         options.clear();
-        options = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
+        options = AppDatabase.getDatabaseInstance(getActivity())
+                .getScienceQuestionChoicesDao().getQuestionChoicesByQIDAndVersion(scienceQuestion.getQid(), scienceQuestion.getAppVersion());
 /*        int imgCnt = 0;
         int textCnt = 0;*/
         if (options != null) {
@@ -333,7 +334,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                             List<ScienceQuestionChoice> ans1 = new ArrayList<>();
                             ans1.add(options.get(finalR));
                             scienceQuestion.setMatchingNameList(ans1);
-                            assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), ans1,0 );
+                            assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), ans1, 0);
                             if (!extension.equalsIgnoreCase("PNG") &&
                                     !extension.equalsIgnoreCase("gif") &&
                                     !extension.equalsIgnoreCase("JPEG") &&
@@ -514,7 +515,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                     List<ScienceQuestionChoice> ans = new ArrayList<>();
                     ans.add(options.get(i));
                     scienceQuestion.setMatchingNameList(ans);
-                    assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), ans,0 );
+                    assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), ans, 0);
                 } else {
                     ((RadioButton) group.getChildAt(i)).setTextColor(getActivity().getResources().getColor(R.color.white));
                 }
@@ -565,7 +566,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
         List<ScienceQuestionChoice> ans = new ArrayList<>();
         ans.add(scienceQuestionChoice);
         scienceQuestion.setMatchingNameList(ans);
-        assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), ans,0 );
+        assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), ans, 0);
 
     }
 

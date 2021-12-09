@@ -253,12 +253,12 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
-                    if (!FastSave.getInstance().getBoolean(Assessment_Constants.INITIAL_ENTRIES, false))
+//                    if (!FastSave.getInstance().getBoolean(Assessment_Constants.INITIAL_ENTRIES, false))
                         doInitialEntries(getActivity());
 
                     com.pratham.assessment.domain.Status status = new com.pratham.assessment.domain.Status();
                     String key = "AppBuildDate";
-                    String value = "28-09-2021";
+                    String value = Assessment_Constants.APP_BUILD_DATE;
                     setStatusTableEntries(status, key, value);
 //                    if (!FastSave.getInstance().getBoolean(Assessment_Constants.KEY_MENU_COPIED, false))
                     populateMenu();

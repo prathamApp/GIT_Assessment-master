@@ -7,7 +7,6 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.Score;
 
 import java.util.List;
@@ -36,6 +35,12 @@ public interface ScoreDao {
 
     @Query("select * from Score")
     List<Score> getAllScores();
+
+    @Query("select count(*) from Score")
+    int getScoresCount();
+
+    @Query("select count(*) from Score where sentFlag=1")
+    int getScoresPushedCount();
 
     @Query("select * from Score where sentFlag=0 and examId=:ece_assessment")
     List<Score> getAllPushScores(String ece_assessment);

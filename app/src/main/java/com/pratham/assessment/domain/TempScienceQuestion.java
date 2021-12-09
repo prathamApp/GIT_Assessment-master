@@ -1,10 +1,8 @@
 package com.pratham.assessment.domain;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
@@ -12,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Entity(primaryKeys = {"qid","paperId"})
+@Entity(primaryKeys = {"qid", "paperId"})
 public class TempScienceQuestion implements Serializable {
 
     private String ansdesc;
@@ -66,7 +64,15 @@ public class TempScienceQuestion implements Serializable {
 
     @NonNull
     private String paperId;
+    private String AppVersion;
 
+    public String getAppVersion() {
+        return AppVersion;
+    }
+
+    public void setAppVersion(String appVersion) {
+        AppVersion = appVersion;
+    }
 
     public String getAnsdesc() {
         return ansdesc;
@@ -259,7 +265,6 @@ public class TempScienceQuestion implements Serializable {
     public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
-
 
 
     public String getEndTime() {

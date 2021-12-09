@@ -3,6 +3,7 @@ package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.
 import android.content.Context;
 
 import com.pratham.assessment.database.AppDatabase;
+import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 
 import org.androidannotations.annotations.EBean;
@@ -25,7 +26,10 @@ public class TrueFalsePresenter implements TrueFalseContract.TrueFalsePresenter 
 
     @Override
     public void getOptions(String qid) {
-        List<ScienceQuestionChoice> options = AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().getQuestionChoicesByQID(qid);
+        ScienceQuestion question = AppDatabase.
+                getDatabaseInstance(context).getScienceQuestionDao().getQuestionByQID(qid);
+        List<ScienceQuestionChoice> options = AppDatabase.getDatabaseInstance(context)
+                .getScienceQuestionChoicesDao().getQuestionChoicesByQIDAndVersion(qid, question.getAppVersion());
         trueFalseView.setOptions(options);
     }
 

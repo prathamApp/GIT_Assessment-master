@@ -16,6 +16,9 @@ public interface ScienceQuestionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAllQuestions(List<ScienceQuestion> questionList);
 
+   @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public void insert(ScienceQuestion question);
+
     @Query("DELETE FROM ScienceQuestion")
     public void deleteAllQuestions();
 

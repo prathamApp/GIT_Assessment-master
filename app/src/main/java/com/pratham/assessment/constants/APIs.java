@@ -212,6 +212,7 @@ public class APIs {
 
     //Azure APIs live
     public static String baseAzureURL = "http://www.prathamassessment.org:8085/";
+//    public static String baseAzureURL = "https://posuat.prathamopenschool.org/";
     //dev API
 //    public static String baseAzureURL = "http://www.apiassessment.openiscool.org/";
 

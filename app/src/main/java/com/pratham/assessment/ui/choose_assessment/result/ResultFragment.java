@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -104,7 +105,10 @@ public class ResultFragment extends Fragment implements ResultListener {
             rl_thanks.setVisibility(View.GONE);
 
             rl_studInfo.setBackgroundColor(Assessment_Utility.selectedColor);
-            student_name.setText(studentName);
+            if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
+                student_name.setText(studentName + "(" + studentId + ")");
+            else student_name.setText(studentName);
+
             String subName = presenter.getSubjectName(examId);
             String topicName = presenter.getTopicName(examId);
             tv_topic.setText(Html.fromHtml(topicName));
@@ -221,16 +225,25 @@ public class ResultFragment extends Fragment implements ResultListener {
                     qCnt++;
                 }
             }
+
             if (qCnt > 0) {
+
                 AssessmentPaperForPush assessmentPaperForPush = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByPaperId(paperId);
                 if (assessmentPaperForPush != null) {
+
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("assessmentPaperForPush", assessmentPaperForPush);
                     Assessment_Utility.showFragment(getActivity(), new CertificateFragment_(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
-                } else Objects.requireNonNull(getActivity()).finish();
-            } else Objects.requireNonNull(getActivity()).finish();
+                } else {
+                    Objects.requireNonNull(getActivity()).finish();
+                }
+            } else {
+                Objects.requireNonNull(getActivity()).finish();
+            }
 
         }
+        Log.d("onDoneClick", "onDoneClick: " + " end");
+
 //            } else Objects.requireNonNull(getActivity()).finish();
 //        } else Objects.requireNonNull(getActivity()).finish();
     }

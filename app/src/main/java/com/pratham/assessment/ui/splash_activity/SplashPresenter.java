@@ -15,7 +15,6 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.Settings;
-import android.support.annotation.WorkerThread;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -72,7 +71,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
@@ -98,19 +96,14 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
 
     @Override
     public void checkVersion() {
-       /* try {
-            new GetLatestVersion(this, context).execute().get();
-        } catch (InterruptedException e) {
+
+        try {
+            new GetLatestVersion(this, context).execute();
+        } catch (Exception e) {
             e.printStackTrace();
             splashView.startApp();
 
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            splashView.startApp();
-
-        }*/
-        splashView.startApp();
-
+        }
     }
 
     @Override
@@ -1440,7 +1433,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
 
 
             key = "AppBuildDate";
-            value = "28-09-2021";
+            value = Assessment_Constants.APP_BUILD_DATE;
             setStatusTableEntries(status, key, value, context);
 /*
             if (AppDatabase.getDatabaseInstance(getActivity()).getStatusDao().getKey(key) != null
@@ -1529,7 +1522,8 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
         }
     }
 
-    public static void setStatusTableEntries(Status status, String key, String value, Context context) {
+    public static void setStatusTableEntries(Status status, String key, String value, Context
+            context) {
 
         if (AppDatabase.getDatabaseInstance(context).getStatusDao().getKey(key) != null) {
             AppDatabase.getDatabaseInstance(context).getStatusDao().updateValue(key, value);
@@ -2095,7 +2089,8 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
         }
     }
 
-    public void getFacilityIdfromRaspberry(final String requestType, String url, JSONObject data) {
+    public void getFacilityIdfromRaspberry(final String requestType, String url, JSONObject
+            data) {
         AndroidNetworking.post(url)
                 .addHeaders("Content-Type", "application/json")
                 .addJSONObjectBody(data)

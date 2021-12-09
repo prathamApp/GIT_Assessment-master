@@ -5,7 +5,6 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
-import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 
 import java.util.List;
@@ -14,6 +13,9 @@ import java.util.List;
 public interface ScienceQuestionChoiceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAllQuestionChoices(List<ScienceQuestionChoice> choiceList);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public void insertChoices(ScienceQuestionChoice choiceList);
 
     @Query("UPDATE ScienceQuestionChoice SET choicename  = replace( choicename, '\n', '<br/>' ) WHERE choicename LIKE '%\n%'")
     public void replaceNewLineForQuestionOptionChoiceNames();
@@ -33,8 +35,8 @@ public interface ScienceQuestionChoiceDao {
     @Query("DELETE FROM ScienceQuestionChoice WHERE qid=:qid")
     public void deleteQuestionChoicesByQID(String qid);
 
-    @Query("SELECT * FROM ScienceQuestionChoice WHERE qid=:qID")
-    public List<ScienceQuestionChoice> getQuestionChoicesByQID(String qID);
+    @Query("SELECT * FROM ScienceQuestionChoice WHERE qid=:qID and AppVersionChoice=:version")
+    public List<ScienceQuestionChoice> getQuestionChoicesByQIDAndVersion(String qID, String version);
 
     @Query("SELECT * FROM ScienceQuestionChoice WHERE qcid=:qcid")
     public ScienceQuestionChoice getQuestionChoicesByQcID(String qcid);

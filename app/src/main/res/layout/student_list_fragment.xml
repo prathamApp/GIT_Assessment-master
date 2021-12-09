@@ -68,7 +68,7 @@
             android:layout_height="60dp"
             android:layout_below="@id/tv_or"
             android:layout_margin="@dimen/_7sdp"
-            android:background="@drawable/gradiance_bg_3"
+            android:background="@drawable/gradiance_bg_green"
             android:elevation="@dimen/_3sdp"
             android:text="Enter enrollment number"
             android:textColor="@color/white"

@@ -1,6 +1,10 @@
 package com.pratham.assessment.ui.splash_activity;
 
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,6 +18,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -34,6 +39,7 @@ import com.pratham.assessment.async.PushDataToServer;
 import com.pratham.assessment.constants.APIs;
 import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
+import com.pratham.assessment.custom.notification.NotificationView;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
@@ -61,6 +67,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.pratham.assessment.constants.Assessment_Constants.SDCARD_OFFLINE_PATH_SAVED;
+import static com.pratham.assessment.ui.splash_activity.SplashPresenter.doInitialEntries;
 import static com.pratham.assessment.utilities.Assessment_Utility.copyFileUsingStream;
 
 @EActivity(R.layout.activity_splash)
@@ -139,7 +146,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                 Log.d("AppBuildDate1", "run: " + "AppBuildDate");
                 com.pratham.assessment.domain.Status status = new com.pratham.assessment.domain.Status();
                 String key = "AppBuildDate";
-                String value = "28-09-2021";
+                String value = Assessment_Constants.APP_BUILD_DATE;
                 SplashPresenter.setStatusTableEntries(status, key, value, context);
                 Log.d("AppBuildDate1", "run: " + "AppBuildDate");
                 gotoNextActivity();
@@ -175,6 +182,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         if (!AssessmentApplication.isTablet) {
 //            splashPresenter.pushData();
             //new PushDataToServer(this, false).execute();
+
             pushDataToServer.setValue(this, true);
             pushDataToServer.doInBackground();
         }
@@ -398,7 +406,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                     if (new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/PrathamBackups" + "/assessment_database").exists()) {
                         try {
                             splashPresenter.copyDataBase();
-                            splashPresenter.updateNewEntriesInStatusTable();
+                            doInitialEntries(context);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -409,7 +417,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                     e.printStackTrace();
                 }
             } else {
-                splashPresenter.updateNewEntriesInStatusTable();
+                doInitialEntries(context);
                 appDatabase = AppDatabase.getDatabaseInstance(this);
             }
             String offlineDBPath = Assessment_Utility.getExternalPath(this) + "/.Assessment/offline_assessment_database.db";

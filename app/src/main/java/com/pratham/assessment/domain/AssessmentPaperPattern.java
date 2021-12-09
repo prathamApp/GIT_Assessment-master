@@ -52,10 +52,18 @@ public class AssessmentPaperPattern implements Serializable {
 
     private String subjectid;
 
-
+    private boolean isDiagnosticTest;
     private boolean IsRandom;
     private String noofcertificateq;
     private String exammode;
+
+    public boolean isDiagnosticTest() {
+        return isDiagnosticTest;
+    }
+
+    public void setDiagnosticTest(boolean diagnosticTest) {
+        isDiagnosticTest = diagnosticTest;
+    }
 
     public String getSubjectname() {
         return subjectname;

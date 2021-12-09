@@ -17,6 +17,12 @@ public interface AssessmentPaperForPushDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAllPapersForPush(List<AssessmentPaperForPush> assessmentPaperForPushes);
 
+    @Query("select count(*) from AssessmentPaperForPush")
+    int getPaperCount();
+
+    @Query("select count(*) from AssessmentPaperForPush where sentFlag=1")
+    int getPaperPushedCount();
+
     @Query("DELETE FROM AssessmentPaperForPush")
     public void deletePapers();
 
@@ -46,9 +52,9 @@ public interface AssessmentPaperForPushDao {
             "or question8Rating !='null' " +
             "or question9Rating !='null' " +
             "or question10Rating !='null')")
-    public List<String> getAssessmentPapersByUniqueLangCertificatequestionsNotNull(String studId,String examId);
+    public List<String> getAssessmentPapersByUniqueLangCertificatequestionsNotNull(String studId, String examId);
 
-@Query("select distinct examId from AssessmentPaperForPush where studentId=:studId and" +
+    @Query("select distinct examId from AssessmentPaperForPush where studentId=:studId and" +
             " question1Rating  !='null' " +
             "or question2Rating !='null' " +
             "or question3Rating !='null' " +
@@ -64,8 +70,8 @@ public interface AssessmentPaperForPushDao {
     @Query("select * from AssessmentPaperForPush where examid=:examId and subjectId=:subId and studentId=:studentId")
     public List<AssessmentPaperForPush> getAssessmentPapersByExamIdAndSubId(String examId, String subId, String studentId);
 
-    @Query("select * from AssessmentPaperForPush where subjectId=:subId")
-    public List<AssessmentPaperForPush> getAssessmentPaperBySubId(String subId);
+    @Query("select * from AssessmentPaperForPush where studentId=:studId and paperStartTime like :date")
+    public List<AssessmentPaperForPush> getAssessmentPaperByStudentIdPaperDate(String studId, String date);
 
     @Query("select * from AssessmentPaperForPush where subjectId=:subId and studentId=:studentId")
     public List<AssessmentPaperForPush> getAssessmentPaperBySubIdAndStudId(String subId, String studentId);
@@ -76,8 +82,17 @@ public interface AssessmentPaperForPushDao {
     @Query("select * from AssessmentPaperForPush where subjectId=:subId and studentId=:studentId and languageId=:langId and examId=:examId")
     public List<AssessmentPaperForPush> getAssessmentPaperBySubIdAndLangIdExamId(String subId, String studentId, String langId, String examId);
 
+    @Query("select * from AssessmentPaperForPush where examid=:examId and studentid=:studentId order by paperEndTime DESC limit 1")
+    public List<AssessmentPaperForPush> getLatestPaperByStudIdExamId(String studentId, String examId);
+
     @Query("update AssessmentPaperForPush set sentFlag=1 where sentFlag=0")
     public void setSentFlag();
+
+    @Query("update AssessmentPaperForPush set recommendedLevel=:level where paperId=:paperId")
+    public long setRecommendedLevel(String paperId, int level);
+
+    @Query("update AssessmentPaperForPush set isDiagnosticTest=:isDiagnostic where paperId=:paperId")
+    public long setDiagnostic(String paperId, boolean isDiagnostic);
 
     @Query("update AssessmentPaperForPush set question1Rating=:question1Rating,question2Rating=:question2Rating," +
             "question3Rating=:question3Rating,question4Rating=:question4Rating ,question5Rating=:question5Rating where paperId=:paperId")

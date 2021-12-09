@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.choose_assessment.data_push_status.PushStatusActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/light_blue_bg"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tv_status_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gradiance_tp"
+            android:fontFamily="@font/quicksand_bold"
+            android:gravity="center"
+            android:text="Exam status"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_20sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_student_name_enrollment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/quicksand_medium"
+            android:gravity="center"
+            android:text="Pradigi(DUM1003)"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15sdp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_status_title" />
+
+
+        <LinearLayout
+            android:id="@+id/constraintLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
+            android:gravity="center"
+            android:padding="@dimen/_1sdp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_student_name_enrollment"
+            tools:layout_editor_absoluteX="6dp">
+
+
+            <TextView
+                android:id="@+id/tv_date_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/quicksand_bold"
+                android:gravity="center"
+                android:text="Select date: "
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_date"
+                android:layout_width="@dimen/_110sdp"
+                android:layout_height="55dp"
+                android:layout_margin="@dimen/_5sdp"
+                android:background="@drawable/gradient_selector"
+                android:fontFamily="@font/quicksand_medium"
+                android:gravity="center"
+                android:text="25-11-2021"
+                android:textSize="@dimen/_15sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tv_date_picker"
+                app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/cl_title">
+
+        <LinearLayout
+            android:id="@+id/cl_title_"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_2sdp"
+            android:background="@color/colorAccent"
+            android:gravity="center"
+            android:padding="@dimen/_2sdp"
+            android:visibility="gone"
+            android:weightSum="3"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="2dp">
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".8"
+                android:fontFamily="@font/quicksand_bold"
+                android:gravity="center"
+                android:text="Date"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_exam_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.6"
+                android:fontFamily="@font/quicksand_bold"
+                android:gravity="center"
+                android:text="Exam"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                app:layout_constraintStart_toEndOf="@+id/tv_time"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/tv_marks"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:fontFamily="@font/quicksand_bold"
+                android:gravity="center"
+                android:text="Marks"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_15sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tv_exam_name"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_push_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/cl_title_" />
+    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>

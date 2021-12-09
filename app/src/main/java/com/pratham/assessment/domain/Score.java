@@ -56,6 +56,12 @@ public class Score implements Serializable {
     private String redirectedFromApp;
     private String redirectedAppSessionId;
 
+    private String qname;
+    private String correctAnsId;
+    private String correctAns;
+    private String AppVersion;
+    private String AppVersionChoice;
+
 
     @Override
     public String toString() {
@@ -72,6 +78,46 @@ public class Score implements Serializable {
                 ", EndDateTime='" + EndDateTime + '\'' +
                 ", Level=" + Level +
                 '}';
+    }
+
+    public String getQname() {
+        return qname;
+    }
+
+    public void setQname(String qname) {
+        this.qname = qname;
+    }
+
+    public String getCorrectAnsId() {
+        return correctAnsId;
+    }
+
+    public void setCorrectAnsId(String correctAnsId) {
+        this.correctAnsId = correctAnsId;
+    }
+
+    public String getCorrectAns() {
+        return correctAns;
+    }
+
+    public void setCorrectAns(String correctAns) {
+        this.correctAns = correctAns;
+    }
+
+    public String getAppVersion() {
+        return AppVersion;
+    }
+
+    public void setAppVersion(String appVersion) {
+        AppVersion = appVersion;
+    }
+
+    public String getAppVersionChoice() {
+        return AppVersionChoice;
+    }
+
+    public void setAppVersionChoice(String appVersionChoice) {
+        AppVersionChoice = appVersionChoice;
     }
 
     public String getRedirectedFromApp() {

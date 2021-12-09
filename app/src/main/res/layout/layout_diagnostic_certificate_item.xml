@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_diagnostic_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/tv_level"
+            style="@style/DiagnosticCertificateItemStyle"
+            android:layout_height="wrap_content"
+            android:layout_weight=".15"
+            android:text="1" />
+
+        <TextView
+            android:id="@+id/tv_competency_question"
+            style="@style/DiagnosticCertificateItemStyle"
+            android:layout_weight=".7"
+            android:text="Can you read numbers from 0 to 99?" />
+
+        <TextView
+            android:id="@+id/tv_yes_no"
+            style="@style/DiagnosticCertificateItemStyle"
+            android:layout_weight=".2"
+            android:text="@string/yes" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:background="@color/black" />
+</LinearLayout>

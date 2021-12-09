@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:paddingBottom="@dimen/_2sdp"
+    tools:context=".ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment">
+
+    <com.pratham.assessment.custom.customFont.SansTextView
+        android:id="@+id/tv_share_pdf"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/_5sdp"
+        android:background="@drawable/correct_bg"
+        android:elevation="@dimen/_3sdp"
+        android:fontFamily="@font/quicksand_bold"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_2sdp"
+        android:text="Share PDF"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_15sdp" />
+
+    <com.github.barteksc.pdfviewer.PDFView
+        android:id="@+id/pdfView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tv_share_pdf" />
+</RelativeLayout>

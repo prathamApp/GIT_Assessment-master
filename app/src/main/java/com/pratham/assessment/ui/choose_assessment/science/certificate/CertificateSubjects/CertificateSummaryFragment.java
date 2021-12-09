@@ -10,8 +10,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
@@ -29,7 +29,7 @@ import java.util.List;
 
 
 @EFragment(R.layout.fragment_certificate_subjects)
-public class CertificateSubjectsFragment extends Fragment implements SubjectContract.SubjectView {
+public class CertificateSummaryFragment extends Fragment implements SubjectContract.SubjectView {
 
     @ViewById(R.id.rv_subject)
     RecyclerView rv_subject;
@@ -43,14 +43,14 @@ public class CertificateSubjectsFragment extends Fragment implements SubjectCont
     public void init() {
 //        presenter = new SubjectPresenter(getActivity(), this);
         presenter.setView(this);
-        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+        /*if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
             presenter.pullCertificates();
-        } else {
-            setSubjectToSpinner();
-        }
+        } else {*/
+        setSubjectToSpinner();
+//        }
     }
 
-    public CertificateSubjectsFragment() {
+    public CertificateSummaryFragment() {
     }
 
 
@@ -91,9 +91,13 @@ public class CertificateSubjectsFragment extends Fragment implements SubjectCont
             AssessmentPaperPattern pattern = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperPatternDao()
                     .getAssessmentPaperPatternsByExamId(distinctExamIds.get(i));
             if (pattern != null)
-//                if (pattern.getExammode() != null)
-//                    if (pattern.getExammode().equalsIgnoreCase(Assessment_Constants.PRACTICE)) {
-                examIdsForPracticeMode.add(pattern.getExamid());
+                if (pattern.isDiagnosticTest()) {
+                    if (pattern.getExammode() != null) {
+                        if (pattern.getExammode().equalsIgnoreCase(Assessment_Constants.SUPERVISED))
+                            examIdsForPracticeMode.add(pattern.getExamid());
+                    }
+                }
+                else examIdsForPracticeMode.add(pattern.getExamid());
 //                    }
         }
         List<String> languageIds = new ArrayList<>();

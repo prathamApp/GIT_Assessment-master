@@ -29,6 +29,9 @@ public interface SupervisorDataDao {
     @Query("SELECT * FROM SupervisorData where assessmentSessionId = :assessmentSessionId")
     public List<SupervisorData> getSupervisorBySession(String assessmentSessionId);
 
+    @Query("SELECT * FROM SupervisorData where supervisorPhoto like :photo")
+    public SupervisorData getSupervisorByPhoto(String photo);
+
     @Query("update SupervisorData set sentFlag=1 where sentFlag=0")
     public int setSentFlag();
 }

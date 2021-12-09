@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:background="@drawable/home_header_2_bg"
-    android:paddingTop="@dimen/_15sdp"
-    android:paddingLeft="@dimen/_10sdp">
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/_10sdp"
+    android:paddingTop="@dimen/_15sdp">
 
     <ImageView
         android:layout_width="@dimen/_50sdp"
@@ -26,9 +26,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:textColor="@color/white"
         android:text="User"
-        android:textSize="@dimen/_18sdp" />
+        android:textColor="@color/white"
+        android:textSize="@dimen/_16sdp" />
+
+    <TextView
+        android:id="@+id/tv_enrollment_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="123"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12sdp" />
 
 
 </LinearLayout>

@@ -38,7 +38,6 @@ public class ScienceQuestion implements Serializable {
     private String topicid;
     private String answer;
     private String outofmarks;
-    private String qname;
     private String hint;
     private String examid;
     private String pdid;
@@ -59,6 +58,16 @@ public class ScienceQuestion implements Serializable {
     private String RefParaID;
     private boolean IsQuestionFromSDCard;
 
+    private String AppVersion;
+    private String qname;
+
+    public String getAppVersion() {
+        return AppVersion;
+    }
+
+    public void setAppVersion(String appVersion) {
+        AppVersion = appVersion;
+    }
 
     public String getUserAnswer() {
         if (userAnswer == null)

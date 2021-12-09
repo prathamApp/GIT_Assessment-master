@@ -11,11 +11,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.Student;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,9 +56,13 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(MyViewHolder holder, int position) {
         Student studentAvatar = studentAvatarList.get(position);
-        holder.studentName.setText(Html.fromHtml(studentAvatar.getFullName()));
+        if (studentAvatar.getIsniosstudent() != null) {
+            if (studentAvatar.getIsniosstudent().equalsIgnoreCase("1"))
+                holder.studentName.setText(Html.fromHtml(studentAvatar.getFullName() + "\n" + studentAvatar.getStudentID()));
+            else holder.studentName.setText(Html.fromHtml(studentAvatar.getFullName()));
+        } else holder.studentName.setText(Html.fromHtml(studentAvatar.getFullName()));
 
        /* int imgId= Integer.parseInt(studentAvatar.getAvatarName());
         holder.avatar.setImageResource(imgId);*/
@@ -92,7 +93,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.MyView
             @Override
             public void onClick(View view) {
                 studentAvatarList.get(position).getStudentID();
-                studentClickListener.onStudentClick(studentAvatarList.get(position).getFullName(), studentAvatarList.get(position).getStudentID(), studentAvatarList.get(position).getGroupId(),studentAvatarList.get(position).getIsniosstudent());
+                studentClickListener.onStudentClick(studentAvatarList.get(position).getFullName(), studentAvatarList.get(position).getStudentID(), studentAvatarList.get(position).getGroupId(), studentAvatarList.get(position).getIsniosstudent());
             }
         });
     }

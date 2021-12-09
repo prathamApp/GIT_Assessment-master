@@ -7,7 +7,7 @@
     <string name="ECE">ECE</string>
     <string name="pratham_institute">Pratham Institute</string>
     <string name="urbon_program">Urban programme</string>
-<!--    <string name="Okay">Okay</string>-->
+    <!--    <string name="Okay">Okay</string>-->
 
 
     <string-array name="age">
@@ -410,5 +410,13 @@
     <string name="loading_exams">परीक्षाएँ लोड हो रही हैं </string>
     <string name="db_push_failed">Db push failed</string>
     <string name="db_pushed_successfully">Db pushed successfully</string>
+    <string name="push_db_file">डीबी फ़ाइल पुश करें.</string>
+    <string name="recommended_level">प्रस्तावित स्तर:</string>
+    <string name="level">स्तर</string>
+    <string name="competency">योग्यता</string>
+    <string name="date">दिनांक:</string>
+    <string name="enrollment_no">नामांकन संख्या:</string>
+    <string name="yes_no">हाँ/नहीं</string>
+    <string name="supervisor_name">सुपरवाइज़र का नाम:</string>
 
 </resources>

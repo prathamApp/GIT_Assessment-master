@@ -16,8 +16,28 @@ public class CertificateKeywordRating {
     private String examId;
     private String studentId;
     private String languageId;
+    private boolean isCorrect;
+    private int questionLevel;
+
+
     @NonNull
     private int sentFlag;
+
+    public boolean isCorrect() {
+        return isCorrect;
+    }
+
+    public void setCorrect(boolean correct) {
+        isCorrect = correct;
+    }
+
+    public int getQuestionLevel() {
+        return questionLevel;
+    }
+
+    public void setQuestionLevel(int questionLevel) {
+        this.questionLevel = questionLevel;
+    }
 
     public String getPaperId() {
         return paperId;

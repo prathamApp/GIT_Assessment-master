@@ -9,6 +9,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.pratham.assessment.R;
 import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
@@ -16,6 +17,7 @@ import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.AssessmentPaperPattern;
 import com.pratham.assessment.domain.AssessmentSubjects;
+import com.pratham.assessment.domain.NIOSExam;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.ExpandableRecyclerView.AssessmentSubjectsExpandable;
 import com.pratham.assessment.utilities.Assessment_Utility;
@@ -26,7 +28,6 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -49,11 +50,24 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
     public void getSubjectsFromDB(String selectedLang) {
         String langId = AppDatabase.getDatabaseInstance(context).getLanguageDao().getLangIdByName(selectedLang.toUpperCase());
         List<AssessmentSubjects> subjects = new ArrayList<>();
-        List<AssessmentSubjects> AllSubjects;
+        List<AssessmentSubjects> AllSubjects = new ArrayList<>();
         List<AssessmentSubjectsExpandable> assessmentSubjectsExpandables = new ArrayList<>();
 
 //        subjects = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjects();
-        AllSubjects = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjectsByLangId(langId);
+        if (!FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
+            AllSubjects = AppDatabase.getDatabaseInstance(context).getSubjectDao().getAllSubjectsByLangId(langId);
+        else {
+            List<NIOSExam> exams = AppDatabase.getDatabaseInstance(context).getNiosExamDao().getAllSubjectsByLangId(langId);
+            if (exams != null && exams.size() > 0)
+                for (int i = 0; i < exams.size(); i++) {
+                    AssessmentSubjects subject = new AssessmentSubjects();
+                    subject.setLanguageid(exams.get(i).getLanguageid());
+                    subject.setSubjectid(exams.get(i).getSubjectid());
+                    subject.setSubjectname(exams.get(i).getSubjectname());
+                    if (!containsSubject(AllSubjects, subject))
+                        AllSubjects.add(subject);
+                }
+        }
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
 //        List<String> attemptedSubjectIds = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueSubId(langId, currentStudentID);
         List<String> attemptedSubjectIds = AppDatabase.getDatabaseInstance(context).getCertificateKeywordRatingDao().getDistinctSubjectsByStudentIdLangId(currentStudentID, langId);
@@ -72,7 +86,7 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
             for (int i = 0; i < paperPatterns.size(); i++) {
                 if (!examIds.contains(paperPatterns.get(i).getExamid())) {
 //                    if (paperPatterns.get(i).getExammode() == null || paperPatterns.get(i).getExammode().equalsIgnoreCase(Assessment_Constants.PRACTICE))
-                        examIds.add(paperPatterns.get(i).getExamid());
+                    examIds.add(paperPatterns.get(i).getExamid());
                 }
             }
 
@@ -81,20 +95,27 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
             List<AssessmentPaperForPush> assessmentPaperForPush = new ArrayList<>();
             if (!examIds.isEmpty()) {
                 for (int i = 0; i < examIds.size(); i++) {
-                    assessmentPaperForPush.addAll(AppDatabase.getDatabaseInstance(context)
-                            .getAssessmentPaperForPushDao()
-                            .getAssessmentPaperBySubIdAndLangIdExamId(assessmentSubjects.getSubjectid(), currentStudentID, langId, examIds.get(i)));
+                    boolean isDiagnostic = AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().getIsDiagnosticExam(examIds.get(i));
+                    if (isDiagnostic) {
+                        String examMode = AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().getExamMode(examIds.get(i));
+                        if (examMode.equalsIgnoreCase(Assessment_Constants.SUPERVISED))
+                            assessmentPaperForPush.addAll(AppDatabase.getDatabaseInstance(context)
+                                    .getAssessmentPaperForPushDao()
+                                    .getLatestPaperByStudIdExamId(currentStudentID, examIds.get(i)));
+
+                    } else {
+                        assessmentPaperForPush.addAll(AppDatabase.getDatabaseInstance(context)
+                                .getAssessmentPaperForPushDao()
+                                .getAssessmentPaperBySubIdAndLangIdExamId(assessmentSubjects.getSubjectid(), currentStudentID, langId, examIds.get(i)));
+                    }
                 }
 
-                Collections.sort(assessmentPaperForPush, new Comparator<AssessmentPaperForPush>() {
-                    @Override
-                    public int compare(AssessmentPaperForPush o1, AssessmentPaperForPush o2) {
-                        Date date1 = Assessment_Utility.stringToDate(o1.getPaperEndTime());
-                        Date date2 = Assessment_Utility.stringToDate(o2.getPaperEndTime());
-                        if (date1 != null && date2 != null)
-                            return date1.compareTo(date2);
-                        else return 0;
-                    }
+                Collections.sort(assessmentPaperForPush, (o1, o2) -> {
+                    Date date1 = Assessment_Utility.stringToDate(o1.getPaperEndTime());
+                    Date date2 = Assessment_Utility.stringToDate(o2.getPaperEndTime());
+                    if (date1 != null && date2 != null)
+                        return date1.compareTo(date2);
+                    else return 0;
                 });
                 if (assessmentPaperForPush.size() > 0) {
                     Collections.reverse(assessmentPaperForPush);
@@ -107,6 +128,14 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
         }
         subjectView.setSubjects(assessmentSubjectsExpandables);
 
+    }
+
+    private boolean containsSubject(List<AssessmentSubjects> allSubjects, AssessmentSubjects subject) {
+        for (int i = 0; i < allSubjects.size(); i++) {
+            if (allSubjects.get(i).getSubjectid().equalsIgnoreCase(subject.getSubjectid()))
+                return true;
+        }
+        return false;
     }
 
     private List<AssessmentPaperPattern> checkQuestions

@@ -49,7 +49,7 @@ public interface AssessmentPaperPatternDao {
             "or certificateQuestion10 !='')")
     public List<AssessmentPaperPattern> getAllAssessmentPaperPatternsBySubId(String subId);
 
-    @Query("select * from AssessmentPaperPattern where subjectid=:subId" )
+    @Query("select * from AssessmentPaperPattern where subjectid=:subId")
     public List<AssessmentPaperPattern> getAllAssessmentPaperPatternsBySubjectId(String subId);
 
     @Query("select * from AssessmentPaperPattern where subjectid=:subId and noofcertificateq!=0")
@@ -87,6 +87,11 @@ public interface AssessmentPaperPatternDao {
 
     @Query("select examid from ASSESSMENTPAPERPATTERN where examname=:examname")
     public String getExamIdByExamName(String examname);
+
+    @Query("select isDiagnosticTest from ASSESSMENTPAPERPATTERN where examid=:examId")
+    public boolean getIsDiagnosticExam(String examId);
+ @Query("select exammode from ASSESSMENTPAPERPATTERN where examid=:examId")
+    public String getExamMode(String examId);
 
     @Query("select examname from ASSESSMENTPAPERPATTERN where examid=:examid")
     public String getExamNameById(String examid);

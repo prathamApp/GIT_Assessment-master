@@ -409,5 +409,11 @@
     <string name="loading_exams">ପରୀକ୍ଷା ଲୋଡିଙ୍ଗ୍ ହେଉଛି </string>
     <string name="db_push_failed">Db push failed</string>
     <string name="db_pushed_successfully">Db pushed successfully</string>
-
+    <string name="push_db_file">Push DB file</string>
+    <string name="recommended_level">Recommended Level:</string>
+    <string name="level">Level</string>
+    <string name="competency">Competency</string>
+    <string name="date">Date:</string>
+    <string name="enrollment_no">Enrollment number:</string>
+    <string name="yes_no">Yes/ No</string>
 </resources>

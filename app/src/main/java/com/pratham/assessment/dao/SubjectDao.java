@@ -37,8 +37,11 @@ public interface SubjectDao {
     @Query("select * FROM AssessmentSubjects WHERE subjectid=:subId")
     public List<AssessmentSubjects> getChhattisgarhSubject(String subId);
 
-   @Query("select subjectid FROM AssessmentSubjects WHERE subjectname=:subName")
+    @Query("select subjectid FROM AssessmentSubjects WHERE subjectname=:subName")
     public String getIdByName(String subName);
+
+    @Query("select subjectname FROM AssessmentSubjects WHERE subjectid=:subId")
+    public String getNameById(String subId);
 
     @Query("select * FROM AssessmentSubjects WHERE subjectid=:subId")
     public AssessmentSubjects getSubjectById(String subId);

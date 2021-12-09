@@ -286,7 +286,6 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
 //        ButtonClickSound = MediaPlayer.create(this, R.raw.click);//new MediaPlayer instance
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
         ttsService = new TTSService(getApplication());
         ttsService.setActivity(this);
         ttsService.setSpeechRate(0.7f);

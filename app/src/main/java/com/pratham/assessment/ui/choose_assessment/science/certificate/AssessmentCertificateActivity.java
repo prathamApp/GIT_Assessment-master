@@ -5,8 +5,8 @@ import android.view.WindowManager;
 
 import com.pratham.assessment.BaseActivity;
 import com.pratham.assessment.R;
-import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateSubjectsFragment;
-import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateSubjectsFragment_;
+import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateSummaryFragment;
+import com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects.CertificateSummaryFragment_;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 /*import butterknife.BindView;
@@ -47,8 +47,8 @@ public class AssessmentCertificateActivity extends BaseActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //        ButterKnife.bind(this);
 
-        Assessment_Utility.showFragment(this, new CertificateSubjectsFragment_(),
-                R.id.frame_certificate, null, CertificateSubjectsFragment.class.getSimpleName());
+        Assessment_Utility.showFragment(this, new CertificateSummaryFragment_(),
+                R.id.frame_certificate, null, CertificateSummaryFragment.class.getSimpleName());
 
      /*   presenter = new AssessmentCertificatePresenterImpl(this);
         presenter.getStudent(Assessment_Constants.currentStudentID);

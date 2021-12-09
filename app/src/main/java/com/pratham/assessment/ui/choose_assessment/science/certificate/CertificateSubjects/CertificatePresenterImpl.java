@@ -1,6 +1,7 @@
 package com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
@@ -45,6 +46,22 @@ public class CertificatePresenterImpl implements CertificateContract.Certificate
     public void setView(CertificateContract.CertificateView certificateView) {
         this.certificateView = certificateView;
 
+    }
+
+    @Override
+    public void getIsDiagnosticTest(String examId) {
+        boolean isDiagnosticTest = AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().getIsDiagnosticExam(examId);
+        certificateView.setIsDiagnosticTest(isDiagnosticTest);
+    }
+
+    @Override
+    public void getRecommendedLevel(String paperId) {
+        Log.d("getRecommendedLevel", "getRecommendedLevel: " + paperId);
+        int level = AppDatabase.getDatabaseInstance(context).getCertificateKeywordRatingDao().getRecommendedLowestLevel(paperId);
+        if (level == 0)
+            level = AppDatabase.getDatabaseInstance(context).getCertificateKeywordRatingDao().getRecommendedHighestLevel(paperId);
+
+        certificateView.setRecommendedLevel(level);
     }
 
     private float CalculateRating(int q1Total, int q1CorrectCnt) {
