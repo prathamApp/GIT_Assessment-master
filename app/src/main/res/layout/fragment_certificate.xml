@@ -48,7 +48,7 @@
           tools:context=".ui.choose_assessment.science.certificate.CertificateSubjects.CertificateFragment">
   -->
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:id="@+id/sv_diagnostic_certificate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -56,151 +56,158 @@
         android:background="@color/white"
         android:visibility="visible">
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/cl_diagnostic_root"
+        <LinearLayout
+            android:id="@+id/ll_diagnostic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_5sdp"
-            android:background="@drawable/certificate_bg"
-            android:padding="@dimen/_5sdp">
-
-            <TextView
-                android:id="@+id/tv_studentEnrollment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_2sdp"
-                android:fontFamily="@font/quicksand_medium"
-                android:text="@string/enrollment_no"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_studentName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_2sdp"
-                android:fontFamily="@font/quicksand_medium"
-                android:text="@string/student_name"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_studentEnrollment" />
-
-            <TextView
-                android:id="@+id/tv_exam_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_2sdp"
-                android:fontFamily="@font/quicksand_medium"
-                android:text="@string/exam_name"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_studentName" />
-
-            <TextView
-                android:id="@+id/tv_supervisor_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_2sdp"
-                android:fontFamily="@font/quicksand_medium"
-                android:text="@string/supervisor_name"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_exam_name" />
-
-            <TextView
-                android:id="@+id/tv_supervisor_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_2sdp"
-                android:fontFamily="@font/quicksand_medium"
-                android:text="@string/supervisor_name"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_supervisor_name" />
-
-            <TextView
-                android:id="@+id/tv_exam_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_2sdp"
-                android:fontFamily="@font/quicksand_medium"
-                android:text="@string/date"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_supervisor_id" />
+            android:layout_below="@+id/tv_share_pdf">
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/cl_diagnostic"
+                android:id="@+id/cl_diagnostic_root"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_2sdp"
-                android:background="@color/white"
-                app:layout_constraintTop_toBottomOf="@id/tv_exam_date">
+                android:layout_margin="@dimen/_5sdp"
+                android:background="@drawable/certificate_bg"
+                android:padding="@dimen/_5sdp">
+
+                <TextView
+                    android:id="@+id/tv_studentEnrollment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:text="@string/enrollment_no"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_studentName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:text="@string/student_name"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_studentEnrollment" />
+
+                <TextView
+                    android:id="@+id/tv_exam_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:text="@string/exam_name"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_studentName" />
+
+                <TextView
+                    android:id="@+id/tv_supervisor_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:text="@string/supervisor_name"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_exam_name" />
+
+                <TextView
+                    android:id="@+id/tv_supervisor_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:text="@string/supervisor_name"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_supervisor_name" />
+
+                <TextView
+                    android:id="@+id/tv_exam_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:fontFamily="@font/quicksand_medium"
+                    android:text="@string/date"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_supervisor_id" />
 
                 <android.support.constraint.ConstraintLayout
-                    android:id="@+id/constraintLayout2"
+                    android:id="@+id/cl_diagnostic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:layout_margin="@dimen/_2sdp"
+                    android:background="@color/white"
+                    app:layout_constraintTop_toBottomOf="@id/tv_exam_date">
 
-                    <TextView
-                        android:id="@+id/tv_recommended_level"
+                    <android.support.constraint.ConstraintLayout
+                        android:id="@+id/constraintLayout2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_3sdp"
-                        android:background="@color/colorProgress"
-                        android:fontFamily="@font/quicksand_bold"
-                        android:gravity="center"
-                        android:padding="@dimen/_2sdp"
-                        android:text="@string/recommended_level"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/_18sdp"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/tv_recommended_level"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_3sdp"
+                            android:background="@color/colorProgress"
+                            android:fontFamily="@font/quicksand_bold"
+                            android:gravity="center"
+                            android:padding="@dimen/_2sdp"
+                            android:text="@string/recommended_level"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_18sdp"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </android.support.constraint.ConstraintLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+
+                        <TextView
+                            style="@style/DiagnosticCertificateTitleStyle"
+                            android:layout_weight=".15"
+                            android:text="@string/level" />
+
+                        <TextView
+                            style="@style/DiagnosticCertificateTitleStyle"
+                            android:layout_weight=".7"
+                            android:text="@string/competency" />
+
+                        <TextView
+                            android:id="@+id/tv_yes_no"
+                            style="@style/DiagnosticCertificateTitleStyle"
+                            android:layout_weight=".2"
+                            android:text="@string/yes_no" />
+
+                    </LinearLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_diagnostic"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_1sdp"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
                 </android.support.constraint.ConstraintLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_4sdp"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
-
-                    <TextView
-                        style="@style/DiagnosticCertificateTitleStyle"
-                        android:layout_weight=".15"
-                        android:text="@string/level" />
-
-                    <TextView
-                        style="@style/DiagnosticCertificateTitleStyle"
-                        android:layout_weight=".7"
-                        android:text="@string/competency" />
-
-                    <TextView
-                        android:id="@+id/tv_yes_no"
-                        style="@style/DiagnosticCertificateTitleStyle"
-                        android:layout_weight=".2"
-                        android:text="@string/yes_no" />
-
-                </LinearLayout>
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_diagnostic"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_1sdp"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
             </android.support.constraint.ConstraintLayout>
-        </android.support.constraint.ConstraintLayout>
-    </ScrollView>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
     <ScrollView
         android:id="@+id/sv_star_certificate"
