@@ -4,7 +4,7 @@ public class AvatarModal {
 
 
     String avatarName;
-    Boolean clickFlag;
+//    Boolean clickFlag;
 
     public String getAvatarName() {
         return avatarName;
@@ -14,11 +14,11 @@ public class AvatarModal {
         this.avatarName = avatarName;
     }
 
-    public Boolean getClickFlag() {
-        return clickFlag;
-    }
+//    public Boolean getClickFlag() {
+//        return clickFlag;
+//    }
 
-    public void setClickFlag(Boolean clickFlag) {
-        this.clickFlag = clickFlag;
-    }
+//    public void setClickFlag(Boolean clickFlag) {
+//        this.clickFlag = clickFlag;
+//    }
 }

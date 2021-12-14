@@ -299,7 +299,7 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
             }
     }
 
-    private void addAvatarsInList() {
+    private void addAvatarsInList() { 
       /*  for (int i = 0; i < 6; i++) {
             AvatarModal avatarModal = new AvatarModal();
             avatarModal.setAvatarName(""+Assessment_Utility.getRandomAvatar(getActivity()));
@@ -308,32 +308,32 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
         }*/
         AvatarModal avatarModal = new AvatarModal();
         avatarModal.setAvatarName("g1.png");
-        avatarModal.setClickFlag(false);
+//        avatarModal.setClickFlag(false);
         avatarList.add(avatarModal);
         AvatarModal avatarModal1 = new AvatarModal();
 
         avatarModal1.setAvatarName("b1.png");
-        avatarModal1.setClickFlag(false);
+//        avatarModal1.setClickFlag(false);
         avatarList.add(avatarModal1);
         AvatarModal avatarModal2 = new AvatarModal();
 
         avatarModal2.setAvatarName("g2.png");
-        avatarModal2.setClickFlag(false);
+//        avatarModal2.setClickFlag(false);
         avatarList.add(avatarModal2);
         AvatarModal avatarModal3 = new AvatarModal();
 
         avatarModal3.setAvatarName("b2.png");
-        avatarModal3.setClickFlag(false);
+//        avatarModal3.setClickFlag(false);
         avatarList.add(avatarModal3);
         AvatarModal avatarModal4 = new AvatarModal();
 
         avatarModal4.setAvatarName("g3.png");
-        avatarModal4.setClickFlag(false);
+//        avatarModal4.setClickFlag(false);
         avatarList.add(avatarModal4);
         AvatarModal avatarModal5 = new AvatarModal();
 
         avatarModal5.setAvatarName("b3.png");
-        avatarModal5.setClickFlag(false);
+//        avatarModal5.setClickFlag(false);
         avatarList.add(avatarModal5);
 
         Collections.shuffle(avatarList);
@@ -544,9 +544,9 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
     public void onAvatarClick(int position, String StudentName) {
         avatarName = StudentName;
 
-        for (int i = 0; i < avatarList.size(); i++)
+       /* for (int i = 0; i < avatarList.size(); i++)
             avatarList.get(i).setClickFlag(false);
-        avatarList.get(position).setClickFlag(true);
+        avatarList.get(position).setClickFlag(true);*/
         avatarAdapter.notifyDataSetChanged();
 //        avatarName = AssessmentApplication.pradigiPath + "/.LLA/English/LLA_Thumbs/" + StudentName;
 

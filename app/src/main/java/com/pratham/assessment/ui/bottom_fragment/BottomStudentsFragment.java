@@ -112,32 +112,32 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
         }*/
         AvatarModal avatarModal = new AvatarModal();
         avatarModal.setAvatarName("g1.png");
-        avatarModal.setClickFlag(false);
+//        avatarModal.setClickFlag(false);
         avatarList.add(avatarModal);
         AvatarModal avatarModal1 = new AvatarModal();
 
         avatarModal1.setAvatarName("b1.png");
-        avatarModal1.setClickFlag(false);
+//        avatarModal1.setClickFlag(false);
         avatarList.add(avatarModal1);
         AvatarModal avatarModal2 = new AvatarModal();
 
         avatarModal2.setAvatarName("g2.png");
-        avatarModal2.setClickFlag(false);
+//        avatarModal2.setClickFlag(false);
         avatarList.add(avatarModal2);
         AvatarModal avatarModal3 = new AvatarModal();
 
         avatarModal3.setAvatarName("b2.png");
-        avatarModal3.setClickFlag(false);
+//        avatarModal3.setClickFlag(false);
         avatarList.add(avatarModal3);
         AvatarModal avatarModal4 = new AvatarModal();
 
         avatarModal4.setAvatarName("g3.png");
-        avatarModal4.setClickFlag(false);
+//        avatarModal4.setClickFlag(false);
         avatarList.add(avatarModal4);
         AvatarModal avatarModal5 = new AvatarModal();
 
         avatarModal5.setAvatarName("b3.png");
-        avatarModal5.setClickFlag(false);
+//        avatarModal5.setClickFlag(false);
         avatarList.add(avatarModal5);
 
         Collections.shuffle(avatarList);

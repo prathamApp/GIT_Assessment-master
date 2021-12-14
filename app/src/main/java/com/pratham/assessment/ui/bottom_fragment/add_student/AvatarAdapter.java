@@ -2,20 +2,16 @@ package com.pratham.assessment.ui.bottom_fragment.add_student;
 
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.pratham.assessment.R;
 import com.pratham.assessment.domain.AvatarModal;
-import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.ArrayList;
 
@@ -57,8 +53,10 @@ public class AvatarAdapter extends RecyclerView.Adapter<AvatarAdapter.MyViewHold
         return new MyViewHolder(itemView);
     }
 
+    int selectedIndex = -1;
+
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(MyViewHolder holder,  int position) {
         final AvatarModal studentAvatar = avatarList.get(position);
 //        holder.avatar.setImageResource(Integer.parseInt(avatarList.get(position).toString()));
         //Glide.with(context).load(studentAvatar).into(holder.avatar);
@@ -89,21 +87,23 @@ public class AvatarAdapter extends RecyclerView.Adapter<AvatarAdapter.MyViewHold
         }
 
 
-        if (studentAvatar.getClickFlag())
-            holder.avatar.setBackground(context.getResources().getDrawable(R.drawable.ripple_rectangle_transparent));
-        else
-            holder.avatar.setBackground(context.getResources().getDrawable(R.drawable.custom_edit_text));
-
-
         holder.avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                selectedIndex = position;
+                notifyDataSetChanged();
                 avatarClickListener.onAvatarClick(position, studentAvatar.getAvatarName());
                 /*}  else
                     holder.avatar.setBackground(context.getResources().getDrawable(R.drawable.ripple_rectangle));
 */
             }
         });
+
+        if (selectedIndex == position)
+            holder.avatar.setBackground(context.getResources().getDrawable(R.drawable.ripple_rectangle_transparent));
+        else
+            holder.avatar.setBackground(context.getResources().getDrawable(R.drawable.custom_edit_text));
+
     }
 
     @Override

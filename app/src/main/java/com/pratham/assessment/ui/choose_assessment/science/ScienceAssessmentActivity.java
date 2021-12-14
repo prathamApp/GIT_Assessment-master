@@ -706,7 +706,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
     }
 
-   /* private void insertQuestionsToDB(JSONArray response) {
+    private void refreshExam(JSONArray response) {
         try {
             Gson gson = new Gson();
             String jsonOutput = response.toString();
@@ -777,7 +777,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
 
     private void insertQuestionsToDB(JSONArray response) {

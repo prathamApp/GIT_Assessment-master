@@ -31,13 +31,13 @@
             android:layout_height="match_parent"
             android:layout_below="@id/assessment_thumbnail">
 
-            <ImageView
-                android:id="@+id/iv_download_icon"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:visibility="gone" />
+              <ImageView
+                  android:id="@+id/iv_download_icon"
+                  android:layout_width="@dimen/_20sdp"
+                  android:layout_height="@dimen/_20sdp"
+                  android:layout_alignParentRight="true"
+                  android:layout_centerVertical="true"
+                  android:visibility="gone" />
             <!--android:src="@drawable/download_icon"/>-->
 
             <TextView
