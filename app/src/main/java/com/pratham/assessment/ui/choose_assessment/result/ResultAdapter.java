@@ -189,7 +189,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                     Assessment_Utility.showZoomDialog(context, localPath, "");
 
                 });
-            } else if (ext.equalsIgnoreCase("mp3")) {
+            } else if (ext.equalsIgnoreCase("mp3") || ext.equalsIgnoreCase("wav")) {
                 myViewHolder.questionImg.setImageResource(R.drawable.ic_play);
                 myViewHolder.questionImg.setOnClickListener(v -> {
                     currentView = v;
@@ -301,7 +301,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
         final ScienceQuestion scienceQuestion = getQuestion(result.getqId());
         final List<ScienceQuestionChoice> scienceQuestionChoice = AppDatabase
                 .getDatabaseInstance(context).getScienceQuestionChoicesDao()
-                .getQuestionChoicesByQIDAndVersion(result.getqId(),scienceQuestion.getAppVersion());
+                .getQuestionChoicesByQIDAndVersion(result.getqId(), scienceQuestion.getAppVersion());
         switch (scienceQuestion.getQtid()) {
             case ARRANGE_SEQUENCE:
             case MATCHING_PAIR:
