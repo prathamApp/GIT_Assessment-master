@@ -411,7 +411,7 @@
     <string name="db_push_failed">Db push failed</string>
     <string name="db_pushed_successfully">Db pushed successfully</string>
     <string name="push_db_file">डीबी फाईल पाठवा.</string>
-    <string name="recommended_level">शिफारस केलेली लेव्हल (स्तर)</string>
+    <string name="recommended_level">शिफारस केलेली लेव्हल (स्तर) :</string>
     <string name="level">लेव्हल (स्तर)</string>
     <string name="competency">क्षमता</string>
     <string name="date">दिनांक:</string>
