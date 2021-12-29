@@ -44,6 +44,7 @@ import java.util.zip.ZipOutputStream;
 
 import static com.pratham.assessment.AssessmentApplication.isTablet;
 import static com.pratham.assessment.constants.Assessment_Constants.PUSH_DATA_FROM_DRAWER;
+import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
 
 @EBean
 public class PushDBZipToServer {
@@ -104,7 +105,7 @@ public class PushDBZipToServer {
         try {
 //            String newdata = compress(String.valueOf(data));
             BackupDatabase.backup(context);
-            File dir = new File(Environment.getExternalStorageDirectory().toString() + "/PrathamBackups/");
+            File dir = new File(getStoragePath().toString() + "/PrathamBackups/");
             File[] db_files = dir.listFiles();
 
 
@@ -115,7 +116,7 @@ public class PushDBZipToServer {
                     if (db_files[i].exists() && db_files[i].isFile() && db_files[i].getName().contains("assessment"))
                         fileNameListStrings.add(db_files[i].getAbsolutePath());
 
-                String filePathStr = Environment.getExternalStorageDirectory().toString()
+                String filePathStr = getStoragePath().toString()
                         + "/PrathamBackups/" + AppDatabase.DB_NAME; // file path to save
 
                 String fileName = Assessment_Utility.getUUID() + "_" +
@@ -124,7 +125,7 @@ public class PushDBZipToServer {
                 zip(fileNameListStrings, filePathStr + ".zip", new File(filePathStr));
 
 
-      /*      File dir = new File(Environment.getExternalStorageDirectory().toString() + "/PrathamBackups/");
+      /*      File dir = new File(Environment.getStoragePath().toString() + "/PrathamBackups/");
             File[] db_files = dir.listFiles();
             int num = 0;
            if (db_files != null) {
@@ -133,7 +134,7 @@ public class PushDBZipToServer {
                         fileNameListStrings.add(db_files[i].getAbsolutePath());
 
 
-                String filePathStr = Environment.getExternalStorageDirectory().toString()
+                String filePathStr = Environment.getStoragePath().toString()
                         + "/PrathamBackups/" + AppDatabase.DB_NAME; // file path to save
 
                 zip(s, filePathStr + ".zip");

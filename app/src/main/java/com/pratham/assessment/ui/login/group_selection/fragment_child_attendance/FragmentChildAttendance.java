@@ -342,14 +342,14 @@ public class FragmentChildAttendance extends Fragment implements ContractChildAt
     private void createDirectoryAndSaveFile(Bitmap imageToSave, String fileName) {
         try {
             File imagesFolder = new File(StudentPhotoPath);
-            if (!imagesFolder.exists()) imagesFolder.mkdir();
+            if (!imagesFolder.exists()) imagesFolder.mkdirs();
 
             File file = new File(StudentPhotoPath + "/" + fileName);
 
 
 //           File  file1 = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH);
 
-//            if (!direct.exists()) direct.mkdir();
+//            if (!direct.exists()) direct.mkdirs();
 
 //            File fileName = new File(direct, fileName);
            /* if (fileName.exists())

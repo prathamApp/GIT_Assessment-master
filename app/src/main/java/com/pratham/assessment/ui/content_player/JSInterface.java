@@ -25,6 +25,7 @@ import com.pratham.assessment.constants.Assessment_Constants;
 import java.util.ArrayList;
 
 import static com.pratham.assessment.BaseActivity.appDatabase;
+import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
 
 
 public class JSInterface implements RecognitionListener {
@@ -187,7 +188,7 @@ public class JSInterface implements RecognitionListener {
             audioFlag = true;
 
             try {
-                path = Environment.getExternalStorageDirectory().toString() + "/.KKSInternal/Recordings/" + filename;
+                path = getStoragePath().toString() + "/.KKSInternal/Recordings/" + filename;
                 mp.setDataSource(path);
 
                 if (mp.isPlaying())

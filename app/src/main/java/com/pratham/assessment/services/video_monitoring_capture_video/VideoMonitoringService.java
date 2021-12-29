@@ -141,7 +141,7 @@ public class VideoMonitoringService extends Service {
 
             // Step 4: Set output file
             File root = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH);
-            if (!root.exists()) root.mkdir();
+            if (!root.exists()) root.mkdirs();
             mOutputFile = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH +"/"+ fileName);
 
 //            CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO);

@@ -69,6 +69,7 @@ import java.util.List;
 import static com.pratham.assessment.constants.Assessment_Constants.SDCARD_OFFLINE_PATH_SAVED;
 import static com.pratham.assessment.ui.splash_activity.SplashPresenter.doInitialEntries;
 import static com.pratham.assessment.utilities.Assessment_Utility.copyFileUsingStream;
+import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
 
 @EActivity(R.layout.activity_splash)
 public class SplashActivity extends SplashSupportActivity implements SplashContract.SplashView, PermissionResult, Interface_copying, DataPushListener {
@@ -218,9 +219,9 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                 updateSdCardPath(fpath);
             else {
                 File direct = new File(Environment.getExternalStorageDirectory().toString() + ".LLA");
-                if (!direct.exists()) direct.mkdir();
+                if (!direct.exists()) direct.mkdirs();
                 direct = new File(Environment.getExternalStorageDirectory().toString() + ".LLA/English");
-                if (!direct.exists()) direct.mkdir();
+                if (!direct.exists()) direct.mkdirs();
                 file = new File(Environment.getExternalStorageDirectory().toString() + ".LLA/English/");
                 if (file.exists())
                     updateSdCardPath("" + Environment.getExternalStorageDirectory().toString() + "/.LLA/English/");
@@ -403,7 +404,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                                 }
                             })
                             .build();*/
-                    if (new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/PrathamBackups" + "/assessment_database").exists()) {
+                    if (new File(getStoragePath().getAbsolutePath() + "/PrathamBackups" + "/assessment_database").exists()) {
                         try {
                             splashPresenter.copyDataBase();
                             doInitialEntries(context);
@@ -423,10 +424,10 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             String offlineDBPath = Assessment_Utility.getExternalPath(this) + "/.Assessment/offline_assessment_database.db";
             File f = new File(offlineDBPath);
             if (f.exists()) {
-                File sd = new File(Environment.getExternalStorageDirectory() + "/PrathamBackups");
+                File sd = new File(getStoragePath() + "/PrathamBackups");
                 if (!sd.exists())
-                    sd.mkdir();
-                File offlineDB = new File(Environment.getExternalStorageDirectory() + "/PrathamBackups/offline_assessment_database.db");
+                    sd.mkdirs();
+                File offlineDB = new File(getStoragePath() + "/PrathamBackups/offline_assessment_database.db");
 
 //                File off = new File(internalPath + "/offline_assessment_database.db");
 //                String offPath = internalPath + "/offline_assessment_database.db";

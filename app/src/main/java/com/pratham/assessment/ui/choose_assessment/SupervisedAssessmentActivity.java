@@ -225,15 +225,15 @@ public class SupervisedAssessmentActivity extends BaseActivity {
     public void createDirectoryAndSaveFile(Bitmap imageToSave, String fileName) {
         try {
 
-         /*   File direct = new File(Environment.getExternalStorageDirectory().toString() + "/.assessmentInternal");
-            if (!direct.exists()) direct.mkdir();
-            direct = new File(Environment.getExternalStorageDirectory().toString() + "/.assessmentInternal/supervisorImages");
-            if (!direct.exists()) direct.mkdir();
+         /*   File direct = new File(getStoragePath().toString() + "/.assessmentInternal");
+            if (!direct.exists()) direct.mkdirs();
+            direct = new File(getStoragePath().toString() + "/.assessmentInternal/supervisorImages");
+            if (!direct.exists()) direct.mkdirs();
 */
             File direct = new File(AssessmentApplication.assessPath + Assessment_Constants.ASSESSMENT_FOLDER_PATH);
-            if (!direct.exists()) direct.mkdir();
+            if (!direct.exists()) direct.mkdirs();
             direct = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_SUPERVISOR_IMAGE_PATH);
-            if (!direct.exists()) direct.mkdir();
+            if (!direct.exists()) direct.mkdirs();
 
             File file = new File(direct, fileName);
 

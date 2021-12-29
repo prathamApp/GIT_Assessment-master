@@ -204,60 +204,56 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
                 showZoomDialog(getActivity(), localPath, "");
             }
         });
-        questionGif.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showZoomDialog(getActivity(), localPath, "");
-            }
-        });
+        questionGif.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
 
 
         options.clear();
         presenter.getOptions(scienceQuestion.getQid());
         //  options = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionChoicesDao().getQuestionChoicesByQID(scienceQuestion.getQid());
-        if (options.get(0).getChoicename() != null && !options.get(0).getChoicename().equalsIgnoreCase(""))
-            radioButtonTrue.setText(Html.fromHtml(options.get(0).getChoicename()));
-        if (options.get(1).getChoicename() != null && !options.get(1).getChoicename().equalsIgnoreCase(""))
-            radioButtonFalse.setText(Html.fromHtml(options.get(1).getChoicename()));
-        radioButtonTrue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        if (options.size() > 0) {
+            if (options.get(0).getChoicename() != null && !options.get(0).getChoicename().equalsIgnoreCase(""))
+                radioButtonTrue.setText(Html.fromHtml(options.get(0).getChoicename()));
+            if (options.get(1).getChoicename() != null && !options.get(1).getChoicename().equalsIgnoreCase(""))
+                radioButtonFalse.setText(Html.fromHtml(options.get(1).getChoicename()));
+            radioButtonTrue.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 //                questionTypeListener.setAnswer("", radioButtonTrue.getText().toString(), scienceQuestion.getQid(), null);
 
-                List<ScienceQuestionChoice> ans = new ArrayList<>();
-                if (options != null)
-                    ans.add(options.get(0));
-                scienceQuestion.setMatchingNameList(ans);
+                    List<ScienceQuestionChoice> ans = new ArrayList<>();
+                    if (options != null)
+                        ans.add(options.get(0));
+                    scienceQuestion.setMatchingNameList(ans);
 //                assessmentAnswerListener.setAnswerInActivity("", radioButtonTrue.getText().toString(), scienceQuestion.getQid(), null);
-                assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), ans,0 );
+                    assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), ans, 0);
 
-                radioButtonTrue.setSelected(true);
-                radioButtonTrue.setBackground(getActivity().getResources().getDrawable(R.drawable.rounded_corner_dialog));
-                radioButtonFalse.setBackground(getActivity().getResources().getDrawable(R.drawable.ripple_rectangle));
-                radioButtonTrue.setTextColor(Assessment_Utility.selectedColor);
-                radioButtonFalse.setSelected(false);
-                radioButtonFalse.setTextColor(getActivity().getResources().getColor(R.color.white));
-            }
-        });
+                    radioButtonTrue.setSelected(true);
+                    radioButtonTrue.setBackground(getActivity().getResources().getDrawable(R.drawable.rounded_corner_dialog));
+                    radioButtonFalse.setBackground(getActivity().getResources().getDrawable(R.drawable.ripple_rectangle));
+                    radioButtonTrue.setTextColor(Assessment_Utility.selectedColor);
+                    radioButtonFalse.setSelected(false);
+                    radioButtonFalse.setTextColor(getActivity().getResources().getColor(R.color.white));
+                }
+            });
 
-        radioButtonFalse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<ScienceQuestionChoice> ans = new ArrayList<>();
-                if (options != null)
-                    ans.add(options.get(1));
-                scienceQuestion.setMatchingNameList(ans);
+            radioButtonFalse.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    List<ScienceQuestionChoice> ans = new ArrayList<>();
+                    if (options != null)
+                        ans.add(options.get(1));
+                    scienceQuestion.setMatchingNameList(ans);
 //                assessmentAnswerListener.setAnswerInActivity("", radioButtonTrue.getText().toString(), scienceQuestion.getQid(), null);
-                assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), ans,0 );
+                    assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), ans, 0);
 
-                radioButtonFalse.setSelected(true);
-                radioButtonFalse.setTextColor(Assessment_Utility.selectedColor);
-                radioButtonTrue.setSelected(false);
-                radioButtonTrue.setBackground(getActivity().getResources().getDrawable(R.drawable.ripple_rectangle));
-                radioButtonFalse.setBackground(getActivity().getResources().getDrawable(R.drawable.rounded_corner_dialog));
-                radioButtonTrue.setTextColor(getActivity().getResources().getColor(R.color.white));
-            }
-        });
+                    radioButtonFalse.setSelected(true);
+                    radioButtonFalse.setTextColor(Assessment_Utility.selectedColor);
+                    radioButtonTrue.setSelected(false);
+                    radioButtonTrue.setBackground(getActivity().getResources().getDrawable(R.drawable.ripple_rectangle));
+                    radioButtonFalse.setBackground(getActivity().getResources().getDrawable(R.drawable.rounded_corner_dialog));
+                    radioButtonTrue.setTextColor(getActivity().getResources().getColor(R.color.white));
+                }
+            });
        /* rg_true_false.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -282,30 +278,32 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
             }
         });*/
 
-        if (scienceQuestion.getUserAnswer().equalsIgnoreCase(options.get(0).getChoicename())) {
-            radioButtonTrue.setSelected(true);
-            radioButtonTrue.setBackground(getActivity().getResources().getDrawable(R.drawable.rounded_corner_dialog));
-            radioButtonFalse.setBackground(getActivity().getResources().getDrawable(R.drawable.ripple_rectangle));
-            radioButtonTrue.setTextColor(Assessment_Utility.selectedColor);
-            radioButtonFalse.setSelected(false);
-            radioButtonFalse.setTextColor(getActivity().getResources().getColor(R.color.white));
+            if (scienceQuestion.getUserAnswer().equalsIgnoreCase(options.get(0).getChoicename())) {
+                radioButtonTrue.setSelected(true);
+                radioButtonTrue.setBackground(getActivity().getResources().getDrawable(R.drawable.rounded_corner_dialog));
+                radioButtonFalse.setBackground(getActivity().getResources().getDrawable(R.drawable.ripple_rectangle));
+                radioButtonTrue.setTextColor(Assessment_Utility.selectedColor);
+                radioButtonFalse.setSelected(false);
+                radioButtonFalse.setTextColor(getActivity().getResources().getColor(R.color.white));
 
 
-        } else if (scienceQuestion.getUserAnswer().equalsIgnoreCase(options.get(1).getChoicename())) {
-            radioButtonFalse.setSelected(true);
-            radioButtonFalse.setTextColor(Assessment_Utility.selectedColor);
-            radioButtonTrue.setSelected(false);
-            radioButtonTrue.setBackground(getActivity().getResources().getDrawable(R.drawable.ripple_rectangle));
-            radioButtonFalse.setBackground(getActivity().getResources().getDrawable(R.drawable.rounded_corner_dialog));
-            radioButtonTrue.setTextColor(getActivity().getResources().getColor(R.color.white));
+            } else if (scienceQuestion.getUserAnswer().equalsIgnoreCase(options.get(1).getChoicename())) {
+                radioButtonFalse.setSelected(true);
+                radioButtonFalse.setTextColor(Assessment_Utility.selectedColor);
+                radioButtonTrue.setSelected(false);
+                radioButtonTrue.setBackground(getActivity().getResources().getDrawable(R.drawable.ripple_rectangle));
+                radioButtonFalse.setBackground(getActivity().getResources().getDrawable(R.drawable.rounded_corner_dialog));
+                radioButtonTrue.setTextColor(getActivity().getResources().getColor(R.color.white));
 
-        } else {
-            radioButtonFalse.setSelected(false);
-            radioButtonTrue.setSelected(false);
-            radioButtonTrue.setTextColor(getActivity().getResources().getColor(R.color.white));
-            radioButtonFalse.setTextColor(getActivity().getResources().getColor(R.color.white));
+            } else {
+                radioButtonFalse.setSelected(false);
+                radioButtonTrue.setSelected(false);
+                radioButtonTrue.setTextColor(getActivity().getResources().getColor(R.color.white));
+                radioButtonFalse.setTextColor(getActivity().getResources().getColor(R.color.white));
 
+            }
         }
+
         setTamilFont(getActivity(), radioButtonFalse);
         setTamilFont(getActivity(), radioButtonTrue);
     }

@@ -2392,4 +2392,12 @@ public class Assessment_Utility {
     }
 
 
+    public static File getStoragePath() {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)) {
+            return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        } else {
+            return Environment.getExternalStorageDirectory();
+        }
+    }
+
 }

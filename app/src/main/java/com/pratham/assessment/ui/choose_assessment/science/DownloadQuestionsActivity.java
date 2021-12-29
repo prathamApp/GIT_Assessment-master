@@ -443,7 +443,7 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
 ////                    if (downloadMediaList.get(mediaDownloadCnt).getQtId().contains("8") || downloadMediaList.get(mediaDownloadCnt).getQtId().contains("9"))
 //                        File direct = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH);
 //                        if (!direct.exists())
-//                            direct.mkdir();
+//                            direct.mkdirs();
 //                        if (direct.exists())
 //                            downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
 //                        else {
@@ -751,7 +751,7 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
 //                    if (downloadMediaList.get(mediaDownloadCnt).getQtId().contains("8") || downloadMediaList.get(mediaDownloadCnt).getQtId().contains("9"))
             File direct = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH);
             if (!direct.exists())
-                direct.mkdir();
+                direct.mkdirs();
             if (direct.exists())
                 downloadMedia(downloadMediaList.get(mediaDownloadCnt).getqId(), downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
             else {

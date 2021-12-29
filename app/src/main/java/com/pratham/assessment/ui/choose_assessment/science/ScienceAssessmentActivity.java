@@ -20,7 +20,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -104,7 +103,6 @@ import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.V
 import com.pratham.assessment.ui.splash_activity.SplashPresenter;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.PermissionUtils;
-import com.pratham.atm.custom.LockNavigation.PinActivity;
 import com.robinhood.ticker.TickerView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -149,7 +147,10 @@ import static com.pratham.assessment.constants.Assessment_Constants.TRUE_FALSE;
 import static com.pratham.assessment.constants.Assessment_Constants.VIDEO;
 import static com.pratham.assessment.constants.Assessment_Constants.VIDEOMONITORING;
 import static com.pratham.assessment.utilities.Assessment_Utility.copyFileUsingStream;
+import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
 import static com.pratham.assessment.utilities.Assessment_Utility.setLocaleByLanguageId;
+
+//import com.pratham.atm.custom.LockNavigation.PinActivity;
 
 @EActivity(R.layout.activity_science_assessment)
 public class ScienceAssessmentActivity extends BaseActivity implements PictureCapturingListener,/* DiscreteScrollView.OnItemChangedListener,*/ AssessmentAnswerListener, QuestionTrackerListener, DataPushListener, PermissionResult {
@@ -253,7 +254,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
     BottomQuestionFragment bottomQuestionFragment;
 
-    PinActivity pinActivity;
+//    PinActivity pinActivity;
 
     @Bean(PushDataToServer.class)
     PushDataToServer pushDataToServer;
@@ -279,7 +280,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         selectedLang = FastSave.getInstance().getString(LANGUAGE, "1");
         subjectId = FastSave.getInstance().getString("SELECTED_SUBJECT_ID", "1");
         currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
-        pinActivity = new PinActivity();
+//        pinActivity = new PinActivity();
         context = this;
 
         tv_app_version.setText("App version : " + Assessment_Utility.getCurrentVersion(this));
@@ -515,7 +516,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     public void onResponse(JSONArray response) {
 //                        progressDialog.dismiss();
                         if (response.length() > 0) {
-                            insertQuestionsToDB(response);
+                            insertQuestionsToDB(response, questionUrl);
                             queDownloadIndex++;
                             if (queDownloadIndex < topicIdList.size()) {
                                 if (downloadFailedExamList.size() == 0)
@@ -780,7 +781,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     }
 
 
-    private void insertQuestionsToDB(JSONArray response) {
+    private void insertQuestionsToDB(JSONArray response, String questionUrl) {
+        boolean mediaDownloaded = false;
         try {
             Gson gson = new Gson();
             String jsonOutput = response.toString();
@@ -797,6 +799,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             !scienceQuestion.getAppVersion().equalsIgnoreCase(question.getAppVersion()) ||
                             !scienceQuestion.getPhotourl().equalsIgnoreCase(question.getPhotourl())
                     ) {
+                        mediaDownloaded = true;
                         Log.d("insertQuestionsToDBpp", "insertQuestionsToDB: " + question.getQid());
                         AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().insert(question);
                         updateTempQuestion(question);
@@ -819,6 +822,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                         .getQuestionChoicesByQcID(choice.getQcid());
                                 if (scienceQuestionChoice == null || !scienceQuestionChoice
                                         .getAppVersionChoice().equalsIgnoreCase(choice.getAppVersionChoice())) {
+                                    mediaDownloaded = true;
+
                                     if (!choiceList.get(j).getChoiceurl().equalsIgnoreCase("")) {
                                         DownloadMedia downloadMedia = new DownloadMedia();
                                         downloadMedia.setPhotoUrl(choiceList.get(j).getChoiceurl());
@@ -857,6 +862,23 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             }
                         }
                     }
+                }
+                if (mediaDownloaded) {
+                    Modal_Log modal_log = new Modal_Log();
+                    modal_log.setErrorType("DOWNLOAD");
+                    modal_log.setExceptionMessage("Exam id : " + selectedExamId);
+                    modal_log.setMethodName("Subject id : " + subjectId);
+                    modal_log.setCurrentDateTime(Assessment_Utility.getCurrentDateTime());
+                    modal_log.setSessionId(FastSave.getInstance().getString("CurrentSession", ""));
+                    modal_log.setExceptionStackTrace("Apk version : " + Assessment_Utility.getCurrentVersion(context)
+                            + " App build date : " + Assessment_Constants.APP_BUILD_DATE);
+                    modal_log.setDeviceId("" + Assessment_Utility.getDeviceId(context));
+                    modal_log.setGroupId(currentStudentID);
+                    if (questionUrl.contains(APIs.baseAzureURL))
+                        modal_log.setLogDetail("INTERNET#" + questionUrl);
+                    else
+                        modal_log.setLogDetail("PI#" + questionUrl);
+                    AppDatabase.getDatabaseInstance(context).getLogsDao().insertLog(modal_log);
                 }
                 AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().replaceNewLineForQuestions();
                 AppDatabase.getDatabaseInstance(this).getTempScienceQuestionDao().replaceNewLineForQuestions();
@@ -1320,6 +1342,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         SimpleSQLiteQuery questionQuery = new SimpleSQLiteQuery(qQuery.toString());
         Log.d("getQuestionsFromDB", "getQuestionsFromDB: " + qQuery.toString());
         return AppDatabase.getDatabaseInstance(context).getScienceQuestionDao().getQuestionQueryResult(questionQuery);
+//        return que;
     }
 
     private ScienceQuestion getParaFromDB(List<String> keywords, AssessmentPatternDetails
@@ -1411,7 +1434,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     }
 
     private void callSupervisedExam() {
-        pinActivity = new PinActivity();
+//        pinActivity = new PinActivity();
 //                pinActivity.init(this, getApplication());
         frame_supervisor.setVisibility(View.VISIBLE);
         rl_exam_info.setVisibility(View.GONE);
@@ -1512,7 +1535,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 //                    if (downloadMediaList.get(mediaDownloadCnt).getQtId().contains("8") || downloadMediaList.get(mediaDownloadCnt).getQtId().contains("9"))
             File direct = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH);
             if (!direct.exists())
-                direct.mkdir();
+                direct.mkdirs();
             if (direct.exists())
                 downloadMedia(downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
             else {
@@ -3704,11 +3727,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     + "/.Assessment/offline_assessment_database.db";
             File f = new File(offlineDBPath);
             if (f.exists()) {
-                File sd = new File(Environment.getExternalStorageDirectory()
+                File sd = new File(getStoragePath()
                         + "/PrathamBackups");
                 if (!sd.exists())
-                    sd.mkdir();
-                File offlineDB = new File(Environment.getExternalStorageDirectory()
+                    sd.mkdirs();
+                File offlineDB = new File(getStoragePath()
                         + "/PrathamBackups/offline_assessment_database.db");
                 if (!FastSave.getInstance().getBoolean(SDCARD_OFFLINE_PATH_SAVED, false))
                     copySDCardDB(f, offlineDB);
@@ -3793,7 +3816,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 }
                             })
                             .build();*/
-                if (new File(Environment.getExternalStorageDirectory()
+                if (new File(getStoragePath()
                         .getAbsolutePath() + "/PrathamBackups" + "/assessment_database").exists()) {
                     try {
                         copyDataBase();
@@ -3859,7 +3882,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 @Override
                 protected Void doInBackground(Void... voids) {
                     try {
-                        SQLiteDatabase db = SQLiteDatabase.openDatabase(Environment.getExternalStorageDirectory().getAbsolutePath() + "/PrathamBackups" + "/assessment_database", null, SQLiteDatabase.OPEN_READONLY);
+                        SQLiteDatabase db = SQLiteDatabase.openDatabase(getStoragePath().getAbsolutePath() + "/PrathamBackups" + "/assessment_database", null, SQLiteDatabase.OPEN_READONLY);
                         if (db != null) {
                             try {
                                 Cursor content_cursor;
@@ -4145,7 +4168,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 @Override
                 protected Void doInBackground(Void... voids) {
                     try {
-                        SQLiteDatabase db = SQLiteDatabase.openDatabase(Environment.getExternalStorageDirectory() + "/PrathamBackups/offline_assessment_database.db", null, SQLiteDatabase.OPEN_READONLY);
+                        SQLiteDatabase db = SQLiteDatabase.openDatabase(getStoragePath() + "/PrathamBackups/offline_assessment_database.db", null, SQLiteDatabase.OPEN_READONLY);
                         if (db != null) {
                             try {
                                 Cursor content_cursor;

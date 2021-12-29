@@ -225,11 +225,12 @@ public class PushDataToServer {
         logsData = fillLogsData(logsList);
 
         try {
-
             push_log = new Modal_Log();
             push_log.setCurrentDateTime(Assessment_Utility.getCurrentDateTime());
+            push_log.setSessionId(FastSave.getInstance().getString("CurrentSession", ""));
             push_log.setDeviceId(Assessment_Utility.getDeviceId(context));
-            push_log.setExceptionStackTrace("Apk version : " + Assessment_Utility.getCurrentVersion(context));
+            push_log.setExceptionStackTrace("Apk version : " + Assessment_Utility.getCurrentVersion(context)
+                    + " App build date : " + Assessment_Constants.APP_BUILD_DATE);
             push_log.setErrorType("DATA_PUSH");
 
             requestJsonObjectScience = generateRequestString(eceScoreData, assessmentScoreData, attendanceData, sessionData,/* learntWords, */supervisorData, logsData, /*assessmentScienceData,*/ studentData);
@@ -856,10 +857,10 @@ public class PushDataToServer {
             String uuID = "" + Assessment_Utility.getUUID();
             String jsonPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_PUSH_JSON_PATH;
             if (!new File(jsonPath).exists())
-                new File(jsonPath).mkdir();
+                new File(jsonPath).mkdirs();
             filepathstr = AssessmentApplication.assessPath + Assessment_Constants.STORE_PUSH_JSON_PATH + "/" + uuID;
 
-           /* String filepathstr = Environment.getExternalStorageDirectory().toString()
+           /* String filepathstr = Environment.getStoragePath().toString()
                     + "/.FCAInternal/PushJsons/" + uuID; // file path to save*/
             File filepath = new File(filepathstr + ".json"); // file path to save
             if (filepath.exists())

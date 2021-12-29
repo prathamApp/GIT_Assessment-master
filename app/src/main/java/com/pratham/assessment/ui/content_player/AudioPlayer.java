@@ -4,6 +4,8 @@ import android.media.MediaRecorder;
 import android.os.Environment;
 import android.util.Log;
 
+import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
+
 public class AudioPlayer extends Thread {
     MediaRecorder mediaRecorder;
     String mediaFilePath;
@@ -21,7 +23,7 @@ public class AudioPlayer extends Thread {
     public void run() {
         try {
             try {
-                internalStoragePath = Environment.getExternalStorageDirectory().toString() + "/.KKSInternal/Recordings/";
+                internalStoragePath = getStoragePath().toString() + "/.KKSInternal/Recordings/";
                 mediaRecorder = new MediaRecorder();
                 mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                 mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);

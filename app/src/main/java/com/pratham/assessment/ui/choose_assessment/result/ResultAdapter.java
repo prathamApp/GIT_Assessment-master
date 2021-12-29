@@ -585,6 +585,14 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 });
                 break;
             case TRUE_FALSE:
+                correctAns = new ScienceQuestionChoice();
+                for (int j = 0; j < scienceQuestionChoice.size(); j++) {
+                    if (scienceQuestionChoice.get(j).getCorrect().equalsIgnoreCase("true")) {
+                        correctAns = scienceQuestionChoice.get(j);
+                        myViewHolder.tv_correctAnswer.setText(Html.fromHtml(correctAns.getChoicename()));
+//                        userAns = scienceQuestionChoice.get(j);
+                    }
+                }
                 myViewHolder.btnCorrectAnswer.setVisibility(View.GONE);
                 myViewHolder.btnUserAnswer.setVisibility(View.GONE);
                 myViewHolder.image_you_answered.setVisibility(View.GONE);
@@ -593,7 +601,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                 if (result.isAttempted()) {
                     myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
                     myViewHolder.tv_correctAnswer.setVisibility(View.VISIBLE);
-
+                    myViewHolder.tv_correctAnswer.setText(correctAns.getChoicename());
                     if (result.isCorrect()) {
                         myViewHolder.ll_user_ans.setVisibility(View.GONE);
                     } else {
@@ -609,7 +617,8 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
     }
 
 
-    private void setImage(ScienceQuestionChoice scienceQuestionChoice, String answer, ImageView view) {
+    private void setImage(ScienceQuestionChoice scienceQuestionChoice, String answer, ImageView
+            view) {
 //        final String path = answer;
         String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), answer);
         final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;

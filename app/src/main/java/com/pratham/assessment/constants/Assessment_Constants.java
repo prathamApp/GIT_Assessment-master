@@ -2,6 +2,8 @@ package com.pratham.assessment.constants;
 
 import android.os.Environment;
 
+import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
+
 public class Assessment_Constants {
     public static final String INITIAL_ENTRIES = "initial_entries";
     public static final String KEY_ASSET_COPIED = "key_asset_copied";
@@ -105,8 +107,8 @@ public class Assessment_Constants {
     public static String STORE_SUPERVISOR_IMAGE_PATH = "/.Assessment/Content/SupervisorImages";
     public static String STORE_STUDENT_IMAGE_PATH = "/.Assessment/Content/StudentImages";
     public static String STORE_STUDENT_PDF_PATH = "/.Assessment/Content/StudentPDFs";
-    public static String STORE_STUDENT_DIAGNOSTIC_PDF_PATH = Environment.getExternalStorageDirectory() + "/PrathamBackups/StudentPDFs";
-    public static String STORE_STUDENT_DIAGNOSTIC_PDF_OLD_PATH = Environment.getExternalStorageDirectory() + "/PrathamBackups/StudentOldPDFs";
+    public static String STORE_STUDENT_DIAGNOSTIC_PDF_PATH = getStoragePath() + "/PrathamBackups/StudentPDFs";
+    public static String STORE_STUDENT_DIAGNOSTIC_PDF_OLD_PATH = getStoragePath() + "/PrathamBackups/StudentOldPDFs";
     public static String STORE_PUSH_JSON_PATH = "/.Assessment/Content/PushJson";
     public static String DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING = "videoMonitoring";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO = "answerVideo";

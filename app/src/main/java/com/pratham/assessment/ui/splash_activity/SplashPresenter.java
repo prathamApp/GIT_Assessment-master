@@ -76,6 +76,7 @@ import static android.content.Context.ACTIVITY_SERVICE;
 import static com.pratham.assessment.AssessmentApplication.sharedPreferences;
 import static com.pratham.assessment.constants.Assessment_Constants.SDCARD_OFFLINE_PATH_SAVED;
 import static com.pratham.assessment.ui.splash_activity.SplashActivity.appDatabase;
+import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
 
 @EBean
 public class SplashPresenter implements SplashContract.SplashPresenter {
@@ -165,10 +166,10 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                     File folder_file, db_file;
                     try {
                         ArrayList<String> sdPath = FileUtils.getExtSdCardPaths(context);
-                        SQLiteDatabase db = SQLiteDatabase.openDatabase(Environment.getExternalStorageDirectory().getAbsolutePath() + "/PrathamBackups" + "/assessment_database", null, SQLiteDatabase.OPEN_READONLY);
+                        SQLiteDatabase db = SQLiteDatabase.openDatabase(getStoragePath().getAbsolutePath() + "/PrathamBackups" + "/assessment_database", null, SQLiteDatabase.OPEN_READONLY);
                         if (db != null) {
                             try {
-                                Cursor content_cursor;
+                               Cursor content_cursor;
                                 content_cursor = db.rawQuery("SELECT * FROM Score Where sentFlag=0", null);
                                 List<Score> contents = new ArrayList<>();
                                 if (content_cursor.moveToFirst()) {
@@ -423,7 +424,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                     try {
                         ArrayList<String> sdPath = FileUtils.getExtSdCardPaths(context);
 //                        SQLiteDatabase db = SQLiteDatabase.openDatabase(sdPath.get(0) + "/.Assessment/offline_assessment_database.db", null, SQLiteDatabase.OPEN_READONLY);
-                        SQLiteDatabase db = SQLiteDatabase.openDatabase(Environment.getExternalStorageDirectory() + "/PrathamBackups/offline_assessment_database.db", null, SQLiteDatabase.OPEN_READONLY);
+                        SQLiteDatabase db = SQLiteDatabase.openDatabase(getStoragePath() + "/PrathamBackups/offline_assessment_database.db", null, SQLiteDatabase.OPEN_READONLY);
                         if (db != null) {
                             try {
                                 Cursor content_cursor;
@@ -1763,7 +1764,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
         AssetManager assetManager = context.getAssets();
         try {
             File direct = new File(Environment.getExternalStorageDirectory().toString() + "/.assessmentInternal");
-            if (!direct.exists()) direct.mkdir();
+            if (!direct.exists()) direct.mkdirs();
 
             InputStream in = new FileInputStream(Assessment_Constants.ext_path + Assessment_Constants.ASSESSMENT_FOLDER_PATH + AppDatabase.DB_NAME);
 //            InputStream in = assetManager.open("assessData.zip");

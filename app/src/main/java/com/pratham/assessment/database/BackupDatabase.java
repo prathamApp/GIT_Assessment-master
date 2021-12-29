@@ -8,16 +8,18 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 
+import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
+
 public class BackupDatabase {
 
     public static void backup(Context mContext) {
 
         try {
-//            File sd = Environment.getExternalStorageDirectory();
+//            File sd = Environment.getStoragePath();
             deletePreviousDbs();
-            File sd = new File(Environment.getExternalStorageDirectory() + "/PrathamBackups");
+            File sd = new File(getStoragePath() + "/PrathamBackups");
             if (!sd.exists())
-                sd.mkdir();
+                sd.mkdirs();
             if (sd.canWrite()) {
                 File currentDB = mContext.getDatabasePath(AppDatabase.DB_NAME);
                 if (currentDB != null) {
@@ -65,7 +67,7 @@ public class BackupDatabase {
     }
 }*/
     private static void deletePreviousDbs() {
-        File sd = Environment.getExternalStorageDirectory();
+        File sd = getStoragePath();
         for (File f : sd.listFiles()) {
             if (f.getName().contains(AppDatabase.DB_NAME))
                 f.delete();
