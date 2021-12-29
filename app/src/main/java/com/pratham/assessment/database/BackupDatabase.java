@@ -17,7 +17,7 @@ public class BackupDatabase {
             deletePreviousDbs();
             File sd = new File(Environment.getExternalStorageDirectory() + "/PrathamBackups");
             if (!sd.exists())
-                sd.mkdir();
+                sd.mkdirs();
             if (sd.canWrite()) {
                 File currentDB = mContext.getDatabasePath(AppDatabase.DB_NAME);
                 if (currentDB != null) {

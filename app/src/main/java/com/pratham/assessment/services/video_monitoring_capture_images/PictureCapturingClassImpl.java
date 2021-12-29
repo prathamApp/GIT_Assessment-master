@@ -280,7 +280,7 @@ public class PictureCapturingClassImpl extends APictureCapturingClass {
         final String cameraId = this.cameraDevice == null ? UUID.randomUUID().toString() : this.cameraDevice.getId();
 //        final File file = new File(Environment.getExternalStorageDirectory() + "/" + cameraId + "_pic.jpg");
         File root = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH);
-        if (!root.exists()) root.mkdir();
+        if (!root.exists()) root.mkdirs();
         File file = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + "/" + fileName);
 
         try (final OutputStream output = new FileOutputStream(file)) {

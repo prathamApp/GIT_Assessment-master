@@ -282,10 +282,10 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface, Aud
 
 //            File direct = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH);
             File direct = new File(AssessmentApplication.assessPath);
-            if (!direct.exists()) direct.mkdir();
+            if (!direct.exists()) direct.mkdirs();
 //            direct = new File(Environment.getExternalStorageDirectory().toString() + "/.Assessment/Science/Content/Answers");
             direct = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH);
-            if (!direct.exists()) direct.mkdir();
+            if (!direct.exists()) direct.mkdirs();
     /*        iv_question_audio.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

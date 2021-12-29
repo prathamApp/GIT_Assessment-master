@@ -853,7 +853,7 @@ public class PushDataToServer {
             String uuID = "" + Assessment_Utility.getUUID();
             String jsonPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_PUSH_JSON_PATH;
             if (!new File(jsonPath).exists())
-                new File(jsonPath).mkdir();
+                new File(jsonPath).mkdirs();
             filepathstr = AssessmentApplication.assessPath + Assessment_Constants.STORE_PUSH_JSON_PATH + "/" + uuID;
 
            /* String filepathstr = Environment.getExternalStorageDirectory().toString()

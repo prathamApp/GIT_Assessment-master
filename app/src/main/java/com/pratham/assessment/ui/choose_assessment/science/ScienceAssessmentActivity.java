@@ -1512,7 +1512,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 //                    if (downloadMediaList.get(mediaDownloadCnt).getQtId().contains("8") || downloadMediaList.get(mediaDownloadCnt).getQtId().contains("9"))
             File direct = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH);
             if (!direct.exists())
-                direct.mkdir();
+                direct.mkdirs();
             if (direct.exists())
                 downloadMedia(downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
             else {
@@ -3707,7 +3707,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 File sd = new File(Environment.getExternalStorageDirectory()
                         + "/PrathamBackups");
                 if (!sd.exists())
-                    sd.mkdir();
+                    sd.mkdirs();
                 File offlineDB = new File(Environment.getExternalStorageDirectory()
                         + "/PrathamBackups/offline_assessment_database.db");
                 if (!FastSave.getInstance().getBoolean(SDCARD_OFFLINE_PATH_SAVED, false))
@@ -4173,6 +4173,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                         paperPattern.setIsRandom((content_cursor.getInt(content_cursor.getColumnIndex("IsRandom"))) == 1);
                                         paperPattern.setNoofcertificateq(content_cursor.getString(content_cursor.getColumnIndex("noofcertificateq")));
                                         paperPattern.setExammode(content_cursor.getString(content_cursor.getColumnIndex("exammode")));
+                                        paperPattern.setDiagnosticTest((content_cursor.getInt(content_cursor.getColumnIndex("isDiagnosticTest"))) == 1);
                                         paperPatternList.add(paperPattern);
                                         AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().deletePaperPatternByExamId(paperPattern.getExamid());
 
@@ -4277,14 +4278,14 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                         scienceQuestion.setRevisitedEndTime(content_cursor.getString(content_cursor.getColumnIndex("revisitedEndTime")));
                                         scienceQuestion.setMarksPerQuestion(content_cursor.getString(content_cursor.getColumnIndex("marksPerQuestion")));
                                         scienceQuestion.setPaperid(content_cursor.getString(content_cursor.getColumnIndex("paperid")));
-                                        scienceQuestion.setUserAnswerId(content_cursor.getString(content_cursor.getColumnIndex("userAnswerId")));
-                                        scienceQuestion.setUserAnswer(content_cursor.getString(content_cursor.getColumnIndex("userAnswer")));
                                         scienceQuestion.setIsAttempted((content_cursor.getInt(content_cursor.getColumnIndex("isAttempted"))) == 1 ? true : false);
                                         scienceQuestion.setIsCorrect((content_cursor.getInt(content_cursor.getColumnIndex("isCorrect"))) == 1 ? true : false);
                                         scienceQuestion.setIsQuestionFromSDCard(true);
                                         scienceQuestion.setIsParaQuestion(content_cursor.getInt((content_cursor.getColumnIndex("IsParaQuestion"))) == 1);
                                         scienceQuestion.setRefParaID(content_cursor.getString(content_cursor.getColumnIndex("RefParaID")));
                                         scienceQuestion.setAppVersion(content_cursor.getString(content_cursor.getColumnIndex("AppVersion")));
+                                        scienceQuestion.setUserAnswerId(content_cursor.getString(content_cursor.getColumnIndex("userAnswerId")));
+                                        scienceQuestion.setUserAnswer(content_cursor.getString(content_cursor.getColumnIndex("userAnswer")));
 
                                         if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
                                             String[] splittedName = scienceQuestion.getPhotourl().split("/");

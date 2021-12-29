@@ -51,7 +51,7 @@ public class FragmentSelectGroup extends Fragment implements ContractGroup {
             StudentPhotoPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_STUDENT_IMAGE_PATH + "/";
             File direct = new File(StudentPhotoPath);
             if (!direct.exists())
-                direct.mkdir();
+                direct.mkdirs();
         } catch (Exception e) {
             e.printStackTrace();
         }

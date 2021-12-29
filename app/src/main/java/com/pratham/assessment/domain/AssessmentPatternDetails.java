@@ -28,14 +28,6 @@ public class AssessmentPatternDetails {
 
     private String keyworddetail;
 
-    public String getExamId() {
-        return examId;
-    }
-
-    public void setExamId(String examId) {
-        this.examId = examId;
-    }
-
 
     @NonNull
     @PrimaryKey(autoGenerate = true)
@@ -51,6 +43,13 @@ public class AssessmentPatternDetails {
         this.patternId = patternId;
     }
 
+    public String getExamId() {
+        return examId;
+    }
+
+    public void setExamId(String examId) {
+        this.examId = examId;
+    }
 
     public String getQlevel() {
         return qlevel;

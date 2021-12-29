@@ -218,9 +218,9 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                 updateSdCardPath(fpath);
             else {
                 File direct = new File(Environment.getExternalStorageDirectory().toString() + ".LLA");
-                if (!direct.exists()) direct.mkdir();
+                if (!direct.exists()) direct.mkdirs();
                 direct = new File(Environment.getExternalStorageDirectory().toString() + ".LLA/English");
-                if (!direct.exists()) direct.mkdir();
+                if (!direct.exists()) direct.mkdirs();
                 file = new File(Environment.getExternalStorageDirectory().toString() + ".LLA/English/");
                 if (file.exists())
                     updateSdCardPath("" + Environment.getExternalStorageDirectory().toString() + "/.LLA/English/");
@@ -425,7 +425,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             if (f.exists()) {
                 File sd = new File(Environment.getExternalStorageDirectory() + "/PrathamBackups");
                 if (!sd.exists())
-                    sd.mkdir();
+                    sd.mkdirs();
                 File offlineDB = new File(Environment.getExternalStorageDirectory() + "/PrathamBackups/offline_assessment_database.db");
 
 //                File off = new File(internalPath + "/offline_assessment_database.db");

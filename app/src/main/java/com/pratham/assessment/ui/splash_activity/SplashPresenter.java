@@ -1763,7 +1763,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
         AssetManager assetManager = context.getAssets();
         try {
             File direct = new File(Environment.getExternalStorageDirectory().toString() + "/.assessmentInternal");
-            if (!direct.exists()) direct.mkdir();
+            if (!direct.exists()) direct.mkdirs();
 
             InputStream in = new FileInputStream(Assessment_Constants.ext_path + Assessment_Constants.ASSESSMENT_FOLDER_PATH + AppDatabase.DB_NAME);
 //            InputStream in = assetManager.open("assessData.zip");
