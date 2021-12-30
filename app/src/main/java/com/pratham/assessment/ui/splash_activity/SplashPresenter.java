@@ -422,8 +422,6 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                 @Override
                 protected Void doInBackground(Void... voids) {
                     try {
-                        ArrayList<String> sdPath = FileUtils.getExtSdCardPaths(context);
-//                        SQLiteDatabase db = SQLiteDatabase.openDatabase(sdPath.get(0) + "/.Assessment/offline_assessment_database.db", null, SQLiteDatabase.OPEN_READONLY);
                         SQLiteDatabase db = SQLiteDatabase.openDatabase(getStoragePath() + "/PrathamBackups/offline_assessment_database.db", null, SQLiteDatabase.OPEN_READONLY);
                         if (db != null) {
                             try {
@@ -449,7 +447,8 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                         paperPattern.setOutofmarks(content_cursor.getString(content_cursor.getColumnIndex("outofmarks")));
                                         paperPattern.setExamid(content_cursor.getString(content_cursor.getColumnIndex("examid")));
                                         paperPattern.setSubjectid(content_cursor.getString(content_cursor.getColumnIndex("subjectid")));
-                                        paperPattern.setIsRandom((content_cursor.getInt(content_cursor.getColumnIndex("IsRandom"))) == 1 ? true : false);
+                                        paperPattern.setIsRandom((content_cursor.getInt(content_cursor.getColumnIndex("IsRandom"))) == 1);
+                                        paperPattern.setDiagnosticTest((content_cursor.getInt(content_cursor.getColumnIndex("isDiagnosticTest"))) == 1);
                                         paperPattern.setNoofcertificateq(content_cursor.getString(content_cursor.getColumnIndex("noofcertificateq")));
                                         paperPattern.setExammode(content_cursor.getString(content_cursor.getColumnIndex("exammode")));
                                         paperPatternList.add(paperPattern);
@@ -556,14 +555,14 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                         scienceQuestion.setRevisitedEndTime(content_cursor.getString(content_cursor.getColumnIndex("revisitedEndTime")));
                                         scienceQuestion.setMarksPerQuestion(content_cursor.getString(content_cursor.getColumnIndex("marksPerQuestion")));
                                         scienceQuestion.setPaperid(content_cursor.getString(content_cursor.getColumnIndex("paperid")));
+                                        scienceQuestion.setIsAttempted((content_cursor.getInt(content_cursor.getColumnIndex("isAttempted"))) == 1 ? true : false);
+                                        scienceQuestion.setIsCorrect((content_cursor.getInt(content_cursor.getColumnIndex("isCorrect"))) == 1 ? true : false);
+                                        scienceQuestion.setIsQuestionFromSDCard(true);
+                                        scienceQuestion.setIsParaQuestion(content_cursor.getInt((content_cursor.getColumnIndex("IsParaQuestion"))) == 1);
+                                        scienceQuestion.setRefParaID(content_cursor.getString(content_cursor.getColumnIndex("RefParaID")));
+                                        scienceQuestion.setAppVersion(content_cursor.getString(content_cursor.getColumnIndex("AppVersion")));
                                         scienceQuestion.setUserAnswerId(content_cursor.getString(content_cursor.getColumnIndex("userAnswerId")));
                                         scienceQuestion.setUserAnswer(content_cursor.getString(content_cursor.getColumnIndex("userAnswer")));
-                                        /*scienceQuestion.setIsAttempted((content_cursor.getInt(content_cursor.getColumnIndex("isAttempted"))) == 1 ? true : false);
-                                        scienceQuestion.setIsCorrect((content_cursor.getInt(content_cursor.getColumnIndex("isCorrect"))) == 1 ? true : false);
-                                        */
-                                        scienceQuestion.setIsQuestionFromSDCard(true);
-                                        scienceQuestion.setIsParaQuestion(content_cursor.getInt((content_cursor.getColumnIndex("IsParaQuestion"))) == 1 ? true : false);
-                                        scienceQuestion.setRefParaID(content_cursor.getString(content_cursor.getColumnIndex("RefParaID")));
 
                                         if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
                                             String[] splittedName = scienceQuestion.getPhotourl().split("/");
@@ -591,10 +590,10 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                 AppDatabase.getDatabaseInstance(context).getScienceQuestionDao().insertAllQuestions(scienceQuestionList);
                                 AppDatabase.getDatabaseInstance(context).getScienceQuestionDao().replaceNewLineForQuestions();
                                 AppDatabase.getDatabaseInstance(context).getScienceQuestionDao().replaceNewLineForQuestions2();
+
                                 content_cursor.close();
                                 tableCopyCount++;
-
-                              /*  if (DownloadMediaList.size() > 0) {
+/*  if (DownloadMediaList.size() > 0) {
                                     AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().insertAllMedia(DownloadMediaList);
                                 }*/
                             } catch (Exception e) {
@@ -614,6 +613,7 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                         scienceQuestionChoice.setCorrect(content_cursor.getString(content_cursor.getColumnIndex("correct")));
                                         scienceQuestionChoice.setMatchingurl(content_cursor.getString(content_cursor.getColumnIndex("matchingurl")));
                                         scienceQuestionChoice.setChoiceurl(content_cursor.getString(content_cursor.getColumnIndex("choiceurl")));
+                                        scienceQuestionChoice.setAppVersionChoice(content_cursor.getString(content_cursor.getColumnIndex("AppVersionChoice")));
 
                                         AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().deleteQuestionChoicesByQID(content_cursor.getString(content_cursor.getColumnIndex("qid")));
                                         if (content_cursor.getString(content_cursor.getColumnIndex("choiceurl")) != null && !content_cursor.getString(content_cursor.getColumnIndex("choiceurl")).equalsIgnoreCase("")) {
@@ -648,8 +648,8 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                 AppDatabase.getDatabaseInstance(context).getScienceQuestionChoicesDao().insertAllQuestionChoices(scienceQuestionChoiceList);
                                 content_cursor.close();
 //                                FastSave.getInstance().saveBoolean(Assessment_Constants.SDCARD_OFFLINE_PATH_SAVED, true);
+                                copySuccessful = true;
                                 tableCopyCount++;
-
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -672,7 +672,6 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                 AppDatabase.getDatabaseInstance(context).getLanguageDao().insertAllLanguages(languages);
                                 content_cursor.close();
                                 tableCopyCount++;
-
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -695,7 +694,6 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                                 AppDatabase.getDatabaseInstance(context).getSubjectDao().insertAllSubjects(subjects);
                                 content_cursor.close();
                                 tableCopyCount++;
-
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
