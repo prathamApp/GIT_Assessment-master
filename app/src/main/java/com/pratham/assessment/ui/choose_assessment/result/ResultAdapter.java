@@ -411,7 +411,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
                         setImage(correctAns, correctAns.getChoiceurl(), myViewHolder.image_correct_ans);
 //                            setImage(userAns, getImage(result.getUserAnswerId()), myViewHolder.image_you_answered);
                         myViewHolder.ll_correct_ans.setVisibility(View.VISIBLE);
-                        myViewHolder.tv_correctAnswer.setVisibility(View.GONE);
+                         myViewHolder.tv_correctAnswer.setVisibility(View.GONE);
 //                                myViewHolder.btnCorrectAnswer.setVisibility(View.VISIBLE);
                         myViewHolder.image_correct_ans.setVisibility(View.VISIBLE);
                     }
@@ -621,8 +621,8 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.MyViewHold
             view) {
 //        final String path = answer;
         String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), answer);
-        final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-
+//        = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+        final String localPath = Assessment_Utility.getOptionLocalPath(scienceQuestionChoice, scienceQuestionChoice.getIsQuestionFromSDCard());
         String extension = getFileExtension(localPath);
 
         if (extension.equalsIgnoreCase("gif")) {

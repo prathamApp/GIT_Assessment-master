@@ -88,8 +88,12 @@ public class MatchPairDragDropAdapter extends RecyclerView.Adapter<MatchPairDrag
             if (scienceQuestionChoice.getMatchingurl() != null && !scienceQuestionChoice.getMatchingurl().equalsIgnoreCase("")) {
 
                 String fileName = Assessment_Utility.getFileName(scienceQuestionChoice.getQid(), scienceQuestionChoice.getMatchingurl());
-                final String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
-
+//                 = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
+                String localPath;
+                if (scienceQuestionChoice.getIsQuestionFromSDCard())
+                    localPath = scienceQuestionChoice.getMatchingurl();
+                else
+                    localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 
 //                holder.iv_choice_image.setVisibility(View.VISIBLE);
                 holder.rl_img.setVisibility(View.VISIBLE);
@@ -298,7 +302,7 @@ public class MatchPairDragDropAdapter extends RecyclerView.Adapter<MatchPairDrag
             Log.d("sss", draggedList.toString());
 //        dragDropListener.setList(draggedList, data.get(0).getQid());
 //        questionTypeListener.setAnswer("", "", data.get(0).getQid(), draggedList);
-            assessmentAnswerListener.setAnswerInActivity("", data.get(0).getQid(), draggedList,0);
+            assessmentAnswerListener.setAnswerInActivity("", data.get(0).getQid(), draggedList, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }

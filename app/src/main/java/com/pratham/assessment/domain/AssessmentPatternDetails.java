@@ -28,6 +28,11 @@ public class AssessmentPatternDetails {
 
     private String keyworddetail;
 
+    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    private int patternId;
+
+    private String qtid;
     public String getExamId() {
         return examId;
     }
@@ -37,11 +42,7 @@ public class AssessmentPatternDetails {
     }
 
 
-    @NonNull
-    @PrimaryKey(autoGenerate = true)
-    private int patternId;
 
-    private String qtid;
 
     public int getPatternId() {
         return patternId;
