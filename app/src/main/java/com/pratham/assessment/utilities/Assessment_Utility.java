@@ -273,11 +273,20 @@ public class Assessment_Utility {
             case "bengali":
                 langCode = "10";
                 break;
+           case "punjabi":
+                langCode = "11";
+                break;
             case "odia":
                 langCode = "12";
                 break;
+            case "tamil":
+                langCode = "13";
+                break;
             case "telugu":
                 langCode = "14";
+                break;
+           case "urdu":
+                langCode = "15";
                 break;
             case "english":
             default:
@@ -728,6 +737,8 @@ public class Assessment_Utility {
             lang = "ml";
         if (lang.equalsIgnoreCase("Assamese"))
             lang = "as";
+        if (lang.equalsIgnoreCase("urdu"))
+            lang = "ur";
 
      /*   Locale myLocale = new Locale(lang);
         Locale.setDefault(myLocale);*/
