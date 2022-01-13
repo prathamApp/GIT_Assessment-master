@@ -47,7 +47,6 @@ import android.widget.Toast;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.DownloadListener;
-import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -104,7 +103,6 @@ import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.V
 import com.pratham.assessment.ui.splash_activity.SplashPresenter;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.PermissionUtils;
-import com.pratham.atm.custom.LockNavigation.PinActivity;
 import com.robinhood.ticker.TickerView;
 
 import org.androidannotations.annotations.AfterViews;
@@ -113,6 +111,8 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -148,6 +148,7 @@ import static com.pratham.assessment.constants.Assessment_Constants.TEXT_PARAGRA
 import static com.pratham.assessment.constants.Assessment_Constants.TRUE_FALSE;
 import static com.pratham.assessment.constants.Assessment_Constants.VIDEO;
 import static com.pratham.assessment.constants.Assessment_Constants.VIDEOMONITORING;
+import static com.pratham.assessment.utilities.Assessment_Utility.checkConnectedToRPI;
 import static com.pratham.assessment.utilities.Assessment_Utility.copyFileUsingStream;
 import static com.pratham.assessment.utilities.Assessment_Utility.setLocaleByLanguageId;
 
@@ -253,7 +254,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
     BottomQuestionFragment bottomQuestionFragment;
 
-    PinActivity pinActivity;
+//    PinActivity pinActivity;
 
     @Bean(PushDataToServer.class)
     PushDataToServer pushDataToServer;
@@ -279,7 +280,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         selectedLang = FastSave.getInstance().getString(LANGUAGE, "1");
         subjectId = FastSave.getInstance().getString("SELECTED_SUBJECT_ID", "1");
         currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
-        pinActivity = new PinActivity();
+//        pinActivity = new PinActivity();
         context = this;
 
         tv_app_version.setText("App version : " + Assessment_Utility.getCurrentVersion(this));
@@ -314,14 +315,15 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             Bundle bundle;
             bundle = this.getIntent().getExtras();
             assert bundle != null;
-            String studId = String.valueOf(bundle.getString("studentId"));
-            redirectedFromApp = String.valueOf(bundle.getString("appName"));
-            String studName = String.valueOf(bundle.getString("studentName"));
-            String subject = String.valueOf(bundle.getString("subjectName"));
-            String language = String.valueOf(bundle.getString("subjectLanguage"));
-            String subLevel = String.valueOf(bundle.getString("subjectLevel"));
-            String examId = String.valueOf(bundle.getString("examId"));
-            redirectedAppSessionId = String.valueOf(bundle.getString("currentSessionId"));
+
+            String studId = (bundle.getString("studentId"));
+            redirectedFromApp = (bundle.getString("appName"));
+            String studName = (bundle.getString("studentName"));
+            String subject = (bundle.getString("subjectName"));
+            String language = (bundle.getString("subjectLanguage"));
+            String subLevel = (bundle.getString("subjectLevel"));
+            String examId = (bundle.getString("examId"));
+            redirectedAppSessionId = (bundle.getString("currentSessionId"));
 
             String currentSession = UUID.randomUUID().toString();
             Session startSession = new Session();
@@ -414,7 +416,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 ScienceQuestion scienceQuestion = (ScienceQuestion) iterator.next();
                 if (scienceQuestion.getQid().equalsIgnoreCase(qid))
                     iterator.remove();
-
             }*/
       /*  }
         for (int i = 0; i < attemptedList.size(); i++) {*/
@@ -505,17 +506,36 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     }
 
     private void downloadQuestions(final String topicId) {
-        String questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + selectedLang + "&subjectid=" + subjectId + "&topicid=" + topicId;
+        String questionUrl;
+        boolean isRPI = checkConnectedToRPI();
+        if (isRPI)
+            questionUrl = APIs.AssessmentQuestionAPIRPI + "languageid=" + selectedLang + "&subjectid=" + subjectId + "&topicid=" + topicId;
+        else
+            questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + selectedLang + "&subjectid=" + subjectId + "&topicid=" + topicId;
+//        String questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + selectedLang + "&subjectid=" + subjectId + "&topicid=" + topicId; progressDialog.show();
         progressDialog.show();
         progressDialog.setMessage(getString(R.string.loading_please_wait));
         AndroidNetworking.get(questionUrl)
                 .build()
-                .getAsJSONArray(new JSONArrayRequestListener() {
+                .getAsString(new StringRequestListener() {
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(String response) {
 //                        progressDialog.dismiss();
+                        JSONArray jsonArray = new JSONArray();
+
                         if (response.length() > 0) {
-                            insertQuestionsToDB(response);
+                            try {
+                                if (!isRPI) {
+                                    jsonArray = new JSONArray(response);
+                                } else {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    jsonArray = jsonObject.getJSONArray("results");
+                                }
+                                insertQuestionsToDB(jsonArray);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+//                            insertQuestionsToDB(jsonArray);
                             queDownloadIndex++;
                             if (queDownloadIndex < topicIdList.size()) {
                                 if (downloadFailedExamList.size() == 0)
@@ -567,19 +587,41 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     }
 
     private void downloadPaperPattern() {
-        if (progressDialog != null)
-            progressDialog.show();
+        String url = "";
+        boolean isRPI = checkConnectedToRPI();
+        if (isRPI)
+            url = APIs.AssessmentPaperPatternAPIRPI + selectedExamId;
+        else
+            url = APIs.AssessmentPaperPatternAPI + selectedExamId;
+        progressDialog = new ProgressDialog(context);
+        progressDialog.show();
         progressDialog.setMessage(getString(R.string.downloading_paper_pattern));
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
 //        progressDialog.show();
-        AndroidNetworking.get(APIs.AssessmentPaperPatternAPI + selectedExamId)
+        AndroidNetworking.get(url)
                 .build()
                 .getAsString(new StringRequestListener() {
                     @Override
                     public void onResponse(String response) {
                         Gson gson = new Gson();
-                        AssessmentPaperPattern assessmentPaperPattern = gson.fromJson(response, AssessmentPaperPattern.class);
+                        JSONArray jsonArray;
+                        AssessmentPaperPattern assessmentPaperPattern = new AssessmentPaperPattern();
+                        if (!isRPI)
+                            assessmentPaperPattern = gson.fromJson(response, AssessmentPaperPattern.class);
+                        else {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                jsonArray = jsonObject.getJSONArray("results");
+                                JSONObject jsonObject2 = (JSONObject) jsonArray.get(0);
+//                                jsonObject2.put("pattern", jsonArray);
+                               /* Type listType = new TypeToken<AssessmentPaperPattern>() {
+                                }.getType();*/
+                                assessmentPaperPattern = gson.fromJson(String.valueOf(jsonObject2), AssessmentPaperPattern.class);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                         if (assessmentPaperPattern != null) {
                             AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPaperPatternDao().insertPaperPattern(assessmentPaperPattern);
                             if (assessmentPaperPattern.getSubjectid() != null && !assessmentPaperPattern.getSubjectid().equalsIgnoreCase("")) {
@@ -619,7 +661,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             progressDialog.dismiss();
 //                            for (int i = 0; i < examIDList.size(); i++) {
                         List<String> topicsList = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this)
-                                .getAssessmentPatternDetailsDao().getTopicsByExamId(selectedExamId);
+                                .getAssessmentPatternDetailsDao().getDistinctTopicsByExamId(selectedExamId);
                         for (int j = 0; j < topicsList.size(); j++) {
                             if (!topicIdList.contains(topicsList.get(j)))
                                 topicIdList.add(topicsList.get(j));
@@ -641,7 +683,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 (ScienceAssessmentActivity.this).getTestDao().getExamNameById(selectedExamId));
                         paperPatternCnt++;
                       /*  if (paperPatternCnt < examIDList.size()) {
-
                             downloadPaperPattern(examIDList.get(paperPatternCnt), langId, subId);
                         } else {*/
                         if (progressDialog != null && isActivityRunning && progressDialog.isShowing())
@@ -672,7 +713,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     dialog.dismiss();
                     for (int i = 0; i < examIDList.size(); i++) {
                         List<String> topicsList = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this)
-                                .getAssessmentPatternDetailsDao().getTopicsByExamId(examIDList.get(i));
+                                .getAssessmentPatternDetailsDao().getDistinctTopicsByExamId(examIDList.get(i));
                         for (int j = 0; j < topicsList.size(); j++) {
                             if (topicIdList.contains(topicsList.get(j)))
                                 topicIdList.add(topicsList.get(j));
@@ -706,7 +747,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
     }
 
-    private void refreshExam(JSONArray response) {
+    private void reloadExam(JSONArray response) {
         try {
             Gson gson = new Gson();
             String jsonOutput = response.toString();
@@ -714,7 +755,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             }.getType();
             List<ScienceQuestion> scienceQuestionList = gson.fromJson(jsonOutput, listType);
             Log.d("hhh", scienceQuestionList.toString());
-
+            boolean isRPI = Assessment_Utility.checkConnectedToRPI();
             if (scienceQuestionList.size() > 0) {
                 AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().deleteByLangIdSubIdTopicId(scienceQuestionList.get(0).getTopicid(), selectedLang, Assessment_Constants.SELECTED_SUBJECT_ID);
                 for (int i = 0; i < scienceQuestionList.size(); i++) {
@@ -726,6 +767,16 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             AppDatabase.getDatabaseInstance(this).getScienceQuestionChoicesDao().replaceNewLineForQuestionOptionChoiceNames();
                             AppDatabase.getDatabaseInstance(this).getScienceQuestionChoicesDao().replaceNewLineForQuestionOptionMatchingNames();
                             for (int j = 0; j < choiceList.size(); j++) {
+                                if (isRPI)
+                                    if (!choiceList.get(j).getLocalChoiceUrl().equalsIgnoreCase("")) {
+                                        DownloadMedia downloadMedia = new DownloadMedia();
+                                        downloadMedia.setPhotoUrl(choiceList.get(j).getLocalChoiceUrl());
+                                        downloadMedia.setqId(scienceQuestionList.get(i).getQid());
+                                        downloadMedia.setQtId(scienceQuestionList.get(i).getQtid());
+                                        downloadMedia.setPaperId(assessmentSession);
+                                        downloadMedia.setMediaType("optionImage");
+                                        downloadMediaList.add(downloadMedia);
+                                    }
                                 if (!choiceList.get(j).getChoiceurl().equalsIgnoreCase("")) {
                                     DownloadMedia downloadMedia = new DownloadMedia();
                                     downloadMedia.setPhotoUrl(choiceList.get(j).getChoiceurl());
@@ -735,6 +786,16 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                     downloadMedia.setMediaType("optionImage");
                                     downloadMediaList.add(downloadMedia);
                                 }
+                                if (isRPI)
+                                    if (!choiceList.get(j).getLocalMatchUrl().equalsIgnoreCase("")) {
+                                        DownloadMedia downloadMedia = new DownloadMedia();
+                                        downloadMedia.setPhotoUrl(choiceList.get(j).getLocalMatchUrl());
+                                        downloadMedia.setqId(scienceQuestionList.get(i).getQid());
+                                        downloadMedia.setQtId(scienceQuestionList.get(i).getQtid());
+                                        downloadMedia.setPaperId(assessmentSession);
+                                        downloadMedia.setMediaType("optionImage");
+                                        downloadMediaList.add(downloadMedia);
+                                    }
                                 if (!choiceList.get(j).getMatchingurl().equalsIgnoreCase("")) {
                                     DownloadMedia downloadMedia = new DownloadMedia();
                                     downloadMedia.setPhotoUrl(choiceList.get(j).getMatchingurl());
@@ -748,6 +809,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                     if (choiceList.get(j).getCorrect().equalsIgnoreCase("true")) {
                                         if (choiceList.get(j).getChoiceurl().equalsIgnoreCase(""))
                                             scienceQuestionList.get(i).setAnswer(choiceList.get(j).getChoicename());
+                                        if (choiceList.get(j).getLocalChoiceUrl().equalsIgnoreCase(""))
+                                            scienceQuestionList.get(i).setAnswer(choiceList.get(j).getChoicename());
                                     }
                                 }
                                 if (scienceQuestionList.get(i).getQtid().equalsIgnoreCase(TRUE_FALSE)) {
@@ -758,10 +821,16 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             }
                         }
                     }
-                    AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().insertAllQuestions(scienceQuestionList);
-                    AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().replaceNewLineForQuestions();
-                    AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().replaceNewLineForQuestions2();
-
+                    if (isRPI)
+                        if (!scienceQuestionList.get(i).getLocalPhotoUrl().equalsIgnoreCase("")) {
+                            DownloadMedia downloadMedia = new DownloadMedia();
+                            downloadMedia.setPhotoUrl(Assessment_Constants.loadOnlineImagePath + scienceQuestionList.get(i).getLocalPhotoUrl());
+                            downloadMedia.setqId(scienceQuestionList.get(i).getQid());
+                            downloadMedia.setQtId(scienceQuestionList.get(i).getQtid());
+                            downloadMedia.setMediaType("questionImage");
+                            downloadMedia.setPaperId(assessmentSession);
+                            downloadMediaList.add(downloadMedia);
+                        }
                     if (!scienceQuestionList.get(i).getPhotourl().equalsIgnoreCase("")) {
                         DownloadMedia downloadMedia = new DownloadMedia();
                         downloadMedia.setPhotoUrl(Assessment_Constants.loadOnlineImagePath + scienceQuestionList.get(i).getPhotourl());
@@ -772,6 +841,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         downloadMediaList.add(downloadMedia);
                     }
                 }
+                AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().insertAllQuestions(scienceQuestionList);
+                AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().replaceNewLineForQuestions();
+                AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().replaceNewLineForQuestions2();
+
             }
             BackupDatabase.backup(this);
         } catch (Exception e) {
@@ -782,6 +855,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
     private void insertQuestionsToDB(JSONArray response) {
         try {
+            boolean isRPI = checkConnectedToRPI();
             Gson gson = new Gson();
             String jsonOutput = response.toString();
             Type listType = new TypeToken<List<ScienceQuestion>>() {
@@ -800,14 +874,26 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         Log.d("insertQuestionsToDBpp", "insertQuestionsToDB: " + question.getQid());
                         AppDatabase.getDatabaseInstance(this).getScienceQuestionDao().insert(question);
                         updateTempQuestion(question);
-                        if (!question.getPhotourl().equalsIgnoreCase("")) {
-                            DownloadMedia downloadMedia = new DownloadMedia();
-                            downloadMedia.setPhotoUrl(scienceQuestionList.get(i).getPhotourl());
-                            downloadMedia.setqId(scienceQuestionList.get(i).getQid());
-                            downloadMedia.setQtId(scienceQuestionList.get(i).getQtid());
-                            downloadMedia.setMediaType("questionImage");
-                            downloadMedia.setPaperId(assessmentSession);
-                            downloadMediaList.add(downloadMedia);
+                        if (isRPI) {
+                            if (!question.getLocalPhotoUrl().equalsIgnoreCase("")) {
+                                DownloadMedia downloadMedia = new DownloadMedia();
+                                downloadMedia.setPhotoUrl(scienceQuestionList.get(i).getLocalPhotoUrl());
+                                downloadMedia.setqId(scienceQuestionList.get(i).getQid());
+                                downloadMedia.setQtId(scienceQuestionList.get(i).getQtid());
+                                downloadMedia.setMediaType("questionImage");
+                                downloadMedia.setPaperId(assessmentSession);
+                                downloadMediaList.add(downloadMedia);
+                            }
+                        } else {
+                            if (!question.getPhotourl().equalsIgnoreCase("")) {
+                                DownloadMedia downloadMedia = new DownloadMedia();
+                                downloadMedia.setPhotoUrl(scienceQuestionList.get(i).getPhotourl());
+                                downloadMedia.setqId(scienceQuestionList.get(i).getQid());
+                                downloadMedia.setQtId(scienceQuestionList.get(i).getQtid());
+                                downloadMedia.setMediaType("questionImage");
+                                downloadMedia.setPaperId(assessmentSession);
+                                downloadMediaList.add(downloadMedia);
+                            }
                         }
                     }
                     if (question.getLstquestionchoice().size() > 0) {
@@ -819,23 +905,47 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                         .getQuestionChoicesByQcID(choice.getQcid());
                                 if (scienceQuestionChoice == null || !scienceQuestionChoice
                                         .getAppVersionChoice().equalsIgnoreCase(choice.getAppVersionChoice())) {
-                                    if (!choiceList.get(j).getChoiceurl().equalsIgnoreCase("")) {
-                                        DownloadMedia downloadMedia = new DownloadMedia();
-                                        downloadMedia.setPhotoUrl(choiceList.get(j).getChoiceurl());
-                                        downloadMedia.setqId(scienceQuestionList.get(i).getQid());
-                                        downloadMedia.setQtId(scienceQuestionList.get(i).getQtid());
-                                        downloadMedia.setPaperId(assessmentSession);
-                                        downloadMedia.setMediaType("optionImage");
-                                        downloadMediaList.add(downloadMedia);
+                                    if (isRPI) {
+                                        if (!choiceList.get(j).getLocalChoiceUrl().equalsIgnoreCase("")) {
+                                            DownloadMedia downloadMedia = new DownloadMedia();
+                                            downloadMedia.setPhotoUrl(choiceList.get(j).getLocalChoiceUrl());
+                                            downloadMedia.setqId(scienceQuestionList.get(i).getQid());
+                                            downloadMedia.setQtId(scienceQuestionList.get(i).getQtid());
+                                            downloadMedia.setPaperId(assessmentSession);
+                                            downloadMedia.setMediaType("optionImage");
+                                            downloadMediaList.add(downloadMedia);
+                                        }
+                                    } else {
+                                        if (!choiceList.get(j).getChoiceurl().equalsIgnoreCase("")) {
+                                            DownloadMedia downloadMedia = new DownloadMedia();
+                                            downloadMedia.setPhotoUrl(choiceList.get(j).getChoiceurl());
+                                            downloadMedia.setqId(scienceQuestionList.get(i).getQid());
+                                            downloadMedia.setQtId(scienceQuestionList.get(i).getQtid());
+                                            downloadMedia.setPaperId(assessmentSession);
+                                            downloadMedia.setMediaType("optionImage");
+                                            downloadMediaList.add(downloadMedia);
+                                        }
                                     }
-                                    if (!choiceList.get(j).getMatchingurl().equalsIgnoreCase("")) {
-                                        DownloadMedia downloadMedia = new DownloadMedia();
-                                        downloadMedia.setPhotoUrl(choiceList.get(j).getMatchingurl());
-                                        downloadMedia.setqId(scienceQuestionList.get(i).getQid());
-                                        downloadMedia.setQtId(scienceQuestionList.get(i).getQtid());
-                                        downloadMedia.setPaperId(assessmentSession);
-                                        downloadMedia.setMediaType("optionImage");
-                                        downloadMediaList.add(downloadMedia);
+                                    if (isRPI) {
+                                        if (!choiceList.get(j).getLocalMatchUrl().equalsIgnoreCase("")) {
+                                            DownloadMedia downloadMedia = new DownloadMedia();
+                                            downloadMedia.setPhotoUrl(choiceList.get(j).getLocalMatchUrl());
+                                            downloadMedia.setqId(scienceQuestionList.get(i).getQid());
+                                            downloadMedia.setQtId(scienceQuestionList.get(i).getQtid());
+                                            downloadMedia.setPaperId(assessmentSession);
+                                            downloadMedia.setMediaType("optionImage");
+                                            downloadMediaList.add(downloadMedia);
+                                        }
+                                    } else {
+                                        if (!choiceList.get(j).getMatchingurl().equalsIgnoreCase("")) {
+                                            DownloadMedia downloadMedia = new DownloadMedia();
+                                            downloadMedia.setPhotoUrl(choiceList.get(j).getMatchingurl());
+                                            downloadMedia.setqId(scienceQuestionList.get(i).getQid());
+                                            downloadMedia.setQtId(scienceQuestionList.get(i).getQtid());
+                                            downloadMedia.setPaperId(assessmentSession);
+                                            downloadMedia.setMediaType("optionImage");
+                                            downloadMediaList.add(downloadMedia);
+                                        }
                                     }
                                     if (scienceQuestionList.get(i).getQtid().equalsIgnoreCase(MULTIPLE_CHOICE)) {
                                         if (choiceList.get(j).getCorrect().equalsIgnoreCase("true")) {
@@ -1127,7 +1237,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                     subjectId, assessmentPatternDetails.get(j).getTopicid(),
                                     assessmentPatternDetails.get(j).getQtid(), assessmentPatternDetails.get(j).getQlevel(),
                                     noOfQues, "%");
-
                         }*/
 
                         if (scienceQuestions.size() > 0) {
@@ -1411,7 +1520,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     }
 
     private void callSupervisedExam() {
-        pinActivity = new PinActivity();
+//        pinActivity = new PinActivity();
 //                pinActivity.init(this, getApplication());
         frame_supervisor.setVisibility(View.VISIBLE);
         rl_exam_info.setVisibility(View.GONE);
@@ -1583,7 +1692,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 //                    startCameraService();
                /* if (!Assessment_Utility.isCameraBusy() && isActivityRunning) {
                     showToast("Starting capture!");
-
                     imgFileName = assessmentSession + "_" + Assessment_Utility.getCurrentDateTime() + "_" + DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING + ".jpg";
                     imgFileName = imgFileName.replaceAll("[\\\\/:*?\"<>|]", "_");
                     String videoPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_VIDEO_MONITORING_PATH + "/" + imgFileName;
@@ -1749,22 +1857,18 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 *//*if (position < -1) { // [-Infinity,-1)
                     // This page is way off-screen to the left.
                     view.setAlpha(0);
-
                 } else*//*
                 if (position <= 1) { // [-1,1]
                     view.setAlpha(1);
                     // Counteract the default slide transition
                     view.setTranslationX(view.getWidth() * -position);
-
                     //set Y position to swipe in from top s
                     float yPosition = position * view.getHeight();
                     view.setTranslationY(yPosition);
-
                 } else { // (1,+Infinity]
                     // This page is way off-screen to the right.
                     view.setAlpha(0);
                 }
-
             }
         });*/
 
@@ -1779,7 +1883,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 .setMinScale(0.5f)
                 .build());
 //            discreteScrollView.setAdapter(scienceAdapter);
-
         discreteScrollView.addScrollListener(new DiscreteScrollView.ScrollListener<RecyclerView.ViewHolder>() {
             @Override
             public void onScroll(float scrollPosition, int currentPosition, int newPosition, @Nullable RecyclerView.ViewHolder currentHolder, @Nullable RecyclerView.ViewHolder newCurrent) {
@@ -1794,12 +1897,9 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 //                queCnt = adapterPosition + 1;
                 currentCount.setText(queCnt + "/" + scienceQuestionList.size());
                 currentViewHolder = viewHolder;
-
                 Assessment_Utility.HideInputKeypad(ScienceAssessmentActivity.this);
 //                    step_view.go(adapterPosition, true);
-
             }
-
         });*/
 //            scienceAdapter.notifyDataSetChanged();
 //        }
@@ -1838,7 +1938,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     if (scienceQuestionList.size() == (queCnt + 1)) {
                         btn_submit.setVisibility(View.VISIBLE);
                         dots_indicator.setVisibility(View.GONE);
-
                     }
                 }*/
                 showSubmit = true;
@@ -1989,7 +2088,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             Log.d("tk", "onTick: " + imgCaptureTime);
 
                            /* if (imgCaptureCnt == 0) {
-
                                 captureInterval = ExamTime - captureTime;
                             }*/
 //                            if (imgCaptureCnt < 3) {
@@ -2290,7 +2388,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         if (isParaQuestion) {
             iv_question_mark.setVisibility(View.VISIBLE);
         } else iv_question_mark.setVisibility(View.GONE);
-
     }*/
 
 
@@ -2298,17 +2395,14 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
       public void setImageCaptureResult(final ScienceQuestion scienceQuestion) {
           final ChooseImageDialog chooseImageDialog = new ChooseImageDialog(this);
           imageFileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + ".jpg";
-
   //            String path = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Answers/" + fileName;
           imageFilePath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH;
-
           chooseImageDialog.btn_take_photo.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v2) {
                   chooseImageDialog.cancel();
                   if ((Build.VER    SION.SDK_INT >= Build.VERSION_CODES.M)) {
                       String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA};
-
                       if (!isPermissionsGranted(ScienceAssessmentActivity.this, permissionArray)) {
                           Toast.makeText(ScienceAssessmentActivity.this, "Give Camera permissions through settings and restart the app.", Toast.LENGTH_SHORT).show();
                       } else {
@@ -2327,14 +2421,12 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                   }
               }
           });
-
           chooseImageDialog.btn_choose_from_gallery.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {
                   chooseImageDialog.cancel();
                   if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
                       String[] permissionArray = new String[]{PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE};
-
                       if (!isPermissionsGranted(ScienceAssessmentActivity.this, permissionArray)) {
                           Toast.makeText(ScienceAssessmentActivity.this, "Give Storage permissions through settings and restart the app.", Toast.LENGTH_SHORT).show();
                       } else {
@@ -2365,7 +2457,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
          if (hasCamera()) {
              if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
                  String[] permissionArray = new String[]{PermissionUtils.Manifest_CAMERA};
-
                  if (!isPermissionsGranted(this, permissionArray)) {
                      Toast.makeText(this, "Give Camera permissions through settings and restart the app.", Toast.LENGTH_LONG).show();
                  } else {
@@ -2379,7 +2470,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
              } else {
                  videoName = scienceQuestion.getPaperid() + "_" + scienceQuestion.getQid() + ".mp4";
                  scienceQuestion.setUserAnswer(videoName);
-
  //                Intent takePicture = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
                  intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 3 * 60);
  //                startActivityForResult(intent, VIDEO_CAPTURE);
@@ -2388,7 +2478,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
              Toast.makeText(this, "Camera not found", Toast.LENGTH_LONG).show();
          }
          filePath = AssessmentApplication.assessPath + Assessment_Constants.STORE_ANSWER_MEDIA_PATH + "/" + videoName;
-
          startActivityForResult(intent, videoCapture);
      }
  */
@@ -2820,8 +2909,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 ft.attach(currentFragment);
                 ft.commit();
             }
-
-
         } else {*/
         if (queCnt < scienceQuestionList.size() - 1)
             nextClick();
@@ -3556,7 +3643,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             }
             int count = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
                     getTempScienceQuestionDao().deleteByLangIdSubIdTopicIdPaperIdStudId(selectedExamId, selectedLang, subjectId, assessmentSession, currentStudentID);
-
             int count1 = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
                     getTempScienceQuestionDao().deleteByLangIdSubIdTopicIdStudId(selectedExamId, selectedLang, subjectId, currentStudentID);
             Log.d("delete count", "doInBackground: " + count + count1);
@@ -3633,7 +3719,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 video.setPhotoUrl(videoPath);
                 video.setPaperId(assessmentSession);
                 AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getDownloadMediaDao().insert(video);
-
             } else {
                 Assessment_Constants.VIDEOMONITORING = false;
                 texture_view.setVisibility(View.GONE);
@@ -3642,7 +3727,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 btn_save_Assessment.setVisibility(View.VISIBLE);
                 Toast.makeText(ScienceAssessmentActivity.this, "video monitoring not prepared", Toast.LENGTH_LONG).show();
             }
-
         }, 300);
     }*/
 
@@ -4523,7 +4607,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             }
             int count = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
                     getTempScienceQuestionDao().deleteByLangIdSubIdTopicIdPaperIdStudId(selectedExamId, selectedLang, subjectId, assessmentSession, currentStudentID);
-
             int count1 = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).
                     getTempScienceQuestionDao().deleteByLangIdSubIdTopicIdStudId(selectedExamId, selectedLang, subjectId, currentStudentID);
             Log.d("delete count", "doInBackground: " + count + count1);

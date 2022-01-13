@@ -230,6 +230,16 @@ public class APIs {
     public static String push_db_zip = baseAzureURL + "api/AssessmentDB/pushFiles";
 
 
+    //RPI
+    public static String baseAzureURLRPI = "http://192.168.4.1:8000/api/assessment/";
+
+    public static String AssessmentLanguageAPIRPI = baseAzureURLRPI + "GetLanguage/";
+    public static String AssessmentSubjectAPIRPI = baseAzureURLRPI + "GetSubjectv2/?languageid=";
+    public static String AssessmentExamAPIRPI = baseAzureURLRPI + "GetExamV2/?subjectid=";
+    public static String AssessmentPaperPatternAPIRPI = baseAzureURLRPI + "GetExamPattern/?examid=";
+    public static String AssessmentQuestionAPIRPI = baseAzureURLRPI + "GetQuestion?";
+
+
     //kolibri
     public static final String KOLIBRI_STATE = ",state:";
 

@@ -54,6 +54,7 @@ public class Assessment_Constants {
 
 
     public static final String PRATHAM_KOLIBRI_HOTSPOT = "prathamkolibri";
+    public static final String PRATHAM_RPI_HOTSPOT = "prathamDigital";
     public static String FACILITY_ID = "facility_id";
     public static final String USAGEDATA = "USAGEDATA";
     public static final String BASE_URL = "http://prodigi.openiscool.org/api/pos/";
@@ -218,6 +219,8 @@ public class Assessment_Constants {
         public String toString() {
             return name;
         }
+
+
 
     }
 }

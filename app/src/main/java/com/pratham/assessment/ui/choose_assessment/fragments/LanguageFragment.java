@@ -10,22 +10,25 @@ import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.androidnetworking.interfaces.StringRequestListener;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.APIs;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.ui.choose_assessment.choose_subject.ChooseAssessmentActivity;
-import com.pratham.assessment.constants.APIs;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.pratham.assessment.utilities.Assessment_Utility.checkConnectedToRPI;
 
 /*import butterknife.BindView;
 import butterknife.ButterKnife;*/
@@ -98,21 +101,33 @@ public class LanguageFragment extends Fragment {
 
 
     private void getLanguageData() {
+        String url = "";
+        boolean isRPI = checkConnectedToRPI();
+        if (isRPI)
+            url = APIs.AssessmentLanguageAPIRPI;
+        else url = APIs.AssessmentLanguageAPI;
         progressDialog.setMessage(getString(R.string.loading));
         progressDialog.setCancelable(false);
         progressDialog.show();
-        AndroidNetworking.get(APIs.AssessmentLanguageAPI)
+        AndroidNetworking.get(url)
                 .build()
-                .getAsJSONArray(new JSONArrayRequestListener() {
+                .getAsString(new StringRequestListener() {
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(String response) {
                         try {
                             progressDialog.dismiss();
+                            JSONArray jsonArray;
 
-                            for (int i = 0; i < response.length(); i++) {
+                            if (!isRPI) {
+                                jsonArray = new JSONArray(response);
+                            } else {
+                                JSONObject jsonObject = new JSONObject(response);
+                                jsonArray = jsonObject.getJSONArray("results");
+                            }
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 AssessmentLanguages assessmentLanguages = new AssessmentLanguages();
-                                assessmentLanguages.setLanguageid(response.getJSONObject(i).getString("languageid"));
-                                assessmentLanguages.setLanguagename(response.getJSONObject(i).getString("languagename"));
+                                assessmentLanguages.setLanguageid(jsonArray.getJSONObject(i).getString("languageid"));
+                                assessmentLanguages.setLanguagename(jsonArray.getJSONObject(i).getString("languagename"));
                                 assessmentLanguagesList.add(assessmentLanguages);
                             }
                             AppDatabase.getDatabaseInstance(getActivity()).getLanguageDao().insertAllLanguages(assessmentLanguagesList);

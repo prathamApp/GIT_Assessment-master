@@ -380,6 +380,7 @@ public class PushDataToServer {
             final MediaType MEDIA_TYPE_3GPP = MediaType.parse("audio/3gpp");
             final MediaType MEDIA_TYPE_M4A = MediaType.parse("audio/m4a");
             final MediaType MEDIA_TYPE_AMR = MediaType.parse("audio/amr");
+            final MediaType MEDIA_TYPE_WAV = MediaType.parse("audio/wav");
 
             MultipartBody.Builder builderNew = new MultipartBody.Builder().setType(MultipartBody.FORM);
 
@@ -409,6 +410,8 @@ public class PushDataToServer {
                         mediaType = MEDIA_TYPE_M4A;
                     else if (extension.equalsIgnoreCase("amr"))
                         mediaType = MEDIA_TYPE_AMR;
+                    else if (extension.equalsIgnoreCase("wav"))
+                        mediaType = MEDIA_TYPE_WAV;
                     builderNew.addFormDataPart(fileName, fileName, RequestBody.create(mediaType, f));
                 }
             }

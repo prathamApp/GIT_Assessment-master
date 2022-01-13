@@ -273,11 +273,20 @@ public class Assessment_Utility {
             case "bengali":
                 langCode = "10";
                 break;
+            case "punjabi":
+                langCode = "11";
+                break;
             case "odia":
                 langCode = "12";
                 break;
+            case "tamil":
+                langCode = "13";
+                break;
             case "telugu":
                 langCode = "14";
+                break;
+            case "urdu":
+                langCode = "15";
                 break;
             case "english":
             default:
@@ -728,6 +737,8 @@ public class Assessment_Utility {
             lang = "ml";
         if (lang.equalsIgnoreCase("Assamese"))
             lang = "as";
+        if (lang.equalsIgnoreCase("urdu"))
+            lang = "ur";
 
      /*   Locale myLocale = new Locale(lang);
         Locale.setDefault(myLocale);*/
@@ -934,6 +945,27 @@ public class Assessment_Utility {
             e.printStackTrace();
         }
     }
+
+    public static boolean checkConnectedToRPI() {
+        boolean isRPI = false;
+        if (AssessmentApplication.wiseF.isDeviceConnectedToWifiNetwork()) {
+            if (AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_RPI_HOTSPOT)) {
+                try {
+                    isRPI = true;
+                    /*JSONObject object = new JSONObject();
+                    object.put("username", "pratham");
+                    object.put("password", "pratham");
+                    new PD_ApiRequest(context, ContentPresenterImpl.this)
+                            .getacilityIdfromRaspberry(Assessment_Constants.FACILITY_ID, Assessment_Constants.RASP_IP + "/api/session/", object);*/
+                } catch (Exception e) {
+                    isRPI = false;
+                    e.printStackTrace();
+                }
+            }
+        } else isRPI = false;
+        return isRPI;
+    }
+
 
 
     /*public static void setFont(Context context, TextView view) {
@@ -2390,6 +2422,5 @@ public class Assessment_Utility {
         }
         return false;
     }
-
 
 }

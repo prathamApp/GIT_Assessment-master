@@ -31,9 +31,11 @@ import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.androidnetworking.interfaces.StringRequestListener;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
@@ -47,27 +49,28 @@ import com.pratham.assessment.ui.bottom_fragment.add_student.AvatarAdapter;
 import com.pratham.assessment.ui.bottom_fragment.add_student.AvatarClickListener;
 import com.pratham.assessment.ui.choose_assessment.choose_subject.ChooseAssessmentActivity;
 import com.pratham.assessment.ui.splash_activity.SplashActivity;
-import com.pratham.assessment.constants.APIs;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
+import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH;
+import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_PROGRAM_ID;
+import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
+import static com.pratham.assessment.utilities.Assessment_Utility.checkConnectedToRPI;
+
 /*
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 */
-
-import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH;
-import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_PROGRAM_ID;
-import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
 
 public class AddStudentFragment extends DialogFragment implements AvatarClickListener, AddStudentContract.AddStudentView {
 
@@ -555,22 +558,37 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
 
     private void getLanguageData() {
 //        progressDialog.setMessage(getString(R.string.loading));
+        String url = "";
+        boolean isRPI = checkConnectedToRPI();
+        if (isRPI)
+            url = APIs.AssessmentLanguageAPIRPI;
+        else url = APIs.AssessmentLanguageAPI;
         progressDialog.setMessage("Loading..");
         progressDialog.setCancelable(false);
         progressDialog.show();
-        AndroidNetworking.get(APIs.AssessmentLanguageAPI)
+        AndroidNetworking.get(url)
                 .build()
-                .getAsJSONArray(new JSONArrayRequestListener() {
+                .getAsString(new StringRequestListener() {
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(String response) {
                         try {
+
                             if (getActivity() != null && progressDialog != null && progressDialog.isShowing())
                                 progressDialog.dismiss();
 
-                            for (int i = 0; i < response.length(); i++) {
+                            JSONArray jsonArray;
+
+                            if (!isRPI) {
+                                jsonArray = new JSONArray(response);
+                            } else {
+                                JSONObject jsonObject = new JSONObject(response);
+                                jsonArray = jsonObject.getJSONArray("results");
+                            }
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 AssessmentLanguages assessmentLanguages = new AssessmentLanguages();
-                                assessmentLanguages.setLanguageid(response.getJSONObject(i).getString("languageid"));
-                                assessmentLanguages.setLanguagename(response.getJSONObject(i).getString("languagename"));
+                                assessmentLanguages.setLanguageid(jsonArray.getJSONObject(i).getString("languageid"));
+                                assessmentLanguages.setLanguagename(jsonArray.getJSONObject(i).getString("languagename"));
                                 assessmentLanguagesList.add(assessmentLanguages);
                             }
                             if (getActivity() != null)

@@ -30,7 +30,6 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.DownloadListener;
 import com.androidnetworking.interfaces.DownloadProgressListener;
-import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -60,6 +59,8 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.reflect.Type;
@@ -71,6 +72,7 @@ import java.util.UUID;
 
 import static com.pratham.assessment.constants.Assessment_Constants.EXAMID;
 import static com.pratham.assessment.constants.Assessment_Constants.MULTIPLE_CHOICE;
+import static com.pratham.assessment.utilities.Assessment_Utility.checkConnectedToRPI;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
 
 @EActivity(R.layout.activity_science_assessment)
@@ -231,19 +233,39 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
     private void downloadPaperPattern(/*final String examId, final String langId,
                                       final String subId*/) {
         String examId = FastSave.getInstance().getString(EXAMID, "");
+
+        String url = "";
+        boolean isRPI = checkConnectedToRPI();
+        if (isRPI)
+            url = APIs.AssessmentPaperPatternAPIRPI + examId;
+        else url = APIs.AssessmentPaperPatternAPI + examId;
         progressDialog.show();
         progressDialog.setMessage("Downloading paper pattern...");
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
 //        progressDialog.show();
 //        AndroidNetworking.get(APIs.AssessmentPaperPatternAPI + Assessment_Constants.SELECTED_EXAM_ID)
-        AndroidNetworking.get(APIs.AssessmentPaperPatternAPI + examId)
+        AndroidNetworking.get(url)
                 .build()
                 .getAsString(new StringRequestListener() {
                     @Override
                     public void onResponse(String response) {
                         Gson gson = new Gson();
-                        AssessmentPaperPattern assessmentPaperPattern = gson.fromJson(response, AssessmentPaperPattern.class);
+                        JSONArray jsonArray;
+                        AssessmentPaperPattern assessmentPaperPattern = new AssessmentPaperPattern();
+                        if (!isRPI)
+                            assessmentPaperPattern = gson.fromJson(response, AssessmentPaperPattern.class);
+                        else {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                jsonArray = jsonObject.getJSONArray("results");
+                                Type listType = new TypeToken<List<AssessmentPaperPattern>>() {
+                                }.getType();
+                                assessmentPaperPattern = gson.fromJson(String.valueOf(jsonArray), AssessmentPaperPattern.class);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         if (assessmentPaperPattern != null)
                             AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().insertPaperPattern(assessmentPaperPattern);
 
@@ -263,7 +285,7 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
                         progressDialog.dismiss();
 //                            for (int i = 0; i < examIDList.size(); i++) {
                         List<String> topicsList = AppDatabase.getDatabaseInstance(context)
-                                .getAssessmentPatternDetailsDao().getTopicsByExamId(examId);
+                                .getAssessmentPatternDetailsDao().getDistinctTopicsByExamId(examId);
                         for (int j = 0; j < topicsList.size(); j++) {
                             if (!topicIdList.contains(topicsList.get(j)))
                                 topicIdList.add(topicsList.get(j));
@@ -308,17 +330,34 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
     }
 
     private void downloadQuestions(final String topicId) {
-        String questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + Assessment_Constants.SELECTED_LANGUAGE + "&subjectid=" + subjectId + "&topicid=" + topicId;
+        String questionUrl;
+        boolean isRPI = checkConnectedToRPI();
+        if (isRPI)
+            questionUrl = APIs.AssessmentQuestionAPIRPI + "languageid=" + Assessment_Constants.SELECTED_LANGUAGE + "&subjectid=" + subjectId + "&topicid=" + topicId;
+        else
+            questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + Assessment_Constants.SELECTED_LANGUAGE + "&subjectid=" + subjectId + "&topicid=" + topicId;
         progressDialog.show();
         progressDialog.setMessage("Downloading questions...");
         AndroidNetworking.get(questionUrl)
                 .build()
-                .getAsJSONArray(new JSONArrayRequestListener() {
+                .getAsString(new StringRequestListener() {
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(String response) {
 //                        progressDialog.dismiss();
                         if (response.length() > 0) {
-                            insertQuestionsToDB(response);
+                            JSONArray jsonArray;
+
+                            try {
+                                if (!isRPI) {
+                                    jsonArray = new JSONArray(response);
+                                } else {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    jsonArray = jsonObject.getJSONArray("results");
+                                }
+                                insertQuestionsToDB(jsonArray);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             queDownloadIndex++;
                             if (queDownloadIndex < topicIdList.size()) {
                                 if (downloadFailedExamList.size() == 0)
@@ -599,7 +638,7 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
                         dialog.dismiss();
                         for (int i = 0; i < examIDList.size(); i++) {
                             List<String> topicsList = AppDatabase.getDatabaseInstance(context)
-                                    .getAssessmentPatternDetailsDao().getTopicsByExamId(examIDList.get(i));
+                                    .getAssessmentPatternDetailsDao().getDistinctTopicsByExamId(examIDList.get(i));
                             for (int j = 0; j < topicsList.size(); j++) {
                                 if (topicIdList.contains(topicsList.get(j)))
                                     topicIdList.add(topicsList.get(j));
