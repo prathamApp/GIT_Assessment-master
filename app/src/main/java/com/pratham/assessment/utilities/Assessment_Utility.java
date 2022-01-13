@@ -138,7 +138,6 @@ import java.util.regex.Pattern;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-
 public class Assessment_Utility {
     private static List<Integer> colors;
     public static Integer selectedColor = 0;
@@ -273,7 +272,7 @@ public class Assessment_Utility {
             case "bengali":
                 langCode = "10";
                 break;
-           case "punjabi":
+            case "punjabi":
                 langCode = "11";
                 break;
             case "odia":
@@ -285,7 +284,7 @@ public class Assessment_Utility {
             case "telugu":
                 langCode = "14";
                 break;
-           case "urdu":
+            case "urdu":
                 langCode = "15";
                 break;
             case "english":
