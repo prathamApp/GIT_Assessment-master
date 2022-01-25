@@ -59,10 +59,16 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.MyView
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Student studentAvatar = studentAvatarList.get(position);
         if (studentAvatar.getIsniosstudent() != null) {
-            if (studentAvatar.getIsniosstudent().equalsIgnoreCase("1"))
-                holder.studentName.setText(Html.fromHtml(studentAvatar.getFullName() + "\n" + studentAvatar.getStudentID()));
-            else holder.studentName.setText(Html.fromHtml(studentAvatar.getFullName()));
-        } else holder.studentName.setText(Html.fromHtml(studentAvatar.getFullName()));
+            if (studentAvatar.getIsniosstudent().equalsIgnoreCase("1")) {
+                if (studentAvatar.getLastName() != null && !studentAvatar.getLastName().equalsIgnoreCase(""))
+                    holder.studentName.setText(Html.fromHtml("<b>" +
+                            studentAvatar.getFullName() + "</b>\n" + studentAvatar.getLastName()));//enrollment id saved in last name
+                else
+                    holder.studentName.setText(Html.fromHtml("<b>" + studentAvatar.getFullName() + "</b>"));
+            } else
+                holder.studentName.setText(Html.fromHtml("<b>" + studentAvatar.getFullName() + "</b>"));
+        } else
+            holder.studentName.setText(Html.fromHtml("<b>" + studentAvatar.getFullName() + "</b>"));
 
        /* int imgId= Integer.parseInt(studentAvatar.getAvatarName());
         holder.avatar.setImageResource(imgId);*/

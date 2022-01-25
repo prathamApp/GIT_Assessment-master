@@ -4,8 +4,7 @@
     style="@style/AppModalStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialog_top"
-    android:paddingBottom="@dimen/_10sdp">
+    android:background="@drawable/dialog_top">
 
     <!--   <com.pratham.assessment.talkbot.custom.fonts.SansButton
            android:id="@+id/btn_download_all_data"
@@ -26,10 +25,11 @@
          android:layout_height="wrap_content">-->
 
     <RelativeLayout
+        android:id="@+id/rl_students"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_5sdp"
-        android:layout_marginBottom="@dimen/_7sdp">
+        android:layout_marginBottom="@dimen/_3sdp">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/students_recyclerView"
@@ -42,14 +42,19 @@
         <com.pratham.assessment.custom.customFont.SansButton
             android:id="@+id/add_student"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_below="@id/students_recyclerView"
-            android:layout_margin="@dimen/_7sdp"
+            android:layout_marginStart="@dimen/_7sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_marginEnd="@dimen/_7sdp"
+            android:layout_marginBottom="@dimen/_3sdp"
             android:background="@drawable/correct_bg"
             android:elevation="@dimen/_3sdp"
+            android:paddingTop="@dimen/_3sdp"
+            android:paddingBottom="@dimen/_3sdp"
             android:text="Create profile"
             android:textColor="@color/white"
-            android:textSize="@dimen/_15sdp" />
+            android:textSize="@dimen/_12sdp" />
 
         <TextView
             android:id="@+id/tv_or"
@@ -58,24 +63,37 @@
             android:layout_below="@id/add_student"
             android:layout_centerHorizontal="true"
             android:layout_margin="@dimen/_3sdp"
-            android:text="or"
-            android:textSize="@dimen/_15sdp"
+            android:text="OR"
+            android:textSize="@dimen/_12sdp"
             android:textStyle="bold" />
 
         <com.pratham.assessment.custom.customFont.SansButton
             android:id="@+id/enter_enrollment_no"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_below="@id/tv_or"
-            android:layout_margin="@dimen/_7sdp"
+            android:layout_marginStart="@dimen/_7sdp"
+            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_marginEnd="@dimen/_7sdp"
+            android:layout_marginBottom="@dimen/_3sdp"
             android:background="@drawable/gradiance_bg_green"
             android:elevation="@dimen/_3sdp"
+            android:paddingTop="@dimen/_3sdp"
+            android:paddingBottom="@dimen/_3sdp"
             android:text="Enter enrollment number"
             android:textColor="@color/white"
-            android:textSize="@dimen/_15sdp" />
+            android:textSize="@dimen/_12sdp" />
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/tv_app_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_students"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/_2sdp"
+        android:text="version" />
     <!--</ScrollView>-->
 
 

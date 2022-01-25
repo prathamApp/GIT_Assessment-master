@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.pratham.assessment.AssessmentApplication;
@@ -64,6 +65,8 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
     @ViewById(R.id.students_recyclerView)
     RecyclerView rl_students;
+    @ViewById(R.id.tv_app_version)
+    TextView tv_app_version;
     @ViewById(R.id.add_student)
     Button add_student;
    /* @BindView(R.id.btn_download_all_data)
@@ -80,6 +83,8 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
             addAvatarsInList();
+            tv_app_version.setText("App version : " + Assessment_Utility.getCurrentVersion(getActivity()));
+
             studentList = new ArrayList<>();
             Status status = new Status();
             setAppVersion(status);
@@ -254,7 +259,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
             protected Void doInBackground(Void... voids) {
                 try {
 //                    if (!FastSave.getInstance().getBoolean(Assessment_Constants.INITIAL_ENTRIES, false))
-                        doInitialEntries(getActivity());
+                    doInitialEntries(getActivity());
 
                     com.pratham.assessment.domain.Status status = new com.pratham.assessment.domain.Status();
                     String key = "AppBuildDate";
@@ -388,6 +393,7 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
                         for (int i = 0; i < studentDBList.size(); i++) {
                             Student studentAvatar = new Student();
                             studentAvatar.setStudentID(studentDBList.get(i).getStudentID());
+                            studentAvatar.setLastName(studentDBList.get(i).getLastName());
                             studentAvatar.setFullName(studentDBList.get(i).getFullName());
                             studentAvatar.setGroupId(studentDBList.get(i).getGroupId());
                             studentAvatar.setStudentUID(studentDBList.get(i).getStudentUID());

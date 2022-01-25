@@ -29,7 +29,7 @@
     <color name="green">#07992F</color>
     <color name="colorBtnRedLight">#e57373</color>
     <color name="colorBtnRedDark">#e53935</color>
-
+    <color name="colorText">#262B4B</color>
 
     <color name="colorProgress">#FDA520</color>
     <color name="colorProgress50">#FF8832</color>

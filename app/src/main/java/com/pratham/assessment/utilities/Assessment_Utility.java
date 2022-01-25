@@ -712,7 +712,7 @@ public class Assessment_Utility {
         return UUID.randomUUID();
     }
 
-    public static void setLocale(Context context, String lang) {
+    /*public static void setLocale(Context context, String lang) {
 
         if (lang.equalsIgnoreCase("Hindi"))
             lang = "hi";
@@ -739,8 +739,8 @@ public class Assessment_Utility {
         if (lang.equalsIgnoreCase("urdu"))
             lang = "ur";
 
-     /*   Locale myLocale = new Locale(lang);
-        Locale.setDefault(myLocale);*/
+     *//*   Locale myLocale = new Locale(lang);
+        Locale.setDefault(myLocale);*//*
 
         Resources resources = context.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
@@ -748,7 +748,7 @@ public class Assessment_Utility {
         config.setLocale(new Locale(lang));
         resources.updateConfiguration(config, dm);
 
-    }
+    }*/
 
     public static void setLocaleByLanguageId(Context context, String langCode) {
 

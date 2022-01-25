@@ -7,7 +7,6 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-
 import com.pratham.assessment.domain.Student;
 
 import java.util.List;
@@ -66,6 +65,9 @@ public interface StudentDao {
 
     @Query("select FullName from Student where StudentID = :studentID")
     String getFullName(String studentID);
+
+    @Query("select LastName from Student where StudentID = :studentID")
+    String getEnrollmentId(String studentID);
 
     @Query("select FirstName from Student where StudentID = :studentID")
     String checkStudent(String studentID);

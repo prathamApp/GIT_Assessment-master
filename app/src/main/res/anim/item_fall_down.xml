@@ -14,8 +14,8 @@
         />
 
     <scale
-        android:fromXScale="200%"
-        android:fromYScale="200%"
+        android:fromXScale="120%"
+        android:fromYScale="120%"
         android:toXScale="100%"
         android:toYScale="100%"
         android:pivotX="50%"

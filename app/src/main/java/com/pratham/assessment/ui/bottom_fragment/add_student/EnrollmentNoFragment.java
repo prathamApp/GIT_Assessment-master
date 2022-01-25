@@ -187,12 +187,12 @@ public class EnrollmentNoFragment extends DialogFragment {
         newEnrolledStudent.setIsniosstudent("1");
 //        AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().insert(newEnrolledStudent);
 
-            AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().insert(newEnrolledStudent);
-            BackupDatabase.backup(getActivity());
+        AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().insert(newEnrolledStudent);
+        BackupDatabase.backup(getActivity());
 //            Toast.makeText(getActivity(), R.string.profile_created_successfully, Toast.LENGTH_SHORT).show();
-            Toast.makeText(getActivity(), "Profile created Successfully..", Toast.LENGTH_SHORT).show();
-            splashInterface.onChildAdded();
-            dismiss();
+        Toast.makeText(getActivity(), "Profile created Successfully..", Toast.LENGTH_SHORT).show();
+        splashInterface.onChildAdded();
+        dismiss();
 //        }
     }
 
@@ -213,6 +213,7 @@ public class EnrollmentNoFragment extends DialogFragment {
                         public void onResponse(JSONArray response) {
                             if (response.length() > 0) {
                                 try {
+                                    newEnrolledStudent.setLastName(enrollmentNo.toUpperCase());
                                     newEnrolledStudent.setStudentID(response.getJSONObject(0).getString("StudentId"));
                                     newEnrolledStudent.setFullName(response.getJSONObject(0).getString("FullName"));
                                     newEnrolledStudent.setAge(response.getJSONObject(0).getInt("Age"));
@@ -271,8 +272,8 @@ public class EnrollmentNoFragment extends DialogFragment {
                 }
             } else {
                 if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-//                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getActivity(), "Enrollment number not found.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "Enrollment number not found.", Toast.LENGTH_SHORT).show();
                 }
                 rl_enroll_no_details.setVisibility(View.GONE);
                 rl_enroll_no_not_found.setVisibility(View.VISIBLE);

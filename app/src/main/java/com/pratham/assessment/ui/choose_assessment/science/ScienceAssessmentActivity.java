@@ -356,6 +356,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             FastSave.getInstance().saveString("language", langCode);
             selectedLang = langCode;
             setLocaleByLanguageId(context, langCode);
+            setStaticStringsInApp();
+
             Student student = new Student();
 
             if (!studId.equalsIgnoreCase("")) {
@@ -382,6 +384,18 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             e.printStackTrace();
         }
         checkPermissions();
+    }
+
+    private void setStaticStringsInApp() {
+
+        txt_next.setText(R.string.next);
+        tv_exam_name.setText(R.string.exam_name);
+        tv_total_que.setText(R.string.total_questions);
+        tv_marks.setText(R.string.marks);
+        tv_img_capture_warning.setText(R.string.note_pictures_of_the_appearing_student_will_be_captured_during_the_exam);
+        tv_time.setText(R.string.time);
+        txt_prev.setText(R.string.prev);
+        swipe_btn.setText(getResources().getString(R.string.swipe_to_start_assessment));
     }
 
     private void startFetchingData() {

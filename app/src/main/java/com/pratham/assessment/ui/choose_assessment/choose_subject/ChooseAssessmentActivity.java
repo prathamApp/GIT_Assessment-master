@@ -125,6 +125,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
 //        String studentName = AppDatabase.getDatabaseInstance(this).getStudentDao().getFullName(Assessment_Constants.currentStudentID);
+        String studentEnrollmentId = AppDatabase.getDatabaseInstance(this).getStudentDao().getEnrollmentId(currentStudentID);
         String studentName = AppDatabase.getDatabaseInstance(this).getStudentDao().getFullName(currentStudentID);
         View view = navigation.getHeaderView(0);
         TextView name = view.findViewById(R.id.userName);
@@ -133,7 +134,9 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
         if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false)) {
             enrollmentId.setVisibility(View.VISIBLE);
-            enrollmentId.setText(Html.fromHtml(currentStudentID));
+            if (studentEnrollmentId != null)
+                enrollmentId.setText(Html.fromHtml(studentEnrollmentId));
+            else enrollmentId.setText(Html.fromHtml(currentStudentID));
         } else enrollmentId.setVisibility(View.GONE);
 
 

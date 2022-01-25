@@ -68,7 +68,7 @@
         <item name="android:gravity">center</item>
     </style>
 
- <style name="PushStatusItemStyle">
+    <style name="PushStatusItemStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/_14sdp</item>
@@ -101,8 +101,8 @@
 
     <style name="AppModalStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/ripple_rectangle</item>
-        <item name="android:layout_marginLeft">30dp</item>
-        <item name="android:layout_marginRight">30dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
     </style>
 
     <style name="StepView">
