@@ -356,7 +356,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             FastSave.getInstance().saveString("language", langCode);
             selectedLang = langCode;
             setLocaleByLanguageId(context, langCode);
-            setStaticStringsInApp();
 
             Student student = new Student();
 
@@ -383,6 +382,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         } catch (Exception e) {
             e.printStackTrace();
         }
+        setStaticStringsInApp();
+
         checkPermissions();
     }
 
