@@ -2321,7 +2321,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             e.printStackTrace();
         }
     }
-
    /* @Override
     public void setParagraph(String para, boolean isParaQuestion) {
         paragraph = para;
