@@ -26,6 +26,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -45,7 +47,9 @@ import com.pratham.assessment.domain.AssessmentLanguages;
 import com.pratham.assessment.domain.AssessmentSubjects;
 import com.pratham.assessment.domain.AssessmentTest;
 import com.pratham.assessment.domain.Crl;
+import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.interfaces.DataPushListener;
+import com.pratham.assessment.ui.bottom_fragment.BottomStudentsFragment_;
 import com.pratham.assessment.ui.choose_assessment.ECELoginDialog;
 import com.pratham.assessment.ui.choose_assessment.data_push_status.PushStatusActivity_;
 import com.pratham.assessment.ui.choose_assessment.exam_status.ExamStatusActivity_;
@@ -111,7 +115,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     ChooseAssessmentAdapter chooseAssessAdapter;
     ECELoginDialog eceLoginDialog;
     Crl loggedCrl;
-    boolean videoMonitoring = false;
+    boolean videoMonitoring = false, isExit = false;
     @Bean(PushDataToServer.class)
     PushDataToServer pushDataToServer;
     @ViewById(R.id.tv_no_exams)
@@ -125,13 +129,16 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
 //        String studentName = AppDatabase.getDatabaseInstance(this).getStudentDao().getFullName(Assessment_Constants.currentStudentID);
-        String studentEnrollmentId = AppDatabase.getDatabaseInstance(this).getStudentDao().getEnrollmentId(currentStudentID);
-        String studentName = AppDatabase.getDatabaseInstance(this).getStudentDao().getFullName(currentStudentID);
-        View view = navigation.getHeaderView(0);
-        TextView name = view.findViewById(R.id.userName);
-        name.setText(Html.fromHtml(studentName));
-        TextView enrollmentId = view.findViewById(R.id.tv_enrollment_id);
+        Student student = AppDatabase.getDatabaseInstance(this).getStudentDao().getStudent(currentStudentID);
+        String studentEnrollmentId = student.getLastName();//enrl id saved in lastName
+        String studentName = student.getFullName();
+        String avatar = student.getAvatarName();
 
+        View nav = navigation.getHeaderView(0);
+        TextView name = nav.findViewById(R.id.userName);
+        name.setText(Html.fromHtml(studentName));
+
+        TextView enrollmentId = nav.findViewById(R.id.tv_enrollment_id);
         if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false)) {
             enrollmentId.setVisibility(View.VISIBLE);
             if (studentEnrollmentId != null)
@@ -139,6 +146,13 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             else enrollmentId.setText(Html.fromHtml(currentStudentID));
         } else enrollmentId.setVisibility(View.GONE);
 
+        ImageView imageView = nav.findViewById(R.id.iv_avatar);
+        if (avatar != null && !avatar.equalsIgnoreCase(""))
+            imageView.setImageResource(/*getResources().getDrawable(*/Assessment_Utility.getAvatarDrawable(avatar)/*)*/);
+        else imageView.setImageResource(R.drawable.g1);
+
+        LinearLayout linearLayout = nav.findViewById(R.id.ll_user_details_header);
+        linearLayout.setOnClickListener(v -> showExitDialog(true));
 
         Assessment_Constants.SELECTED_LANGUAGE = FastSave.getInstance().getString(LANGUAGE, "1");
         swipe_to_refresh.setColorSchemeColors(getResources().getColor(R.color.catcho_primary));
@@ -525,7 +539,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             resetActivity();
         } else {
 //            startActivity(new Intent(this, MenuActivity.class));
-            showExitDialog();
+            showExitDialog(false);
         }
       /*  presenter.endSession();
 //        super.onBackPressed();
@@ -534,7 +548,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
 //        showExitDialog();
     }
 
-    public void showExitDialog() {
+    public void showExitDialog(boolean isLogout) {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -549,18 +563,33 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         setTamilFont(context, exit_btn);
         setTamilFont(context, cancel_btn);
         cancel_btn.setVisibility(View.VISIBLE);
-        title.setText(R.string.do_you_want_to_exit);
+        if (isLogout) {
+            title.setText("Do you want to logout?");
+            cancel_btn.setVisibility(View.GONE);
+        } else {
+            cancel_btn.setVisibility(View.VISIBLE);
+            title.setText(R.string.do_you_want_to_exit);
+        }
         restart_btn.setText(R.string.no);
         exit_btn.setText(R.string.yes);
         cancel_btn.setText(R.string.restart);
         dialog.show();
 
         exit_btn.setOnClickListener(v -> {
-            dialog.dismiss();
             AssessmentApplication.endTestSession(context);
-            VIDEOMONITORING = false;
-            finishAffinity();
-
+            if (!isLogout) {
+                dialog.dismiss();
+                VIDEOMONITORING = false;
+                finishAffinity();
+            } else {
+                isExit = true;
+                dialog.dismiss();
+                drawerLayout.closeDrawer(GravityCompat.START);
+                BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
+                if (!bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
+                    bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
+                }
+            }
         });
 
         cancel_btn.setOnClickListener(v -> {
@@ -577,6 +606,13 @@ public class ChooseAssessmentActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                if (isExit) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
+                    if (!bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
+                        bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
+                    }
+                }
             }
         });
     }

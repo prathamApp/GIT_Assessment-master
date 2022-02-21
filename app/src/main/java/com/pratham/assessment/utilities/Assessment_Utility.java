@@ -889,6 +889,27 @@ public class Assessment_Utility {
     }
 
 
+    public static int getAvatarDrawable(String avatarName) {
+        switch (avatarName) {
+            default:
+            case "g1.png":
+                return R.drawable.g1;
+
+            case "g2.png":
+                return R.drawable.g2;
+
+            case "g3.png":
+                return R.drawable.g3;
+            case "b1.png":
+                return R.drawable.b1;
+            case "b2.png":
+                return R.drawable.b2;
+            case "b3.png":
+                return R.drawable.b3;
+
+        }
+    }
+
     public static int getRandomAvatar(Context context) {
         Integer[] drawables = {R.drawable.b1, R.drawable.b2, R.drawable.b3,
                 R.drawable.g1, R.drawable.g2, R.drawable.g3};

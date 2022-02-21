@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_user_details_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/home_header_2_bg"
     android:orientation="vertical"
-    android:paddingLeft="@dimen/_10sdp"
-    android:paddingTop="@dimen/_15sdp">
+    android:paddingTop="@dimen/_10sdp">
 
     <ImageView
-        android:layout_width="@dimen/_50sdp"
-        android:layout_height="@dimen/_50sdp"
+        android:id="@+id/iv_avatar"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="@dimen/_80sdp"
         android:padding="10dp"
         android:src="@drawable/g3" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
         android:padding="5dp"
         android:text="@string/welcome"
         android:textColor="@color/white"
@@ -25,6 +27,7 @@
         android:id="@+id/userName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
         android:padding="5dp"
         android:text="User"
         android:textColor="@color/white"
@@ -34,6 +37,7 @@
         android:id="@+id/tv_enrollment_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
         android:padding="5dp"
         android:text="123"
         android:textColor="@color/white"
