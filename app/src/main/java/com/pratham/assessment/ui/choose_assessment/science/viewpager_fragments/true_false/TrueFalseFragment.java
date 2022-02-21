@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
@@ -302,6 +303,8 @@ public class TrueFalseFragment extends Fragment implements TrueFalseContract.Tru
                 radioButtonFalse.setTextColor(getActivity().getResources().getColor(R.color.white));
 
             }
+        } else {
+            Toast.makeText(getActivity(), R.string.error_in_loading_check_internet_connection, Toast.LENGTH_LONG).show();
         }
 
         setTamilFont(getActivity(), radioButtonFalse);

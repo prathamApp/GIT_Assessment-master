@@ -10,5 +10,7 @@ public interface AssessmentAnswerListener {
 
     void removeSupervisorFragment();
 
+    void reDownloadExam();
+
 //    void setParagraph(String para, boolean isParaQuestion);
 }

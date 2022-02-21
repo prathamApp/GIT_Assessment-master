@@ -17,6 +17,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -235,7 +236,7 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                 .getScienceQuestionChoicesDao().getQuestionChoicesByQIDAndVersion(scienceQuestion.getQid(), scienceQuestion.getAppVersion());
 /*        int imgCnt = 0;
         int textCnt = 0;*/
-        if (options != null) {
+        if (options != null && !options.isEmpty()) {
             radioGroupMcq.removeAllViews();
             gridMcq.removeAllViews();
 
@@ -499,6 +500,8 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                     }*/
 
             }
+        } else {//todo
+            Toast.makeText(getActivity(), R.string.error_in_loading_check_internet_connection, Toast.LENGTH_LONG).show();
         }
         radioGroupMcq.setOnCheckedChangeListener((group, checkedId) -> {
             //((RadioButton) radioGroupMcq.getChildAt(checkedId)).setChecked(true);

@@ -2322,6 +2322,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         }
     }
 
+    @Override
+    public void reDownloadExam() {
+
+    }
+
    /* @Override
     public void setParagraph(String para, boolean isParaQuestion) {
         paragraph = para;

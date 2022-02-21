@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
@@ -291,22 +292,26 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
             ScienceQuestion scienceQuestion = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getQuestionByQID(this.scienceQuestion.getQid());
             if (scienceQuestion.isParaQuestion()) {
                 String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
-                showZoomDialog(getActivity(),  "", para);
+                showZoomDialog(getActivity(), "", para);
             }
         }
     }
 
     @Override
     public void setShuffledList(List<ScienceQuestionChoice> shuffledList) {
-        dragDropAdapter = new ArrangeSeqDragDropAdapter(this, shuffledList, scienceQuestion.getQtid(), getActivity());
-        ItemTouchHelper.Callback callback =
-                new ItemMoveCallback(dragDropAdapter);
-        touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(null);
-        touchHelper.attachToRecyclerView(recyclerArrangeSeq);
-        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getActivity().getApplicationContext());
-        recyclerArrangeSeq.setLayoutManager(linearLayoutManager1);
-        recyclerArrangeSeq.setAdapter(dragDropAdapter);
+        if (!shuffledList.isEmpty()) {
+            dragDropAdapter = new ArrangeSeqDragDropAdapter(this, shuffledList, scienceQuestion.getQtid(), getActivity());
+            ItemTouchHelper.Callback callback =
+                    new ItemMoveCallback(dragDropAdapter);
+            touchHelper = new ItemTouchHelper(callback);
+            touchHelper.attachToRecyclerView(null);
+            touchHelper.attachToRecyclerView(recyclerArrangeSeq);
+            LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getActivity().getApplicationContext());
+            recyclerArrangeSeq.setLayoutManager(linearLayoutManager1);
+            recyclerArrangeSeq.setAdapter(dragDropAdapter);
+        } else {
+            Toast.makeText(getActivity(), R.string.error_in_loading_check_internet_connection, Toast.LENGTH_LONG).show();
+        }
     }
   /*  @Override
     public void setShuffledList(List<ScienceQuestionChoice> shuffledList) {

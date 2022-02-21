@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
@@ -274,7 +275,9 @@ public class MatchThePairFragment extends Fragment implements StartDragListener,
             recyclerView2.setLayoutManager(linearLayoutManager1);
             recyclerView2.setAdapter(matchPairDragDropAdapter);
             Log.d("wwwwwwwwwww", pairList.size() + "");
-        }
+        } else
+            Toast.makeText(getActivity(), R.string.error_in_loading_check_internet_connection, Toast.LENGTH_LONG).show();
+
 
     }
 

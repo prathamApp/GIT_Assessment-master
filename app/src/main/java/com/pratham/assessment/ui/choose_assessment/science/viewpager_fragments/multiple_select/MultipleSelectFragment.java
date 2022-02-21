@@ -14,6 +14,7 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
@@ -148,61 +149,65 @@ public class MultipleSelectFragment extends Fragment implements MultipleSelectCo
         questionGif.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
 
         final List<ScienceQuestionChoice> choices = scienceQuestion.getLstquestionchoice();
+        if (choices != null && !choices.isEmpty()) {
+            gridLayout.setColumnCount(1);
+            gridLayout.removeAllViews();
+            for (int j = 0; j < choices.size(); j++) {
+                View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_multiple_select_item, gridLayout, false);
+                final CheckBox checkBox = (CheckBox) view;
+                checkBox.setButtonTintList(Assessment_Utility.colorStateList);
+                checkBox.setTextColor(getActivity().getResources().getColor(R.color.white));
+                setOdiaFont(getActivity(), checkBox);
+                setTamilFont(getActivity(), checkBox);
+                if (!choices.get(j).getChoicename().equalsIgnoreCase(""))
+                    checkBox.setText(Html.fromHtml(choices.get(j).getChoicename()));
 
-        gridLayout.setColumnCount(1);
-        gridLayout.removeAllViews();
-        for (int j = 0; j < choices.size(); j++) {
-            View view = LayoutInflater.from(getActivity()).inflate(R.layout.layout_multiple_select_item, gridLayout, false);
-            final CheckBox checkBox = (CheckBox) view;
-            checkBox.setButtonTintList(Assessment_Utility.colorStateList);
-            checkBox.setTextColor(getActivity().getResources().getColor(R.color.white));
-            setOdiaFont(getActivity(), checkBox);
-            setTamilFont(getActivity(), checkBox);
-            if (!choices.get(j).getChoicename().equalsIgnoreCase(""))
-                checkBox.setText(Html.fromHtml(choices.get(j).getChoicename()));
-
-            if (!choices.get(j).getChoiceurl().equalsIgnoreCase("")) {
+                if (!choices.get(j).getChoiceurl().equalsIgnoreCase("")) {
 //                final String path = choices.get(j).getChoiceurl();
 
-                String fileNameChoice = Assessment_Utility.getFileName(scienceQuestion.getQid(), choices.get(j).getChoiceurl());
-                final String localPathChoice = getOptionLocalPath(choices.get(j), scienceQuestion.isParaQuestion()); /*AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileNameChoice;
-                 */
+                    String fileNameChoice = Assessment_Utility.getFileName(scienceQuestion.getQid(), choices.get(j).getChoiceurl());
+                    final String localPathChoice = getOptionLocalPath(choices.get(j), scienceQuestion.isParaQuestion()); /*AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileNameChoice;
+                     */
 
-                checkBox.setOnClickListener(v -> Assessment_Utility.showZoomDialog(getActivity(), localPathChoice, ""));
+                    checkBox.setOnClickListener(v -> Assessment_Utility.showZoomDialog(getActivity(), localPathChoice, ""));
 
-                if (choices.get(j).getChoicename().equalsIgnoreCase(""))
-                    checkBox.setText(getString(R.string.view_option) + " " + (j + 1));
-            }
-            checkBox.setTag(choices.get(j).getQcid());
-
-            if (scienceQuestion.getIsAttempted()) {
-                if (choices.get(j).getMyIscorrect().equalsIgnoreCase("TRUE")) {
-                    checkBox.setChecked(true);
-                    checkBox.setTextColor(Assessment_Utility.selectedColor);
-                } else {
-                    checkBox.setChecked(false);
-                    checkBox.setTextColor(getActivity().getResources().getColor(R.color.white));
-
+                    if (choices.get(j).getChoicename().equalsIgnoreCase(""))
+                        checkBox.setText(getString(R.string.view_option) + " " + (j + 1));
                 }
-//                }
-            }
-            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                checkBox.setTag(choices.get(j).getQcid());
 
-                multipleSelectPresenter.setCheckedAnswer(buttonView, isChecked, choices);
-                for (int i = 0; i < gridLayout.getRowCount(); i++) {
-                    if (((CheckBox) gridLayout.getChildAt(i)).isChecked()) {
-                        ((CheckBox) gridLayout.getChildAt(i)).setTextColor(Assessment_Utility.selectedColor);
+                if (scienceQuestion.getIsAttempted()) {
+                    if (choices.get(j).getMyIscorrect().equalsIgnoreCase("TRUE")) {
+                        checkBox.setChecked(true);
+                        checkBox.setTextColor(Assessment_Utility.selectedColor);
                     } else {
-                        ((CheckBox) gridLayout.getChildAt(i)).setTextColor(Color.WHITE);
+                        checkBox.setChecked(false);
+                        checkBox.setTextColor(getActivity().getResources().getColor(R.color.white));
+
                     }
+//                }
                 }
-            });
-            GridLayout.LayoutParams paramGrid = new GridLayout.LayoutParams();
-            paramGrid.width = GridLayout.LayoutParams.WRAP_CONTENT;
-            paramGrid.setGravity(Gravity.FILL_HORIZONTAL);
-            paramGrid.setMargins(10, 10, 10, 10);
-            checkBox.setLayoutParams(paramGrid);
-            gridLayout.addView(checkBox);
+                checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+
+                    multipleSelectPresenter.setCheckedAnswer(buttonView, isChecked, choices);
+                    for (int i = 0; i < gridLayout.getRowCount(); i++) {
+                        if (((CheckBox) gridLayout.getChildAt(i)).isChecked()) {
+                            ((CheckBox) gridLayout.getChildAt(i)).setTextColor(Assessment_Utility.selectedColor);
+                        } else {
+                            ((CheckBox) gridLayout.getChildAt(i)).setTextColor(Color.WHITE);
+                        }
+                    }
+                });
+                GridLayout.LayoutParams paramGrid = new GridLayout.LayoutParams();
+                paramGrid.width = GridLayout.LayoutParams.WRAP_CONTENT;
+                paramGrid.setGravity(Gravity.FILL_HORIZONTAL);
+                paramGrid.setMargins(10, 10, 10, 10);
+                checkBox.setLayoutParams(paramGrid);
+                gridLayout.addView(checkBox);
+            }
+        } else {
+            Toast.makeText(getActivity(), R.string.error_in_loading_check_internet_connection, Toast.LENGTH_LONG).show();
+            assessmentAnswerListener.reDownloadExam();
         }
     }
 
