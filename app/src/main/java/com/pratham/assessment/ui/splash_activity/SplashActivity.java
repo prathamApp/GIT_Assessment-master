@@ -1,10 +1,6 @@
 package com.pratham.assessment.ui.splash_activity;
 
 import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,11 +10,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -39,7 +33,6 @@ import com.pratham.assessment.async.PushDataToServer;
 import com.pratham.assessment.constants.APIs;
 import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
-import com.pratham.assessment.custom.notification.NotificationView;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
@@ -316,7 +309,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         title.setText("Do you want to exit?");
         restart_btn.setText("Yes");
         exit_btn.setText("No");
-        dia_btn_cancel.setText("Cancel");
+        dia_btn_cancel.setVisibility(View.GONE);
         dialog.show();
 
         exit_btn.setOnClickListener(new View.OnClickListener() {
