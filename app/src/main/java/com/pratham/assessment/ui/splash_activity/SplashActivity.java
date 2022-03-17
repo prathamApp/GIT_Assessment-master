@@ -1,10 +1,6 @@
 package com.pratham.assessment.ui.splash_activity;
 
 import android.app.Dialog;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,11 +10,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Build;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -39,7 +33,6 @@ import com.pratham.assessment.async.PushDataToServer;
 import com.pratham.assessment.constants.APIs;
 import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
-import com.pratham.assessment.custom.notification.NotificationView;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
@@ -69,6 +62,7 @@ import java.util.List;
 import static com.pratham.assessment.constants.Assessment_Constants.SDCARD_OFFLINE_PATH_SAVED;
 import static com.pratham.assessment.ui.splash_activity.SplashPresenter.doInitialEntries;
 import static com.pratham.assessment.utilities.Assessment_Utility.copyFileUsingStream;
+import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
 
 @EActivity(R.layout.activity_splash)
 public class SplashActivity extends SplashSupportActivity implements SplashContract.SplashView, PermissionResult, Interface_copying, DataPushListener {
@@ -316,6 +310,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         restart_btn.setText("Yes");
         exit_btn.setText("No");
         dia_btn_cancel.setText("Cancel");
+        dia_btn_cancel.setVisibility(View.GONE);
         dialog.show();
 
         exit_btn.setOnClickListener(new View.OnClickListener() {
@@ -403,7 +398,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                                 }
                             })
                             .build();*/
-                    if (new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/PrathamBackups" + "/assessment_database").exists()) {
+                    if (new File(getStoragePath().getAbsolutePath() + "/PrathamBackups" + "/assessment_database").exists()) {
                         try {
                             splashPresenter.copyDataBase();
                             doInitialEntries(context);
@@ -423,10 +418,10 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             String offlineDBPath = Assessment_Utility.getExternalPath(this) + "/.Assessment/offline_assessment_database.db";
             File f = new File(offlineDBPath);
             if (f.exists()) {
-                File sd = new File(Environment.getExternalStorageDirectory() + "/PrathamBackups");
+                File sd = new File(getStoragePath() + "/PrathamBackups");
                 if (!sd.exists())
                     sd.mkdirs();
-                File offlineDB = new File(Environment.getExternalStorageDirectory() + "/PrathamBackups/offline_assessment_database.db");
+                File offlineDB = new File(getStoragePath() + "/PrathamBackups/offline_assessment_database.db");
 
 //                File off = new File(internalPath + "/offline_assessment_database.db");
 //                String offPath = internalPath + "/offline_assessment_database.db";

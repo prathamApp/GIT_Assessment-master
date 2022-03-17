@@ -150,6 +150,7 @@ import static com.pratham.assessment.constants.Assessment_Constants.VIDEO;
 import static com.pratham.assessment.constants.Assessment_Constants.VIDEOMONITORING;
 import static com.pratham.assessment.utilities.Assessment_Utility.checkConnectedToRPI;
 import static com.pratham.assessment.utilities.Assessment_Utility.copyFileUsingStream;
+import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
 import static com.pratham.assessment.utilities.Assessment_Utility.setLocaleByLanguageId;
 
 @EActivity(R.layout.activity_science_assessment)
@@ -3788,11 +3789,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     + "/.Assessment/offline_assessment_database.db";
             File f = new File(offlineDBPath);
             if (f.exists()) {
-                File sd = new File(Environment.getExternalStorageDirectory()
+                File sd = new File(getStoragePath()
                         + "/PrathamBackups");
                 if (!sd.exists())
                     sd.mkdirs();
-                File offlineDB = new File(Environment.getExternalStorageDirectory()
+                File offlineDB = new File(getStoragePath()
                         + "/PrathamBackups/offline_assessment_database.db");
                 if (!FastSave.getInstance().getBoolean(SDCARD_OFFLINE_PATH_SAVED, false))
                     copySDCardDB(f, offlineDB);
@@ -3877,7 +3878,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 }
                             })
                             .build();*/
-                if (new File(Environment.getExternalStorageDirectory()
+                if (new File(getStoragePath()
                         .getAbsolutePath() + "/PrathamBackups" + "/assessment_database").exists()) {
                     try {
                         copyDataBase();
@@ -3943,7 +3944,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 @Override
                 protected Void doInBackground(Void... voids) {
                     try {
-                        SQLiteDatabase db = SQLiteDatabase.openDatabase(Environment.getExternalStorageDirectory().getAbsolutePath() + "/PrathamBackups" + "/assessment_database", null, SQLiteDatabase.OPEN_READONLY);
+                        SQLiteDatabase db = SQLiteDatabase.openDatabase(getStoragePath().getAbsolutePath() + "/PrathamBackups" + "/assessment_database", null, SQLiteDatabase.OPEN_READONLY);
                         if (db != null) {
                             try {
                                 Cursor content_cursor;
@@ -4229,7 +4230,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 @Override
                 protected Void doInBackground(Void... voids) {
                     try {
-                        SQLiteDatabase db = SQLiteDatabase.openDatabase(Environment.getExternalStorageDirectory() + "/PrathamBackups/offline_assessment_database.db", null, SQLiteDatabase.OPEN_READONLY);
+                        SQLiteDatabase db = SQLiteDatabase.openDatabase(getStoragePath() + "/PrathamBackups/offline_assessment_database.db", null, SQLiteDatabase.OPEN_READONLY);
                         if (db != null) {
                             try {
                                 Cursor content_cursor;

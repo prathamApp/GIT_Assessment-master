@@ -4,6 +4,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Environment;
 
+import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
+
 public class DeleteSensitiveTablesFromBackupDB {
    public static void deleteTables() {
         new AsyncTask<Void, Integer, Void>() {
@@ -15,7 +17,7 @@ public class DeleteSensitiveTablesFromBackupDB {
             @Override
             protected Void doInBackground(Void... voids) {
                 try {
-                    SQLiteDatabase db = SQLiteDatabase.openDatabase(Environment.getExternalStorageDirectory().getAbsolutePath() + "/PrathamBackups" + "/assessment_database", null, SQLiteDatabase.OPEN_READWRITE);
+                    SQLiteDatabase db = SQLiteDatabase.openDatabase(getStoragePath().getAbsolutePath() + "/PrathamBackups" + "/assessment_database", null, SQLiteDatabase.OPEN_READWRITE);
                     if (db != null) {
 
                         db.execSQL("drop table if exists ScienceQuestion");

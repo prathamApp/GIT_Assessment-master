@@ -227,17 +227,24 @@ public class APIs {
 
     public static String pullStudentByEnrollmentNoAPI = "http://www.devtab.openiscool.org/api/StudentEnrollment?enrollmentno=";
     public static String pullStateAPI = "http://swap.prathamcms.org/api/state?progid=";
-    public static String push_db_zip = baseAzureURL + "api/AssessmentDB/pushFiles";
+    public static String pushDbZip = baseAzureURL + "api/AssessmentDB/pushFiles";
 
 
-    //RPI
-    public static String baseAzureURLRPI = "http://192.168.4.1:8000/api/assessment/";
+    //RPI pull
+    public static String baseAzureURLRPI = "http://192.168.4.1:8000/";
 
-    public static String AssessmentLanguageAPIRPI = baseAzureURLRPI + "GetLanguage/";
-    public static String AssessmentSubjectAPIRPI = baseAzureURLRPI + "GetSubjectv2/?languageid=";
-    public static String AssessmentExamAPIRPI = baseAzureURLRPI + "GetExamV2/?subjectid=";
-    public static String AssessmentPaperPatternAPIRPI = baseAzureURLRPI + "GetExamPattern/?examid=";
-    public static String AssessmentQuestionAPIRPI = baseAzureURLRPI + "GetQuestion?";
+    public static String AssessmentLanguageAPIRPI = baseAzureURLRPI + "api/assessment/GetLanguage/";
+    public static String AssessmentSubjectAPIRPI = baseAzureURLRPI + "api/assessment/GetSubjectv2/?languageid=";
+    public static String AssessmentExamAPIRPI = baseAzureURLRPI + "api/assessment/GetExamV2/?subjectid=";
+    public static String AssessmentPaperPatternAPIRPI = baseAzureURLRPI + "api/assessment/GetExamPattern/?examid=";
+    public static String AssessmentQuestionAPIRPI = baseAzureURLRPI + "api/assessment/GetQuestion?";
+
+    //RPI push
+    public static String UploadDataJsonZipURLRPI = APIs.baseAzureURLRPI + "api/usagedata/";      //rpi data push
+    public static String UploadDBZipURLRPI = APIs.baseAzureURLRPI + "api/dbpushdata/";      //rpi db push
+    public static String UploadMediaURLRPI = APIs.baseAzureURLRPI + "api/channel/FileUpload/";      //rpi media push
+
+
 
 
     //kolibri

@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 
+import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
+
 public class BackupDatabase {
 
     public static void backup(Context mContext) {
@@ -15,7 +17,7 @@ public class BackupDatabase {
         try {
 //            File sd = Environment.getExternalStorageDirectory();
             deletePreviousDbs();
-            File sd = new File(Environment.getExternalStorageDirectory() + "/PrathamBackups");
+            File sd = new File(getStoragePath() + "/PrathamBackups");
             if (!sd.exists())
                 sd.mkdirs();
             if (sd.canWrite()) {

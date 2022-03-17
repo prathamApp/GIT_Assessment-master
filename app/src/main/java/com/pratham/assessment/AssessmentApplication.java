@@ -36,9 +36,8 @@ import java.util.TimerTask;
 import java.util.UUID;
 
 import static com.pratham.assessment.constants.Assessment_Constants.PREFS_VERSION;
-import static com.pratham.assessment.utilities.Assessment_Utility.setLocaleByLanguageId;
 
-public class AssessmentApplication extends  Application {
+public class AssessmentApplication extends Application {
 
 
     public static final boolean isTablet = false;
@@ -48,7 +47,10 @@ public class AssessmentApplication extends  Application {
     public static String uploadScienceUrl = APIs.baseAzureURL + "api/pushassessment/AssessmentPushData";
     public static String uploadScienceFilesUrl = APIs.baseAzureURL + "api/question/pushFiles";
     public static String uploadLargeFilesUrl = APIs.baseAzureURL + "api/uploadfile/UploadFile";
-    public static String UploadJsonZipURL = APIs.baseAzureURL + "api/pushzip/pushfiles";
+    public static String UploadDataJsonZipURL = APIs.baseAzureURL + "api/pushzip/pushfiles";
+
+
+
     String sdCardPathString = null;
     public static MediaPlayer bubble_mp, bgMusic;
     public static WiseFy wiseF;
@@ -339,6 +341,7 @@ public class AssessmentApplication extends  Application {
         super.onTerminate();
         endTestSession(this);
     }
+
     public static void setLocaleByLanguageId(Context context, String langCode) {
 
         if (langCode.equalsIgnoreCase(Assessment_Constants.ENGLISH_ID))

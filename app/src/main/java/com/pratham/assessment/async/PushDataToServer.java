@@ -77,8 +77,10 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static android.support.constraint.Constraints.TAG;
-import static com.pratham.assessment.AssessmentApplication.UploadJsonZipURL;
+import static com.pratham.assessment.AssessmentApplication.UploadDataJsonZipURL;
 import static com.pratham.assessment.AssessmentApplication.isTablet;
+import static com.pratham.assessment.constants.APIs.UploadDataJsonZipURLRPI;
+import static com.pratham.assessment.constants.APIs.UploadMediaURLRPI;
 import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO;
 import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE;
 import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA;
@@ -86,6 +88,7 @@ import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MED
 import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_SUPERVISOR;
 import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING;
 import static com.pratham.assessment.constants.Assessment_Constants.PUSH_DATA_FROM_DRAWER;
+import static com.pratham.assessment.utilities.Assessment_Utility.checkConnectedToRPI;
 import static com.pratham.assessment.utilities.Assessment_Utility.getCurrentDateTime;
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
 
@@ -121,6 +124,7 @@ public class PushDataToServer {
     List<DownloadMedia> videoRecordingList = new ArrayList<>();
     private int paperPushCnt = 0, scorePushCount = 0, videoMonCnt = 0, supervisorCnt = 0, answerMediaCnt = 0;
     private int totalVideoMonCnt = 0, totalSupervisorCnt = 0, totalAnswerMediaCnt = 0;
+    private int videoMonCntRPI = 0, supervisorCntRPI = 0, answerMediaCntRPI = 0;
     //    ProgressDialog progressDialog;
     JSONObject requestJsonObjectScience;
     LottieAnimationView push_lottie;
@@ -287,8 +291,12 @@ public class PushDataToServer {
             if (!AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_KOLIBRI_HOTSPOT)) {
 
                 //            pushDataToServer(context, requestJsonObject, AssessmentApplication.uploadDataUrl);
+                downloadMediaList = new ArrayList<>();
 
-                pushDataScienceToServer(context, requestJsonObjectScience);
+                if (checkConnectedToRPI())
+                    pushDataScienceToServer(context, requestJsonObjectScience, UploadDataJsonZipURLRPI);
+                else
+                    pushDataScienceToServer(context, requestJsonObjectScience, UploadDataJsonZipURL);
 
             }/* else {//todo raspberry push
                     pushDataToRaspberry("" + Assessment_Constants.URL.DATASTORE_RASPBERY_URL.toString(),
@@ -308,8 +316,16 @@ public class PushDataToServer {
                 supervisorMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_SUPERVISOR));
                 if (supervisorMediaList.size() > 0) {
                     totalSupervisorCnt = supervisorMediaList.size();
+//                    if (checkConnectedToRPI())
+//                        downloadMediaList.addAll(supervisorMediaList);
+//                        pushImagesToServer_PI(supervisorMediaList, supervisorCntRPI, DOWNLOAD_MEDIA_TYPE_SUPERVISOR);
+//                        pushMediaToServer(UploadMediaURLRPI, DOWNLOAD_MEDIA_TYPE_SUPERVISOR, supervisorMediaList);
+//                    else
                     pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, DOWNLOAD_MEDIA_TYPE_SUPERVISOR, supervisorMediaList);
-                } else supervisorImagesPushed = true;
+                } else {
+                    supervisorImagesPushed = true;
+//                    pushImagesToServer_PI(downloadMediaList, answerMediaCntRPI, DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA);
+                }
                 return null;
             }
         }.execute();
@@ -324,7 +340,6 @@ public class PushDataToServer {
             @Override
             protected Void doInBackground(Void... voids) {
                 totalAnswerMediaCnt = 0;
-                downloadMediaList = new ArrayList<>();
                 downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE));
                 downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO));
                 downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO));
@@ -332,8 +347,15 @@ public class PushDataToServer {
 
                 if (downloadMediaList.size() > 0) {
                     totalAnswerMediaCnt = downloadMediaList.size();
+//                    if (checkConnectedToRPI()) {
+////                        pushImagesToServer_PI(downloadMediaList, answerMediaCntRPI, DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA);
+////                        pushMediaToServer(UploadMediaURLRPI, DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA, downloadMediaList);
+//                    } else
                     pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA, downloadMediaList);
-                } else answerMediaPushed = true;
+                } else {
+                    answerMediaPushed = true;
+//                    pushImagesToServer_PI(videoRecordingList, videoMonCntRPI, DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
+                }
                 return null;
             }
         }.execute();
@@ -354,6 +376,11 @@ public class PushDataToServer {
                     File file = new File(filePath);
                     if (file.exists())*/
                     totalVideoMonCnt = videoRecordingList.size();
+                   /* if (checkConnectedToRPI()) {
+                        downloadMediaList.addAll(videoRecordingList);
+//                        pushImagesToServer_PI(downloadMediaList, 0, DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
+//                        pushMediaToServer(UploadMediaURLRPI, DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING, videoRecordingList);
+                    } else*/
                     pushMediaToServer(AssessmentApplication.uploadScienceFilesUrl, DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING, videoRecordingList);
                /* } catch (Exception e) {
                     e.printStackTrace();
@@ -361,7 +388,12 @@ public class PushDataToServer {
             }*/
                 } else {
                     videoMonImagesPushed = true;
-                    PushDataToServer.this.onPostExecute();
+                   /* if (checkConnectedToRPI())
+                        if (downloadMediaList.size() > 0)
+                            pushImagesToServer_PI(downloadMediaList, 0, DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
+*/
+                    if (!checkConnectedToRPI())
+                        PushDataToServer.this.onPostExecute();
                 }
                 return null;
             }
@@ -446,6 +478,163 @@ public class PushDataToServer {
             onPostExecute();
             Log.e(TAG, "Other Error: " + e.getLocalizedMessage());
         }
+    }
+
+    int mediaCnt = 0;
+
+    /* public void pushImagesToServer_PI(List<DownloadMedia> downloadMediaList, final int jsonIndex, String mediaType) {
+ //        Log.d("PushData", "Image jsonIndex : " + jsonIndex);
+         if (jsonIndex < downloadMediaList.size()) {
+             switch (mediaType) {
+                 case DOWNLOAD_MEDIA_TYPE_SUPERVISOR:
+                     supervisorCntRPI = jsonIndex;
+                     break;
+                 case DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA:
+                     answerMediaCntRPI = jsonIndex;
+                     break;
+                 case DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING:
+                     videoMonCntRPI = jsonIndex;
+                     break;
+             }
+
+             AndroidNetworking.upload(UploadMediaURLRPI)
+                     .addMultipartFile("uploaded_file", new File(downloadMediaList.get(jsonIndex).getPhotoUrl()))
+                     .setPriority(Priority.HIGH)
+                     .build()
+                     .getAsString(new StringRequestListener() {
+                         @Override
+                         public void onResponse(String response) {
+                             try {
+                                 Log.d("PushData", "Image onResponse_PI : " + response);
+ //                                if (response.equalsIgnoreCase("success")) {
+                                 mediaCnt++;
+ //                                Log.d("PushData", "imageUploadCnt _PI: " + imageUploadCnt);
+                                 switch (mediaType) {
+                                     case DOWNLOAD_MEDIA_TYPE_SUPERVISOR:
+                                         pushImagesToServer_PI(downloadMediaList, supervisorCntRPI + 1, mediaType);
+                                         downloadMediaList.get(supervisorCntRPI).setDownloadSuccessful(true);
+                                         break;
+                                     case DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA:
+                                         pushImagesToServer_PI(downloadMediaList, answerMediaCntRPI + 1, mediaType);
+                                         downloadMediaList.get(answerMediaCntRPI).setDownloadSuccessful(true);
+                                         break;
+                                     case DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING:
+                                         pushImagesToServer_PI(downloadMediaList, videoMonCntRPI + 1, mediaType);
+                                         downloadMediaList.get(videoMonCnt).setDownloadSuccessful(true);
+                                         onPostExecute();
+                                         break;
+                                 }
+ //                                }
+                             } catch (Exception e) {
+                                 e.printStackTrace();
+                             }
+                         }
+
+                         @Override
+                         public void onError(ANError anError) {
+ //                            Log.d("PushData", "IMAGE onError _PI: " + imageUploadList.get(jsonIndex).getFileName());
+                             Log.d("PushData", "onError _PI: " + anError.getMessage());
+                             Log.d("PushData", "onError _PI: " + anError.getErrorBody());
+                             Log.d("PushData", "onError _PI: " + anError.getErrorDetail());
+                             switch (mediaType) {
+                                 case DOWNLOAD_MEDIA_TYPE_SUPERVISOR:
+                                     pushImagesToServer_PI(downloadMediaList, supervisorCntRPI + 1, mediaType);
+                                     downloadMediaList.get(supervisorCntRPI).setDownloadSuccessful(true);
+                                     break;
+                                 case DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA:
+                                     pushImagesToServer_PI(downloadMediaList, answerMediaCntRPI + 1, mediaType);
+                                     downloadMediaList.get(answerMediaCntRPI).setDownloadSuccessful(true);
+                                     break;
+                                 case DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING:
+                                     pushImagesToServer_PI(downloadMediaList, videoMonCntRPI + 1, mediaType);
+                                     downloadMediaList.get(videoMonCnt).setDownloadSuccessful(true);
+                                     break;
+                             }
+                         }
+                     });
+         } else {
+             switch (mediaType) {
+                 case DOWNLOAD_MEDIA_TYPE_SUPERVISOR:
+ //                    setMediaPushFlagRPI(downloadMediaList, mediaType);
+ //                    break;
+                 case DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA:
+                     setMediaPushFlagRPI(downloadMediaList, mediaType);
+ //                    pushImagesToServer_PI(videoRecordingList, 0, DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
+                     break;
+                 case DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING:
+                     setMediaPushFlagRPI(downloadMediaList, mediaType);
+                     onPostExecute();
+                     Log.d("PushData", "IMAGES COMPLETE");
+                     break;
+             }
+         }
+     }
+ */
+    int rpiMediaCnt = 0;
+
+    public void pushImagesToServer_PI(List<DownloadMedia> downloadMediaList, final int jsonIndex) {
+//        Log.d("PushData", "Image jsonIndex : " + jsonIndex);
+        if (jsonIndex < downloadMediaList.size()) {
+
+            AndroidNetworking.upload(UploadMediaURLRPI)
+                    .addMultipartFile("uploaded_file", new File(downloadMediaList.get(jsonIndex).getPhotoUrl()))
+                    .setPriority(Priority.HIGH)
+                    .build()
+                    .getAsString(new StringRequestListener() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                Log.d("PushData", "Image onResponse_PI : " + response);
+                                pushImagesToServer_PI(downloadMediaList, jsonIndex + 1);
+                                setMediaPushFlagRPI(downloadMediaList.get(jsonIndex));
+
+//                                downloadMediaList.get(jsonIndex).setDownloadSuccessful(true);
+                                rpiMediaCnt++;
+//                                if (response.equalsIgnoreCase("success")) {
+//                                mediaCnt++;
+//                                Log.d("PushData", "imageUploadCnt _PI: " + imageUploadCnt);
+//                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onError(ANError anError) {
+//                            Log.d("PushData", "IMAGE onError _PI: " + imageUploadList.get(jsonIndex).getFileName());
+                            Log.d("PushData", "onError _PI: " + anError.getMessage());
+                            Log.d("PushData", "onError _PI: " + anError.getErrorBody());
+                            Log.d("PushData", "onError _PI: " + anError.getErrorDetail());
+                            pushImagesToServer_PI(downloadMediaList, jsonIndex + 1);
+
+                        }
+                    });
+        } else {
+            onPostExecute();
+            Log.d("PushData", "IMAGES COMPLETE");
+        }
+    }
+
+    private void setMediaPushFlagRPI(DownloadMedia downloadMediaList) {
+//        for (int i = 0; i < downloadMediaList.size(); i++) {
+//            if (downloadMediaList.get(i).isDownloadSuccessful())
+        AppDatabase.getDatabaseInstance(context).getDownloadMediaDao()
+                .setSentFlagByPath(downloadMediaList.getMediaType(), downloadMediaList.getPhotoUrl());
+           /* switch (downloadMediaList.get(i).getMediaType()) {
+                case DOWNLOAD_MEDIA_TYPE_SUPERVISOR:
+                    supervisorCnt++;
+                    totalSupervisorCnt = downloadMediaList.size();
+                    break;
+                case DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA:
+                    answerMediaCnt++;
+                    totalAnswerMediaCnt = downloadMediaList.size();
+                    break;
+                case DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING:
+                    videoMonCnt++;
+                    totalVideoMonCnt = downloadMediaList.size();
+            }*/
+//    }
+
     }
 
 
@@ -847,7 +1036,7 @@ public class PushDataToServer {
     }
 */
 
-    private void pushDataScienceToServer(final Context context, JSONObject requestJsonObject) {
+    private void pushDataScienceToServer(final Context context, JSONObject requestJsonObject, String url) {
         final String filepathstr;
 
         try {
@@ -857,7 +1046,7 @@ public class PushDataToServer {
             String jsonPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_PUSH_JSON_PATH;
             if (!new File(jsonPath).exists())
                 new File(jsonPath).mkdirs();
-            filepathstr = AssessmentApplication.assessPath + Assessment_Constants.STORE_PUSH_JSON_PATH + "/" + uuID;
+            filepathstr = AssessmentApplication.assessPath + Assessment_Constants.STORE_PUSH_JSON_PATH + "/" + "AS_" + uuID;
 
            /* String filepathstr = Environment.getExternalStorageDirectory().toString()
                     + "/.FCAInternal/PushJsons/" + uuID; // file path to save*/
@@ -875,11 +1064,14 @@ public class PushDataToServer {
             s[0] = filepathstr + ".json";
             // first parameter is d files second parameter is zip file name
             zip(s, filepathstr + ".zip", filepath);
+            String multipartKey = "";
+            if (checkConnectedToRPI())
+                multipartKey = "uploaded_file";
+            else multipartKey = uuID;
 
-
-            AndroidNetworking.upload(UploadJsonZipURL)
+            AndroidNetworking.upload(url)
                     .addHeaders("Content-Type", "file/zip")
-                    .addMultipartFile("" + uuID, new File(filepathstr + ".zip"))
+                    .addMultipartFile(multipartKey, new File(filepathstr + ".zip"))
                     .setPriority(Priority.HIGH)
                     .build()
                     /* AndroidNetworking.post(url)
@@ -894,9 +1086,13 @@ public class PushDataToServer {
                                 new File(filepathstr + ".zip").delete();
                             Log.d("PUSH_STATUS", "Data pushed successfully");
                             Drawable icon = context.getResources().getDrawable(R.drawable.ic_check);
-                            pushSupervisorImages();
-                            createMediaFileToPush();
-                            CreateFilesForVideoMonitoring();
+                            if (!checkConnectedToRPI()) {
+                                pushSupervisorImages();
+                                createMediaFileToPush();
+                                CreateFilesForVideoMonitoring();
+                            } else {
+                                pushAllMediaToRPI();
+                            }
                             dataPushed = true;
                             setPushFlag();
                         }
@@ -930,6 +1126,23 @@ public class PushDataToServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private void pushAllMediaToRPI() {
+        downloadMediaList = new ArrayList<>();
+
+        downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_SUPERVISOR));
+
+        downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE));
+        downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO));
+        downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO));
+
+        downloadMediaList.addAll(AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaByTypeForPush(DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING));
+
+        if (downloadMediaList.size() > 0) {
+            pushImagesToServer_PI(downloadMediaList, 0);
+        } else onPostExecute();
     }
 
 
@@ -1060,8 +1273,14 @@ public class PushDataToServer {
                         msg1 = "Date-time: " + getCurrentDateTime() + "\n" + context.getString(R.string.papers_pushed)
                                 + " " + paperPushCnt + "\n" + "Score pushed: " + scorePushCount;
 //                    if (answerMediaPushed && supervisorImagesPushed && videoMonImagesPushed) {
-                        int mediaCnt = supervisorCnt + answerMediaCnt + videoMonCnt;
-                        int totalMediaCnt = totalSupervisorCnt + totalAnswerMediaCnt + totalVideoMonCnt;
+                        int totalMediaCnt = 0;
+                        if (!checkConnectedToRPI()) {
+                            mediaCnt = supervisorCnt + answerMediaCnt + videoMonCnt;
+                            totalMediaCnt = totalSupervisorCnt + totalAnswerMediaCnt + totalVideoMonCnt;
+                        } else {
+                            mediaCnt = rpiMediaCnt;
+                            totalMediaCnt = downloadMediaList.size();
+                        }
                         msg2 = context.getString(R.string.media_pushed) + mediaCnt + "/" + totalMediaCnt;
                         txt_push_dialog_msg.setText(msg1);
                         txt_push_cnt.setVisibility(View.VISIBLE);
@@ -1080,11 +1299,16 @@ public class PushDataToServer {
             int paperTotalCnt = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getPaperCount();
             int paperPushedCnt = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getPaperPushedCount();
             String paper = paperPushedCnt + "/" + paperTotalCnt;
-
-            int mediaTotalCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaCount();
-            int mediaPushedCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaPushedCount();
-            String media = mediaPushedCnt + "/" + mediaTotalCnt;
-
+            String media = "";
+            if (!checkConnectedToRPI()) {
+                int mediaTotalCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaCount();
+                int mediaPushedCnt = AppDatabase.getDatabaseInstance(context).getDownloadMediaDao().getMediaPushedCount();
+                media = mediaPushedCnt + "/" + mediaTotalCnt;
+            } else {
+                int mediaTotalCnt = downloadMediaList.size();
+                int mediaPushedCnt = rpiMediaCnt;
+                media = mediaPushedCnt + "/" + mediaTotalCnt;
+            }
             StringBuilder pushAllCount = new StringBuilder();
             pushAllCount.append("{ \"push_time\":\"").append(push_log.getCurrentDateTime()).append("\",");
             pushAllCount.append("\"score_pushed\":\"").append(score).append("\",");
