@@ -28,6 +28,7 @@ public class AssessmentPatternDetails {
 
     private String keyworddetail;
 
+// <<<<<<< HEAD
     @NonNull
     @PrimaryKey(autoGenerate = true)
     private int patternId;
@@ -41,6 +42,8 @@ public class AssessmentPatternDetails {
         this.examId = examId;
     }
 
+// =======
+// >>>>>>> feature_branch
 
 
 

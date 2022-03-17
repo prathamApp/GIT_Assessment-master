@@ -45,6 +45,7 @@ import static com.pratham.assessment.constants.Assessment_Constants.PUSH_DATA_FR
 import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
 import static com.pratham.assessment.utilities.Assessment_Utility.checkConnectedToRPI;
 // >>>>>>> feature_branch
+import static com.pratham.assessment.utilities.Assessment_Utility.checkConnectedToRPI;
 
 @EBean
 public class PushDBZipToServer {
@@ -113,6 +114,7 @@ public class PushDBZipToServer {
 // =======
             File dir = new File(Assessment_Utility.getStoragePath() + "/PrathamBackups/");
 // >>>>>>> feature_branch
+            File dir = new File(Assessment_Utility.getStoragePath() + "/PrathamBackups/");
             File[] db_files = dir.listFiles();
 
 
@@ -128,6 +130,7 @@ public class PushDBZipToServer {
 // =======
                 String filePathStr = Assessment_Utility.getStoragePath()
 // >>>>>>> feature_branch
+                String filePathStr = Assessment_Utility.getStoragePath()
                         + "/PrathamBackups/" + AppDatabase.DB_NAME; // file path to save
 
                 String fileName = Assessment_Utility.getUUID() + "_" +
@@ -139,6 +142,7 @@ public class PushDBZipToServer {
                 if (checkConnectedToRPI())
                     multipartKey = "uploaded_file";
                 else multipartKey = fileName;
+
 
 
       /*      File dir = new File(Environment.getStoragePath().toString() + "/PrathamBackups/");

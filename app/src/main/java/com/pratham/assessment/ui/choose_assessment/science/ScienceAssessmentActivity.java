@@ -541,7 +541,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         JSONArray jsonArray = new JSONArray();
 
                         if (response.length() > 0) {
+// <<<<<<< HEAD
                             insertQuestionsToDB(response, questionUrl);
+// =======
+// >>>>>>> feature_branchs
                             try {
                                 if (!isRPI) {
                                     jsonArray = new JSONArray(response);
@@ -925,6 +928,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                         .getQuestionChoicesByQcID(choice.getQcid());
                                 if (scienceQuestionChoice == null || !scienceQuestionChoice
                                         .getAppVersionChoice().equalsIgnoreCase(choice.getAppVersionChoice())) {
+// <<<<<<< HEAD
                                     mediaDownloaded = true;
 
                                     if (!choiceList.get(j).getChoiceurl().equalsIgnoreCase("")) {
@@ -935,6 +939,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                         downloadMedia.setPaperId(assessmentSession);
                                         downloadMedia.setMediaType("optionImage");
                                         downloadMediaList.add(downloadMedia);
+// =======
+// >>>>>>> feature_branch
                                     if (isRPI) {
                                         if (!choiceList.get(j).getLocalChoiceUrl().equalsIgnoreCase("")) {
                                             DownloadMedia downloadMedia = new DownloadMedia();

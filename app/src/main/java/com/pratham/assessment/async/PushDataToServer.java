@@ -1052,6 +1052,7 @@ public class PushDataToServer {
 // =======
             filepathstr = AssessmentApplication.assessPath + Assessment_Constants.STORE_PUSH_JSON_PATH + "/" + "AS_" + uuID;
 // >>>>>>> feature_branch
+            filepathstr = AssessmentApplication.assessPath + Assessment_Constants.STORE_PUSH_JSON_PATH + "/" + "AS_" + uuID;
 
            /* String filepathstr = Environment.getStoragePath().toString()
                     + "/.FCAInternal/PushJsons/" + uuID; // file path to save*/

@@ -2443,7 +2443,10 @@ public class Assessment_Utility {
         return false;
     }
 
+// <<<<<<< HEAD
 
+// =======
+// >>>>>>> feature_branch
     public static File getStoragePath() {
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)) {
             return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);

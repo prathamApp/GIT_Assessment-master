@@ -1,8 +1,11 @@
 package com.pratham.assessment.constants;
 
 import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
+// <<<<<<< HEAD
 
 import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
+// =======
+// >>>>>>> feature_branch
 
 public class Assessment_Constants {
     public static final String INITIAL_ENTRIES = "initial_entries";
