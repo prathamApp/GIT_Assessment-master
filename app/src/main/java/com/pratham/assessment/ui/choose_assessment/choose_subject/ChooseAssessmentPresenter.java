@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -37,6 +36,7 @@ import com.pratham.assessment.utilities.Assessment_Utility;
 import org.androidannotations.annotations.EBean;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -50,6 +50,7 @@ import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH
 import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_SUBJECT_ID;
 import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH_SUBJECT_NAME;
 import static com.pratham.assessment.constants.Assessment_Constants.CURRENT_VERSION;
+import static com.pratham.assessment.utilities.Assessment_Utility.checkConnectedToRPI;
 
 @EBean
 public class ChooseAssessmentPresenter implements ChooseAssessmentContract.ChooseAssessmentPresenter {
@@ -474,19 +475,33 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
     }
 
     private void getSubjectData() {
+        String url = "";
+        boolean isRPI = checkConnectedToRPI();
+        if (isRPI)
+            url = APIs.AssessmentSubjectAPIRPI + Assessment_Constants.SELECTED_LANGUAGE;
+        else url = APIs.AssessmentSubjectAPI + Assessment_Constants.SELECTED_LANGUAGE;
         contentTableList.clear();
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage(context.getString(R.string.loading_subjects));
-        AndroidNetworking.get(APIs.AssessmentSubjectAPI + Assessment_Constants.SELECTED_LANGUAGE)
+        AndroidNetworking.get(url)
                 .build()
-                .getAsJSONArray(new JSONArrayRequestListener() {
+                .getAsString(new StringRequestListener() {
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(String response) {
                         try {
-                            for (int i = 0; i < response.length(); i++) {
+                            JSONArray jsonArray;
+
+                            if (!isRPI) {
+                                jsonArray = new JSONArray(response);
+                            } else {
+                                JSONObject jsonObject = new JSONObject(response);
+                                jsonArray = jsonObject.getJSONArray("results");
+                            }
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 AssessmentSubjects assessmentSubjects = new AssessmentSubjects();
-                                assessmentSubjects.setSubjectid(response.getJSONObject(i).getString("subjectid"));
-                                assessmentSubjects.setSubjectname(response.getJSONObject(i).getString("subjectname"));
+                                assessmentSubjects.setSubjectid(jsonArray.getJSONObject(i).getString("subjectid"));
+                                assessmentSubjects.setSubjectname(jsonArray.getJSONObject(i).getString("subjectname"));
                                 assessmentSubjects.setLanguageid(Assessment_Constants.SELECTED_LANGUAGE);
                                 contentTableList.add(assessmentSubjects);
                             }
@@ -591,24 +606,38 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
 
     private void getLanguageData() {
+        String url = "";
+        boolean isRPI = checkConnectedToRPI();
+        if (isRPI)
+            url = APIs.AssessmentLanguageAPIRPI;
+        else url = APIs.AssessmentLanguageAPI;
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage(context.getString(R.string.loading));
         progressDialog.setCancelable(false);
         progressDialog.show();
-        AndroidNetworking.get(APIs.AssessmentLanguageAPI)
+        AndroidNetworking.get(url)
                 .build()
-                .getAsJSONArray(new JSONArrayRequestListener() {
+                .getAsString(new StringRequestListener() {
                     @Override
-                    public void onResponse(JSONArray response) {
+                    public void onResponse(String response) {
                         try {
+                            JSONArray jsonArray;
+
+                            if (!isRPI) {
+                                jsonArray = new JSONArray(response);
+                            } else {
+                                JSONObject jsonObject = new JSONObject(response);
+                                jsonArray = jsonObject.getJSONArray("results");
+                            }
+
                             if (progressDialog != null && progressDialog.isShowing())
                                 progressDialog.dismiss();
                             List<AssessmentLanguages> assessmentLanguagesList = new ArrayList<>();
 
-                            for (int i = 0; i < response.length(); i++) {
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 AssessmentLanguages assessmentLanguages = new AssessmentLanguages();
-                                assessmentLanguages.setLanguageid(response.getJSONObject(i).getString("languageid"));
-                                assessmentLanguages.setLanguagename(response.getJSONObject(i).getString("languagename"));
+                                assessmentLanguages.setLanguageid(jsonArray.getJSONObject(i).getString("languageid"));
+                                assessmentLanguages.setLanguagename(jsonArray.getJSONObject(i).getString("languagename"));
                                 assessmentLanguagesList.add(assessmentLanguages);
                             }
                             if (assessmentLanguagesList.size() > 0)
@@ -641,7 +670,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
         String currentVersion = Assessment_Utility.getCurrentVersion(context);
         Log.d("version::", "Current version = " + currentVersion);
         try {
-            latestVersion = new GetLatestVersion(this,context).execute().get();
+            latestVersion = new GetLatestVersion(this, context).execute().get();
             Log.d("version::", "Latest version = " + latestVersion);
         } catch (InterruptedException e) {
             e.printStackTrace();

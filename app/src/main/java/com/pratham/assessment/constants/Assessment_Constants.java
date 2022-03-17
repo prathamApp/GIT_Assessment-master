@@ -1,6 +1,6 @@
 package com.pratham.assessment.constants;
 
-import android.os.Environment;
+import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
 
 import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
 
@@ -56,6 +56,7 @@ public class Assessment_Constants {
 
 
     public static final String PRATHAM_KOLIBRI_HOTSPOT = "prathamkolibri";
+    public static final String PRATHAM_RPI_HOTSPOT = "prathamDigital";
     public static String FACILITY_ID = "facility_id";
     public static final String USAGEDATA = "USAGEDATA";
     public static final String BASE_URL = "http://prodigi.openiscool.org/api/pos/";
@@ -110,12 +111,12 @@ public class Assessment_Constants {
     public static String STORE_STUDENT_DIAGNOSTIC_PDF_PATH = getStoragePath() + "/PrathamBackups/StudentPDFs";
     public static String STORE_STUDENT_DIAGNOSTIC_PDF_OLD_PATH = getStoragePath() + "/PrathamBackups/StudentOldPDFs";
     public static String STORE_PUSH_JSON_PATH = "/.Assessment/Content/PushJson";
-    public static String DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING = "videoMonitoring";
+    public static final String DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING = "videoMonitoring";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO = "answerVideo";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO = "answerAudio";
     public static String DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE = "answerImage";
-    public static String DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA = "answerMedia";
-    public static String DOWNLOAD_MEDIA_TYPE_SUPERVISOR = "supervisorImage";
+    public static final String DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA = "answerMedia";
+    public static final String DOWNLOAD_MEDIA_TYPE_SUPERVISOR = "supervisorImage";
     public static String SDCARD_OFFLINE_PATH_SAVED = "sdcardOfflinePathSaved";
 
     public static final String KOLIBRI_BLOCK = "kolibri_block";
@@ -220,6 +221,7 @@ public class Assessment_Constants {
         public String toString() {
             return name;
         }
+
 
     }
 }

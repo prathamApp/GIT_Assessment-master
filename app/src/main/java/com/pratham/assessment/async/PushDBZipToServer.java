@@ -3,7 +3,6 @@ package com.pratham.assessment.async;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,7 +27,6 @@ import com.pratham.assessment.utilities.Assessment_Utility;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.UiThread;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -45,6 +43,8 @@ import java.util.zip.ZipOutputStream;
 import static com.pratham.assessment.AssessmentApplication.isTablet;
 import static com.pratham.assessment.constants.Assessment_Constants.PUSH_DATA_FROM_DRAWER;
 import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
+import static com.pratham.assessment.utilities.Assessment_Utility.checkConnectedToRPI;
+// >>>>>>> feature_branch
 
 @EBean
 public class PushDBZipToServer {
@@ -97,7 +97,10 @@ public class PushDBZipToServer {
         push_log.setLogDetail("Apk version : " + Assessment_Utility.getCurrentVersion(context));
         push_log.setErrorType("DB_PUSH");
 
-        pushZipToServer(context, APIs.push_db_zip);
+        if (Assessment_Utility.checkConnectedToRPI())
+            pushZipToServer(context, APIs.UploadDBZipURLRPI);
+        else
+            pushZipToServer(context, APIs.pushDbZip);
 
     }
 
@@ -105,7 +108,11 @@ public class PushDBZipToServer {
         try {
 //            String newdata = compress(String.valueOf(data));
             BackupDatabase.backup(context);
+// <<<<<<< HEAD
             File dir = new File(getStoragePath().toString() + "/PrathamBackups/");
+// =======
+            File dir = new File(Assessment_Utility.getStoragePath() + "/PrathamBackups/");
+// >>>>>>> feature_branch
             File[] db_files = dir.listFiles();
 
 
@@ -116,13 +123,22 @@ public class PushDBZipToServer {
                     if (db_files[i].exists() && db_files[i].isFile() && db_files[i].getName().contains("assessment"))
                         fileNameListStrings.add(db_files[i].getAbsolutePath());
 
+// <<<<<<< HEAD
                 String filePathStr = getStoragePath().toString()
+// =======
+                String filePathStr = Assessment_Utility.getStoragePath()
+// >>>>>>> feature_branch
                         + "/PrathamBackups/" + AppDatabase.DB_NAME; // file path to save
 
                 String fileName = Assessment_Utility.getUUID() + "_" +
                         Assessment_Utility.getDeviceId(context) + "_" + FastSave.getInstance().getString("currentStudentID", "");
 
                 zip(fileNameListStrings, filePathStr + ".zip", new File(filePathStr));
+
+                String multipartKey = "";
+                if (checkConnectedToRPI())
+                    multipartKey = "uploaded_file";
+                else multipartKey = fileName;
 
 
       /*      File dir = new File(Environment.getStoragePath().toString() + "/PrathamBackups/");
@@ -145,22 +161,22 @@ public class PushDBZipToServer {
  */
                 AndroidNetworking.upload(url[0])
                         .addHeaders("Content-Type", "file/zip")
-                        .addMultipartFile("" + fileName, new File(filePathStr + ".zip"))
+                        .addMultipartFile(multipartKey, new File(filePathStr + ".zip"))
                         .setPriority(Priority.HIGH)
                         .build()
                         .getAsJSONObject(new JSONObjectRequestListener() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
-                                    if (response.getString("success").equalsIgnoreCase("true")) {
-                                        if (new File(filePathStr + ".zip").exists())
-                                            new File(filePathStr + ".zip").delete();
+//                                    if (response.getString("success").equalsIgnoreCase("true")) {
+                                    if (new File(filePathStr + ".zip").exists())
+                                        new File(filePathStr + ".zip").delete();
 
-                                        dataPushed = true;
-                                        onPostExecute();
-                                    }
+                                    dataPushed = true;
+                                    onPostExecute();
+//                                    }
 
-                                } catch (JSONException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
 
                                 }
@@ -234,6 +250,9 @@ public class PushDBZipToServer {
 //            new File(zipFileName).delete();
         } catch (Exception e) {
             e.printStackTrace();
+            dataPushed = false;
+            onPostExecute();
+
         }
     }
 

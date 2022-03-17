@@ -17,6 +17,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.APIs;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.AssessmentTest;
@@ -24,13 +26,14 @@ import com.pratham.assessment.domain.AssessmentTestModal;
 import com.pratham.assessment.domain.NIOSExam;
 import com.pratham.assessment.domain.NIOSExamTopics;
 import com.pratham.assessment.ui.choose_assessment.choose_subject.ChooseAssessmentActivity;
-import com.pratham.assessment.constants.APIs;
-import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -38,6 +41,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
+import static com.pratham.assessment.utilities.Assessment_Utility.checkConnectedToRPI;
 
 /*import butterknife.BindView;
 import butterknife.ButterKnife;*/
@@ -77,7 +81,8 @@ public class TopicFragment extends Fragment {
                 AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
                 AppDatabase.getDatabaseInstance(getActivity()).getTestDao().insertAllTest(assessmentTests);
                 setTopicsToRecyclerView(assessmentTests);
-            } else*/ if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
+            } else*/
+            if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
                 getNIOSExams();
             else
                 getExamData();
@@ -266,20 +271,44 @@ public class TopicFragment extends Fragment {
     }*/
 
     private void getExamData() {
+        String url = "";
+        boolean isRPI = checkConnectedToRPI();
+        if (isRPI)
+            url = APIs.AssessmentExamAPIRPI + subjectId + "&languageid=" + Assessment_Constants.SELECTED_LANGUAGE;
+        else
+            url = APIs.AssessmentExamAPI + subjectId + "&languageid=" + Assessment_Constants.SELECTED_LANGUAGE;
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getString(R.string.loading_exams));
         progressDialog.setCancelable(false);
         progressDialog.show();
-        AndroidNetworking.get(APIs.AssessmentExamAPI + subjectId + "&languageid=" + Assessment_Constants.SELECTED_LANGUAGE)
+        AndroidNetworking.get(url)
                 .build()
                 .getAsString(new StringRequestListener() {
                     @Override
                     public void onResponse(String response) {
-                        Gson gson = new Gson();
-                        Type listType = new TypeToken<List<AssessmentTestModal>>() {
-                        }.getType();
-                        assessmentTestModals = gson.fromJson(response, listType);
-                        assessmentTests.clear();
+
+                        JSONArray jsonArray;
+
+                        if (!isRPI) {
+                            Gson gson = new Gson();
+                            Type listType = new TypeToken<List<AssessmentTestModal>>() {
+                            }.getType();
+                            assessmentTestModals = gson.fromJson(response, listType);
+                            assessmentTests.clear();
+                        } else {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response);
+                                jsonArray = jsonObject.getJSONArray("results");
+                                Gson gson = new Gson();
+                                Type listType = new TypeToken<List<AssessmentTestModal>>() {
+                                }.getType();
+                                assessmentTestModals = gson.fromJson(String.valueOf(jsonArray), listType);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
                         for (int i = 0; i < assessmentTestModals.size(); i++) {
                             assessmentTests.addAll(assessmentTestModals.get(i).getLstsubjectexam());
                             for (int j = 0; j < assessmentTests.size(); j++) {

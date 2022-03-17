@@ -48,7 +48,7 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.MyViewHolder
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.assessment_content_card, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.assessment_topic_card, viewGroup, false);
         return new MyViewHolder(view);
     }
 

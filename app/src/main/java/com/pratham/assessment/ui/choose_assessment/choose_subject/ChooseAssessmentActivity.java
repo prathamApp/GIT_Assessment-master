@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -680,18 +681,12 @@ public class ChooseAssessmentActivity extends BaseActivity implements
     @Override
     public void topicClicked(int pos, AssessmentTest test) {
 //        Toast.makeText(this, "" + test.getExamname(), Toast.LENGTH_SHORT).show();
-        Assessment_Constants.SELECTED_EXAM_ID = test.getExamid();
-        FastSave.getInstance().saveString(EXAMID, test.getExamid());
-       /* List<AssessmentTest> tests = AppDatabase.getDatabaseInstance(this).getTestDao().getTopicByExamId(Assessment_Constants.SELECTED_EXAM_ID);
-        if (tests.size() <= 0) {
-            downloadPaperPattern();
-        }*/
-   /*     if (Assessment_Constants.ASSESSMENT_TYPE.equalsIgnoreCase("supervised"))
-            showSupervisionDialog();
-        else {*/
-        Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity_.class);
+            Assessment_Constants.SELECTED_EXAM_ID = test.getExamid();
+            FastSave.getInstance().saveString(EXAMID, test.getExamid());
+
+            Intent intent = new Intent(ChooseAssessmentActivity.this, ScienceAssessmentActivity_.class);
 //        Intent intent = new Intent(ChooseAssessmentActivity.this, DownloadQuestionsActivity_.class);
-        startActivity(intent);
+            startActivity(intent);
 //        }
     }
 

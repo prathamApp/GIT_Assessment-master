@@ -966,6 +966,27 @@ public class Assessment_Utility {
         }
     }
 
+    public static boolean checkConnectedToRPI() {
+        boolean isRPI = false;
+        if (AssessmentApplication.wiseF.isDeviceConnectedToWifiNetwork()) {
+            if (AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_RPI_HOTSPOT)) {
+                try {
+                    isRPI = true;
+                    /*JSONObject object = new JSONObject();
+                    object.put("username", "pratham");
+                    object.put("password", "pratham");
+                    new PD_ApiRequest(context, ContentPresenterImpl.this)
+                            .getacilityIdfromRaspberry(Assessment_Constants.FACILITY_ID, Assessment_Constants.RASP_IP + "/api/session/", object);*/
+                } catch (Exception e) {
+                    isRPI = false;
+                    e.printStackTrace();
+                }
+            }
+        } else isRPI = false;
+        return isRPI;
+    }
+
+
 
     /*public static void setFont(Context context, TextView view) {
         Typeface font = null;
@@ -2430,5 +2451,4 @@ public class Assessment_Utility {
             return Environment.getExternalStorageDirectory();
         }
     }
-
 }

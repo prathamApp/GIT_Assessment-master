@@ -52,6 +52,13 @@ public class AssessmentPatternDetails {
         this.patternId = patternId;
     }
 
+    public String getExamId() {
+        return examId;
+    }
+
+    public void setExamId(String examId) {
+        this.examId = examId;
+    }
 
     public String getQlevel() {
         return qlevel;

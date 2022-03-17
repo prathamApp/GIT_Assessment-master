@@ -65,4 +65,7 @@ public interface DownloadMediaDao {
 
     @Query("update DownloadMedia set sentFlag=1 where sentFlag=0 AND mediaType=:type")
     public int setSentFlag(String type);
+
+    @Query("update DownloadMedia set sentFlag=1 where sentFlag=0 AND mediaType=:type and photoUrl=:url")
+    public int setSentFlagByPath(String type, String url);
 }

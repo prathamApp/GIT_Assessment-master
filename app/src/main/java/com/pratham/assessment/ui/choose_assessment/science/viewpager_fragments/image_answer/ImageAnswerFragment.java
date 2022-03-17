@@ -288,7 +288,7 @@ public class ImageAnswerFragment extends Fragment implements ImageAnswerContract
 
                     if (!((ScienceAssessmentActivity) context).isPermissionsGranted(context, permissionArray)) {
                         Toast.makeText(context, R.string.give_camera_permissions, Toast.LENGTH_SHORT).show();
-                    }    else {
+                    } else {
 //                        imageName = Assessment_Utility.getFileName(scienceQuestion.getQid())
                         scienceQuestion.setUserAnswer(path + "/" + fileName);
 //                        selectedImage = selectedImageTemp;
@@ -344,7 +344,7 @@ public class ImageAnswerFragment extends Fragment implements ImageAnswerContract
                         Intent intent = new Intent();
                         intent.setType("image/*");
                         intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_FROM_GALLERY  );
+                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_FROM_GALLERY);
                     }
                 } else {
 //                    imageName = entryID + "_" + dde_questions.getQuestionId() + ".jpg";
@@ -469,7 +469,7 @@ public class ImageAnswerFragment extends Fragment implements ImageAnswerContract
 
                         Log.d("TAG", "onActivityResult: " + imageList.size());
 
-                        assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), answers,0 );
+                        assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), answers, 0);
                         if (imageList.size() > 0) {
                             view_captured_img.setVisibility(View.VISIBLE);
                         }

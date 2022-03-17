@@ -6,6 +6,8 @@ import com.pratham.assessment.domain.AssessmentTest;
 
 public interface ChoseAssessmentClicked {
     public void subjectClicked(int position, AssessmentSubjects nodeId);
+
     void languageClicked(int pos, AssessmentLanguages languages);
+
     void topicClicked(int pos, AssessmentTest test);
 }

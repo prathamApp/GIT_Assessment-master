@@ -309,6 +309,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         title.setText("Do you want to exit?");
         restart_btn.setText("Yes");
         exit_btn.setText("No");
+        dia_btn_cancel.setText("Cancel");
         dia_btn_cancel.setVisibility(View.GONE);
         dialog.show();
 

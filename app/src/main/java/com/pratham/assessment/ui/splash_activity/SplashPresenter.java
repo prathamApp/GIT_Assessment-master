@@ -422,6 +422,8 @@ public class SplashPresenter implements SplashContract.SplashPresenter {
                 @Override
                 protected Void doInBackground(Void... voids) {
                     try {
+                        ArrayList<String> sdPath = FileUtils.getExtSdCardPaths(context);
+//                        SQLiteDatabase db = SQLiteDatabase.openDatabase(sdPath.get(0) + "/.Assessment/offline_assessment_database.db", null, SQLiteDatabase.OPEN_READONLY);
                         SQLiteDatabase db = SQLiteDatabase.openDatabase(getStoragePath() + "/PrathamBackups/offline_assessment_database.db", null, SQLiteDatabase.OPEN_READONLY);
                         if (db != null) {
                             try {

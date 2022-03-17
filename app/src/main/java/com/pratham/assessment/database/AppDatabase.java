@@ -72,7 +72,7 @@ import com.pratham.assessment.domain.Village;
         AssessmentTest.class, AssessmentPaperForPush.class,
         AssessmentPaperPattern.class, AssessmentPatternDetails.class,
         SupervisorData.class, DownloadMedia.class, TempScienceQuestion.class,
-        NIOSExam.class, NIOSExamTopics.class, CertificateTopicList.class, CertificateKeywordRating.class}, version = 19/*,exportSchema = false*/)
+        NIOSExam.class, NIOSExamTopics.class, CertificateTopicList.class, CertificateKeywordRating.class}, version = 20/*,exportSchema = false*/)
 public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase appDatabase;
 
@@ -153,7 +153,8 @@ public abstract class AppDatabase extends RoomDatabase {
                                 MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8,
                                 MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12,
                                 MIGRATION_12_13, MIGRATION_13_14, MIGRATION_14_15, MIGRATION_15_16,
-                                MIGRATION_14_15, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19)
+                                MIGRATION_14_15, MIGRATION_16_17, MIGRATION_17_18, MIGRATION_18_19,
+                                MIGRATION_19_20)
                         .allowMainThreadQueries().build();
 
             }
@@ -567,12 +568,29 @@ public abstract class AppDatabase extends RoomDatabase {
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             Log.d("$$$", "MIGRATION_18_19");
             try {
-                //TODO ----UNcoMMent new fields frOm push data************
                 database.execSQL("ALTER TABLE AssessmentPaperForPush add recommendedLevel INTEGER not null DEFAULT 0");
                 database.execSQL("ALTER TABLE AssessmentPaperForPush add isDiagnosticTest INTEGER not null DEFAULT 0");
 
 
                 Log.d("$$$", "after MIGRATION_18_19");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    static final Migration MIGRATION_19_20 = new Migration(19, 20) {
+
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            Log.d("$$$", "MIGRATION_19_20");
+            try {
+                database.execSQL("ALTER TABLE ScienceQuestion add localPhotoUrl TEXT");
+                database.execSQL("ALTER TABLE ScienceQuestionChoice add localChoiceUrl TEXT");
+                database.execSQL("ALTER TABLE ScienceQuestionChoice add localMatchUrl TEXT");
+
+
+                Log.d("$$$", "after MIGRATION_19_20");
             } catch (Exception e) {
                 e.printStackTrace();
             }

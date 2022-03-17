@@ -132,7 +132,8 @@ public class ZoomImageActivity extends AppCompatActivity implements AudioPlayerI
       /*  else if (!path.equalsIgnoreCase(""))
             extension = getFileExtension(path);*/
 
-        if (extension.equalsIgnoreCase("mp4") || extension.equalsIgnoreCase("3gp")) {
+        if (extension.equalsIgnoreCase("mp4") ||
+                extension.equalsIgnoreCase("3gp")) {
             rl_para.setVisibility(View.GONE);
 
             zoomImg.setVisibility(View.GONE);

@@ -228,6 +228,9 @@ public class SupervisedAssessmentActivity extends BaseActivity {
          /*   File direct = new File(getStoragePath().toString() + "/.assessmentInternal");
             if (!direct.exists()) direct.mkdirs();
             direct = new File(getStoragePath().toString() + "/.assessmentInternal/supervisorImages");
+         /*   File direct = new File(Environment.getExternalStorageDirectory().toString() + "/.assessmentInternal");
+            if (!direct.exists()) direct.mkdirs();
+            direct = new File(Environment.getExternalStorageDirectory().toString() + "/.assessmentInternal/supervisorImages");
             if (!direct.exists()) direct.mkdirs();
 */
             File direct = new File(AssessmentApplication.assessPath + Assessment_Constants.ASSESSMENT_FOLDER_PATH);

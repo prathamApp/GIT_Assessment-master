@@ -61,6 +61,10 @@ public class ScienceQuestion implements Serializable {
     private String AppVersion;
     private String qname;
 
+
+    private String localPhotoUrl;
+
+
     public String getAppVersion() {
         return AppVersion;
     }
@@ -388,4 +392,15 @@ public class ScienceQuestion implements Serializable {
     public int hashCode() {
         return Integer.parseInt(qid);
     }
+
+
+    public String getLocalPhotoUrl() {
+        return localPhotoUrl;
+    }
+
+    public void setLocalPhotoUrl(String localPhotoUrl) {
+        this.localPhotoUrl = localPhotoUrl;
+    }
+
+
 }

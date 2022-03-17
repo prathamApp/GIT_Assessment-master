@@ -25,6 +25,9 @@ public class ScienceQuestionChoice implements Serializable {
 
     private String AppVersionChoice;
 
+    private String localChoiceUrl;
+    private String localMatchUrl;
+
     public String getAppVersionChoice() {
         return AppVersionChoice;
     }
@@ -106,6 +109,21 @@ public class ScienceQuestionChoice implements Serializable {
 
     public void setMatchingname(String matchingname) {
         this.matchingname = matchingname;
+    }
+    public String getLocalChoiceUrl() {
+        return localChoiceUrl;
+    }
+
+    public void setLocalChoiceUrl(String localChoiceUrl) {
+        this.localChoiceUrl = localChoiceUrl;
+    }
+
+    public String getLocalMatchUrl() {
+        return localMatchUrl;
+    }
+
+    public void setLocalMatchUrl(String localMatchUrl) {
+        this.localMatchUrl = localMatchUrl;
     }
 
 }
