@@ -818,6 +818,11 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
         }
     }
 
+    @Override
+    public void reDownloadExam() {
+
+    }
+
     /*@Override
     public void setParagraph(String para, boolean isParaQuestion) {
 

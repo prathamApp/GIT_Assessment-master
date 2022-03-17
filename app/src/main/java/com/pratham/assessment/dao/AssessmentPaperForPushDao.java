@@ -85,6 +85,12 @@ public interface AssessmentPaperForPushDao {
     @Query("select * from AssessmentPaperForPush where examid=:examId and studentid=:studentId order by paperEndTime DESC limit 1")
     public List<AssessmentPaperForPush> getLatestPaperByStudIdExamId(String studentId, String examId);
 
+    @Query("select * from AssessmentPaperForPush where examid=:examId  order by paperEndTime DESC limit 1")
+    public List<AssessmentPaperForPush> getLatestPaperByExamId(String examId);
+
+    @Query("select distinct studentId from AssessmentPaperForPush where examid=:examId")
+    public List<String> getDistinctStudentIdsByExamId(String examId);
+
     @Query("update AssessmentPaperForPush set sentFlag=1 where sentFlag=0")
     public void setSentFlag();
 

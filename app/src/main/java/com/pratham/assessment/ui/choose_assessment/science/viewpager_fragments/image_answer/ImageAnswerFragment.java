@@ -155,23 +155,25 @@ public class ImageAnswerFragment extends Fragment implements ImageAnswerContract
             else
                 localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 */
-            String extension = getFileExtension(localPath);
+            if (new File(localPath).exists()) {
 
-            if (extension.equalsIgnoreCase("PNG") ||
-                    extension.equalsIgnoreCase("gif") ||
-                    extension.equalsIgnoreCase("JPEG") ||
-                    extension.equalsIgnoreCase("JPG")) {
-                Assessment_Utility.setQuestionImageToImageView(questionImage, questionGif, localPath, getActivity());
-            } else {
-                if (extension.equalsIgnoreCase("mp4") ||
-                        extension.equalsIgnoreCase("3gp")) {
-                    Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
+                String extension = getFileExtension(localPath);
+
+                if (extension.equalsIgnoreCase("PNG") ||
+                        extension.equalsIgnoreCase("gif") ||
+                        extension.equalsIgnoreCase("JPEG") ||
+                        extension.equalsIgnoreCase("JPG")) {
+                    Assessment_Utility.setQuestionImageToImageView(questionImage, questionGif, localPath, getActivity());
+                } else {
+                    if (extension.equalsIgnoreCase("mp4") ||
+                            extension.equalsIgnoreCase("3gp")) {
+                        Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
+                    }
+                    questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
+                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250, 250);
+                    param.gravity = Gravity.CENTER;
+                    questionImage.setLayoutParams(param);
                 }
-                questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250, 250);
-                param.gravity = Gravity.CENTER;
-                questionImage.setLayoutParams(param);
-            }
           /*  String path = scienceQuestion.getPhotourl();
             String[] imgPath = path.split("\\.");
             int len;
@@ -207,8 +209,9 @@ public class ImageAnswerFragment extends Fragment implements ImageAnswerContract
                         .into(questionImage);
             }
 */
-            questionImage.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
-            questionGif.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
+                questionImage.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
+                questionGif.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
+            } else assessmentAnswerListener.reDownloadExam();
         } else questionImage.setVisibility(View.GONE);
 
 //        fileName = scienceQuestion.getQid() + "_" + scienceQuestion.getPaperid() + "_" + Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE + "_" + capturedImageCnt + ".jpg";
@@ -288,7 +291,7 @@ public class ImageAnswerFragment extends Fragment implements ImageAnswerContract
 
                     if (!((ScienceAssessmentActivity) context).isPermissionsGranted(context, permissionArray)) {
                         Toast.makeText(context, R.string.give_camera_permissions, Toast.LENGTH_SHORT).show();
-                    }    else {
+                    } else {
 //                        imageName = Assessment_Utility.getFileName(scienceQuestion.getQid())
                         scienceQuestion.setUserAnswer(path + "/" + fileName);
 //                        selectedImage = selectedImageTemp;
@@ -344,7 +347,7 @@ public class ImageAnswerFragment extends Fragment implements ImageAnswerContract
                         Intent intent = new Intent();
                         intent.setType("image/*");
                         intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_FROM_GALLERY  );
+                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_FROM_GALLERY);
                     }
                 } else {
 //                    imageName = entryID + "_" + dde_questions.getQuestionId() + ".jpg";
@@ -469,7 +472,7 @@ public class ImageAnswerFragment extends Fragment implements ImageAnswerContract
 
                         Log.d("TAG", "onActivityResult: " + imageList.size());
 
-                        assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), answers,0 );
+                        assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), answers, 0);
                         if (imageList.size() > 0) {
                             view_captured_img.setVisibility(View.VISIBLE);
                         }

@@ -1,5 +1,6 @@
 package com.pratham.assessment.ui.choose_assessment.science.certificate.CertificateSubjects;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,10 +39,21 @@ public class CertificateSummaryFragment extends Fragment implements SubjectContr
     String selectedLang = "english";
     @Bean(SubjectPresenter.class)
     SubjectContract.SubjectPresenter presenter;
+    String appName = "NA";
+    String schoolAppName = "PraDigi for School";
 
     @AfterViews
     public void init() {
 //        presenter = new SubjectPresenter(getActivity(), this);
+        try {
+            if (getArguments() != null) {
+                Bundle bundle = getArguments();
+                appName = bundle.getString("appName");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            appName = "NA";
+        }
         presenter.setView(this);
         /*if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
             presenter.pullCertificates();
@@ -83,8 +95,13 @@ public class CertificateSummaryFragment extends Fragment implements SubjectContr
     @Override
     public void setSubjectToSpinner() {
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
+        List<String> distinctExamIds;
 
-        List<String> distinctExamIds = AppDatabase.getDatabaseInstance(getActivity()).getCertificateKeywordRatingDao().getQuestionsByExamIdSubId(currentStudentID);
+        if (!appName.equalsIgnoreCase(schoolAppName)) {
+            distinctExamIds = AppDatabase.getDatabaseInstance(getActivity()).getCertificateKeywordRatingDao().getQuestionsByExamIdBySubId(currentStudentID);
+        } else {
+            distinctExamIds = AppDatabase.getDatabaseInstance(getActivity()).getCertificateKeywordRatingDao().getQuestionsByExamId();
+        }
         List<String> examIdsForPracticeMode = new ArrayList<>();
 
         for (int i = 0; i < distinctExamIds.size(); i++) {
@@ -96,19 +113,30 @@ public class CertificateSummaryFragment extends Fragment implements SubjectContr
                         if (pattern.getExammode().equalsIgnoreCase(Assessment_Constants.SUPERVISED))
                             examIdsForPracticeMode.add(pattern.getExamid());
                     }
+                } else {
+                    if (!appName.equalsIgnoreCase(schoolAppName)) {
+                        examIdsForPracticeMode.add(pattern.getExamid());
+                    }
                 }
-                else examIdsForPracticeMode.add(pattern.getExamid());
 //                    }
         }
         List<String> languageIds = new ArrayList<>();
+        List<String> filteredLangId;
 
         for (int j = 0; j < examIdsForPracticeMode.size(); j++) {
-            List<String> langId = AppDatabase.getDatabaseInstance(getActivity())
-                    .getCertificateKeywordRatingDao()
-                    .getDistinctLangByExamIdStudentId(currentStudentID, examIdsForPracticeMode.get(j));
+            if (!appName.equalsIgnoreCase(schoolAppName)) {
 
-            if (langId != null && langId.size() > 0 && !langId.contains(langId))
-                languageIds.addAll(langId);
+                filteredLangId = AppDatabase.getDatabaseInstance(getActivity())
+                        .getCertificateKeywordRatingDao()
+                        .getDistinctLangByExamIdStudentId(currentStudentID, examIdsForPracticeMode.get(j));
+            } else {
+                filteredLangId = AppDatabase.getDatabaseInstance(getActivity())
+                        .getCertificateKeywordRatingDao()
+                        .getDistinctLangByExamId(examIdsForPracticeMode.get(j));
+
+            }
+            if (filteredLangId != null && filteredLangId.size() > 0 && !filteredLangId.contains(filteredLangId))
+                languageIds.addAll(filteredLangId);
         }
 
 //        languageIds = AppDatabase.getDatabaseInstance(getActivity()).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueLangCertificatequestionsNotNull(currentStudentID);
@@ -127,12 +155,12 @@ public class CertificateSummaryFragment extends Fragment implements SubjectContr
                         TextView lang = (TextView) view;
                         selectedLang = lang.getText().toString();
                     }
-                    presenter.getSubjectsFromDB(selectedLang);
+                    presenter.getSubjectsFromDB(selectedLang, appName);
                 }
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
-                    presenter.getSubjectsFromDB(selectedLang);
+                    presenter.getSubjectsFromDB(selectedLang, appName);
                 }
             });
         } else {
@@ -143,7 +171,7 @@ public class CertificateSummaryFragment extends Fragment implements SubjectContr
 
     @Override
     public void setSubjects(final List<AssessmentSubjectsExpandable> subjects) {
-        SubjectAdapter subjectAdapter = new SubjectAdapter(getActivity(), subjects);
+        SubjectAdapter subjectAdapter = new SubjectAdapter(getActivity(), subjects, appName);
         subjectAdapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
             @Override
             public void onListItemExpanded(int position) {

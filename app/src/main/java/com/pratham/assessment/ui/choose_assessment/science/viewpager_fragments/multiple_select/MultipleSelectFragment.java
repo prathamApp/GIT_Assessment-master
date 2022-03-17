@@ -14,7 +14,6 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
@@ -31,6 +30,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.File;
 import java.util.List;
 
 import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
@@ -125,28 +125,35 @@ public class MultipleSelectFragment extends Fragment implements MultipleSelectCo
         final String localPath = Assessment_Utility.getQuestionLocalPath(scienceQuestion);
 
         if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
-            questionImage.setVisibility(View.VISIBLE);
-            String extension = getFileExtension(localPath);
+            if (new File(localPath).exists()) {
 
-            if (extension.equalsIgnoreCase("PNG") ||
-                    extension.equalsIgnoreCase("gif") ||
-                    extension.equalsIgnoreCase("JPEG") ||
-                    extension.equalsIgnoreCase("JPG")) {
-                Assessment_Utility.setQuestionImageToImageView(questionImage, questionGif, localPath, getActivity());
-            } else {
-                if (extension.equalsIgnoreCase("mp4") ||
-                        extension.equalsIgnoreCase("3gp")) {
-                    Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
+                questionImage.setVisibility(View.VISIBLE);
+                String extension = getFileExtension(localPath);
+
+                if (extension.equalsIgnoreCase("PNG") ||
+                        extension.equalsIgnoreCase("gif") ||
+                        extension.equalsIgnoreCase("JPEG") ||
+                        extension.equalsIgnoreCase("JPG")) {
+                    Assessment_Utility.setQuestionImageToImageView(questionImage, questionGif, localPath, getActivity());
+                } else {
+                    if (extension.equalsIgnoreCase("mp4") ||
+                            extension.equalsIgnoreCase("3gp")) {
+                        Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
+                    }
+                    questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
+                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250, 250);
+                    param.gravity = Gravity.CENTER;
+                    questionImage.setLayoutParams(param);
                 }
-                questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250, 250);
-                param.gravity = Gravity.CENTER;
-                questionImage.setLayoutParams(param);
-            }
+            } else assessmentAnswerListener.reDownloadExam();
         } else questionImage.setVisibility(View.GONE);
 
-        questionImage.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
-        questionGif.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
+        questionImage.setOnClickListener(v ->
+
+                showZoomDialog(getActivity(), localPath, ""));
+        questionGif.setOnClickListener(v ->
+
+                showZoomDialog(getActivity(), localPath, ""));
 
         final List<ScienceQuestionChoice> choices = scienceQuestion.getLstquestionchoice();
         if (choices != null && !choices.isEmpty()) {
@@ -206,9 +213,9 @@ public class MultipleSelectFragment extends Fragment implements MultipleSelectCo
                 gridLayout.addView(checkBox);
             }
         } else {
-            Toast.makeText(getActivity(), R.string.error_in_loading_check_internet_connection, Toast.LENGTH_LONG).show();
             assessmentAnswerListener.reDownloadExam();
         }
+
     }
 
     @Override

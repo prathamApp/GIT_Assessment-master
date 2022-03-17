@@ -27,8 +27,9 @@
     <RelativeLayout
         android:id="@+id/rl_img"
         android:layout_width="wrap_content"
-        android:padding="@dimen/_5sdp"
-        android:layout_height="@dimen/_60sdp">
+        android:layout_height="@dimen/_60sdp"
+        android:layout_centerInParent="true"
+        android:padding="@dimen/_5sdp">
 
         <ImageView
             android:id="@+id/iv_choice_image"

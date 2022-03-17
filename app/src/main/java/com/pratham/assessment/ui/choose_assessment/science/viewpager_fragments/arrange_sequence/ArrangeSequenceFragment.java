@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.pratham.assessment.R;
 import com.pratham.assessment.custom.gif_viewer.GifView;
@@ -21,7 +20,9 @@ import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.domain.ScienceQuestion;
 import com.pratham.assessment.domain.ScienceQuestionChoice;
 import com.pratham.assessment.ui.choose_assessment.science.ItemMoveCallback;
+import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.adapters.ArrangeSeqDragDropAdapter;
+import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragListener;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
@@ -31,6 +32,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +66,7 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
     private ScienceQuestion scienceQuestion;
     ItemTouchHelper touchHelper;
     List<ScienceQuestionChoice> shuffledList = new ArrayList<>();
+    AssessmentAnswerListener assessmentAnswerListener;
 
     ArrangeSeqDragDropAdapter dragDropAdapter;
 
@@ -89,6 +92,8 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
         }
         if (question != null)
             question.setMovementMethod(new ScrollingMovementMethod());
+        assessmentAnswerListener = (ScienceAssessmentActivity) getActivity();
+
         presenter.setView(this);
         setArrangeSeqQuestion();
 
@@ -106,26 +111,29 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
         else
             localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
      */
+
         String extension = getFileExtension(localPath);
 
         if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
-            questionImage.setVisibility(View.VISIBLE);
-            if (extension.equalsIgnoreCase("PNG") ||
-                    extension.equalsIgnoreCase("gif") ||
-                    extension.equalsIgnoreCase("JPEG") ||
-                    extension.equalsIgnoreCase("JPG")) {
-                Assessment_Utility.setQuestionImageToImageView(questionImage, questionGif, localPath, getActivity());
-            } else {
-                if (extension.equalsIgnoreCase("mp4") ||
-                        extension.equalsIgnoreCase("3gp")) {
-                    Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
-                }
-                questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250, 250);
-                param.gravity = Gravity.CENTER;
-                questionImage.setLayoutParams(param);
-            }//            if (Assessm entApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-            //                    zoomImg.setVisibility(View.VISIBLE);
+            if (new File(localPath).exists()) {
+
+                questionImage.setVisibility(View.VISIBLE);
+                if (extension.equalsIgnoreCase("PNG") ||
+                        extension.equalsIgnoreCase("gif") ||
+                        extension.equalsIgnoreCase("JPEG") ||
+                        extension.equalsIgnoreCase("JPG")) {
+                    Assessment_Utility.setQuestionImageToImageView(questionImage, questionGif, localPath, getActivity());
+                } else {
+                    if (extension.equalsIgnoreCase("mp4") ||
+                            extension.equalsIgnoreCase("3gp")) {
+                        Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
+                    }
+                    questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
+                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250, 250);
+                    param.gravity = Gravity.CENTER;
+                    questionImage.setLayoutParams(param);
+                }//            if (Assessm entApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
+                //                    zoomImg.setVisibility(View.VISIBLE);
          /*   String path = scienceQuestion.getPhotourl();
             String[] imgPath = path.split("\\.");
             int len;
@@ -165,6 +173,7 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
                 Bitmap bitmap = BitmapFactory.decodeFile(localPath);
                 questionImage.setImageBitmap(bitmap);
             }*/
+            } else assessmentAnswerListener.reDownloadExam();
         } else questionImage.setVisibility(View.GONE);
 
         questionImage.setOnClickListener(new View.OnClickListener() {
@@ -310,7 +319,8 @@ public class ArrangeSequenceFragment extends Fragment implements StartDragListen
             recyclerArrangeSeq.setLayoutManager(linearLayoutManager1);
             recyclerArrangeSeq.setAdapter(dragDropAdapter);
         } else {
-            Toast.makeText(getActivity(), R.string.error_in_loading_check_internet_connection, Toast.LENGTH_LONG).show();
+            assessmentAnswerListener.reDownloadExam();
+//            Toast.makeText(getActivity(), R.string.error_in_loading_check_internet_connection, Toast.LENGTH_LONG).show();
         }
     }
   /*  @Override

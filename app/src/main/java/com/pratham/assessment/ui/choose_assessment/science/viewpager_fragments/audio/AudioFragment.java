@@ -193,6 +193,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface, Aud
 
         question.setText(Html.fromHtml(scienceQuestion.getQname()));
         if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
+
             questionImage.setVisibility(View.VISIBLE);
 
             fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
@@ -203,23 +204,25 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface, Aud
             else
                 localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 */
-            String extension = getFileExtension(localPath);
+            if (new File(localPath).exists()) {
 
-            if (extension.equalsIgnoreCase("PNG") ||
-                    extension.equalsIgnoreCase("gif") ||
-                    extension.equalsIgnoreCase("JPEG") ||
-                    extension.equalsIgnoreCase("JPG")) {
-                Assessment_Utility.setQuestionImageToImageView(questionImage, questionGif, localPath, getActivity());
-            } else {
-                if (extension.equalsIgnoreCase("mp4") ||
-                        extension.equalsIgnoreCase("3gp")) {
-                    Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
+                String extension = getFileExtension(localPath);
+
+                if (extension.equalsIgnoreCase("PNG") ||
+                        extension.equalsIgnoreCase("gif") ||
+                        extension.equalsIgnoreCase("JPEG") ||
+                        extension.equalsIgnoreCase("JPG")) {
+                    Assessment_Utility.setQuestionImageToImageView(questionImage, questionGif, localPath, getActivity());
+                } else {
+                    if (extension.equalsIgnoreCase("mp4") ||
+                            extension.equalsIgnoreCase("3gp")) {
+                        Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
+                    }
+                    questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
+                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250, 250);
+                    param.gravity = Gravity.CENTER;
+                    questionImage.setLayoutParams(param);
                 }
-                questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250, 250);
-                param.gravity = Gravity.CENTER;
-                questionImage.setLayoutParams(param);
-            }
       /*      String path = scienceQuestion.getPhotourl();
             String[] imgPath = path.split("\\.");
             int len;
@@ -261,20 +264,20 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface, Aud
                         .into(questionImage);
             }*/
 
-            questionImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showZoomDialog(getActivity(), localPath, "");
-                }
-            });
-            questionGif.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showZoomDialog(getActivity(), localPath, "");
-                }
-            });
+                questionImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showZoomDialog(getActivity(), localPath, "");
+                    }
+                });
+                questionGif.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showZoomDialog(getActivity(), localPath, "");
+                    }
+                });
 
-
+            } else assessmentAnswerListener.reDownloadExam();
         } else questionImage.setVisibility(View.GONE);
 
 
@@ -705,6 +708,7 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface, Aud
     public void updateAudioList(List audioList) {
         this.audioList = audioList;
     }
+
     @Click(R.id.btn_view_hint)
     public void showPara() {
         if (scienceQuestion != null) {

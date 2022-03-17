@@ -100,13 +100,8 @@ public class PushDataToServer {
     JSONArray assessmentScoreData;
     JSONArray attendanceData;
     JSONArray studentData;
-    //    JSONArray crlData;
     JSONArray sessionData;
-    //    JSONArray learntWords;
     JSONArray supervisorData;
-    //    JSONArray groupsData;
-//    JSONArray assessmentData;
-//    JSONArray assessmentScienceData;
     JSONArray logsData;
     Boolean isConnectedToRasp = false;
     DataPushListener dataPushListener;
@@ -581,6 +576,7 @@ public class PushDataToServer {
                 _studentObj.put("school", studentList.get(i).getSchool());
                 _studentObj.put("villageId", studentList.get(i).getVillageId());
                 _studentObj.put("DeviceId", Assessment_Utility.getDeviceId(context));
+                _studentObj.put("studentGroupId", studentList.get(i).getGroupId());
                 studentData.put(_studentObj);
             }
         } catch (Exception e) {
@@ -600,6 +596,7 @@ public class PushDataToServer {
                 _obj.put("attendanceID", _attendance.getAttendanceID());
                 _obj.put("SessionID", _attendance.getSessionID());
                 _obj.put("StudentID", _attendance.getStudentID());
+                _obj.put("studentGroupId", _attendance.getGroupID());
                 attendanceData.put(_obj);
             }
         } catch (Exception e) {
@@ -712,6 +709,8 @@ public class PushDataToServer {
                         _obj_score.put("AppVersionChoice", _score.getAppVersionChoice());
                         _obj_score.put("correctAnsId", _score.getCorrectAnsId());
                         _obj_score.put("correctAns", _score.getCorrectAns());
+                        _obj_score.put("studentGroupId", _score.getStudentGroupId());
+
                         scoreData.put(_obj_score);
                     }
                 }

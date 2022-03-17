@@ -49,7 +49,13 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.choose_assessment.science.certificate.AssessmentCertificateActivity"
-            android:screenOrientation="portrait" />
+            android:exported="true"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="com.pratham.assessment.ui.choose_assessment.science.certificate.AssessmentCertificateActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.choose_assessment.result.ResultActivity_"
             android:screenOrientation="portrait" />

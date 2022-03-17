@@ -33,7 +33,7 @@ public interface ScienceQuestionChoiceDao {
 //    public List<Groups> GetGroups(int vID);
 
     @Query("DELETE FROM ScienceQuestionChoice WHERE qid=:qid")
-    public void deleteQuestionChoicesByQID(String qid);
+    public int deleteQuestionChoicesByQID(String qid);
 
     @Query("SELECT * FROM ScienceQuestionChoice WHERE qid=:qID and AppVersionChoice=:version")
     public List<ScienceQuestionChoice> getQuestionChoicesByQIDAndVersion(String qID, String version);

@@ -8,7 +8,7 @@ public interface SubjectContract {
 
     public interface SubjectPresenter {
 
-        public void getSubjectsFromDB(String selectedLang);
+        public void getSubjectsFromDB(String selectedLang, String appName);
 
         void pullCertificates();
 

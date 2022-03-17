@@ -16,7 +16,7 @@ public interface ScienceQuestionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAllQuestions(List<ScienceQuestion> questionList);
 
-   @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insert(ScienceQuestion question);
 
     @Query("DELETE FROM ScienceQuestion")
@@ -36,7 +36,7 @@ public interface ScienceQuestionDao {
     //    public List<Groups> GetGroups(int vID);
 
     @Query("DELETE FROM ScienceQuestion WHERE qid=:qid")
-    public void deleteQuestionByQID(String qid);
+    public int deleteQuestionByQID(String qid);
 
     @Query("DELETE FROM ScienceQuestion WHERE examid=:examId")
     public void deleteQuestionByExamId(String examId);
@@ -82,7 +82,7 @@ public interface ScienceQuestionDao {
     public List<ScienceQuestion> getQuestionListByLangIdSubIdTopicId(String topicId, String langId, String subId);
 
     @Query("DELETE FROM ScienceQuestion WHERE topicid=:topicId and languageid=:langId and subjectid=:subId")
-    public void deleteByLangIdSubIdTopicId(String topicId, String langId, String subId);
+    public int deleteByLangIdSubIdTopicId(String topicId, String langId, String subId);
 
     @Query("select * from ScienceQuestion where qtId=:qtid and topicid=:topicId and subjectid=:subId and languageid=:langId and qlevel=:qlevel and IsParaQuestion=0 and ansdesc like :keyword and qtid!='14' order by random() limit :noOfQues")
     public List<ScienceQuestion> getQuestionListByPatternRandomly(String langId, String subId, String topicId, String qtid, String qlevel, int noOfQues, String keyword);

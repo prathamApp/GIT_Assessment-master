@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +18,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -39,6 +39,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -159,33 +160,34 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                 localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 
 */
-            rl_question_img.setVisibility(View.VISIBLE);
+            if (new File(localPath).exists()) {
+                rl_question_img.setVisibility(View.VISIBLE);
 
-            String extension = getFileExtension(localPath);
+                String extension = getFileExtension(localPath);
 
-            if (extension.equalsIgnoreCase("PNG") ||
-                    extension.equalsIgnoreCase("gif") ||
-                    extension.equalsIgnoreCase("JPEG") ||
-                    extension.equalsIgnoreCase("JPG")) {
-                Assessment_Utility.setQuestionImageToImageView(questionImage, questionGif, localPath, getActivity());
-            } else {
-                if (extension.equalsIgnoreCase("mp4") ||
-                        extension.equalsIgnoreCase("3gp")) {
-                    Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
+                if (extension.equalsIgnoreCase("PNG") ||
+                        extension.equalsIgnoreCase("gif") ||
+                        extension.equalsIgnoreCase("JPEG") ||
+                        extension.equalsIgnoreCase("JPG")) {
+                    Assessment_Utility.setQuestionImageToImageView(questionImage, questionGif, localPath, getActivity());
+                } else {
+                    if (extension.equalsIgnoreCase("mp4") ||
+                            extension.equalsIgnoreCase("3gp")) {
+                        Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
+                    }
+                    questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
+                    RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(
+                            250, 250);
+                    param.addRule(RelativeLayout.CENTER_IN_PARENT);
+                    questionImage.setLayoutParams(param);
                 }
-                questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
-                RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(
-                        250, 250);
-                param.addRule(RelativeLayout.CENTER_IN_PARENT);
-                questionImage.setLayoutParams(param);
-            }
-            final String path = scienceQuestion.getPhotourl();
+                final String path = scienceQuestion.getPhotourl();
 //            if (questionExtension.equalsIgnoreCase("gif") || questionExtension.equalsIgnoreCase("png") || questionExtension.equalsIgnoreCase("jpg") || questionExtension.equalsIgnoreCase("jpeg")) {
-            questionImage.setVisibility(View.VISIBLE);
+                questionImage.setVisibility(View.VISIBLE);
 
 
-            questionImage.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
-            questionGif.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
+                questionImage.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
+                questionGif.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
           /*  questionGif.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -227,6 +229,11 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                     }
                 });
             }*/
+            } else {
+                assessmentAnswerListener.reDownloadExam();
+                Log.d("localPath", "localPath: " + localPath);
+
+            }
         } else {
             questionImage.setVisibility(View.GONE);
             rl_question_img.setVisibility(View.GONE);
@@ -234,8 +241,6 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
         options.clear();
         options = AppDatabase.getDatabaseInstance(getActivity())
                 .getScienceQuestionChoicesDao().getQuestionChoicesByQIDAndVersion(scienceQuestion.getQid(), scienceQuestion.getAppVersion());
-/*        int imgCnt = 0;
-        int textCnt = 0;*/
         if (options != null && !options.isEmpty()) {
             radioGroupMcq.removeAllViews();
             gridMcq.removeAllViews();
@@ -284,81 +289,84 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
 //                        String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 
                         String localPath = getOptionLocalPath(options.get(r), scienceQuestion.getIsQuestionFromSDCard());
-
-                        String extension = Assessment_Utility.getFileExtension(localPath);
+                        if (new File(localPath).exists()) {
+                            String extension = Assessment_Utility.getFileExtension(localPath);
                   /*  final GifView gifView;
                     ImageView imageView = null;*/
 
 //                        final String imageUrl = localPath;
-                        final View view;
-                        final RelativeLayout rl_mcq;
-                        View viewRoot;
-                        final ImageView tick;
-                        final ImageView zoomImg;
+                            final View view;
+                            final RelativeLayout rl_mcq;
+                            View viewRoot;
+                            final ImageView tick;
+                            final ImageView zoomImg;
 
 
-                        if (extension.equalsIgnoreCase("gif")) {
-                            viewRoot = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_gif_item, gridMcq, false);
-                            view = viewRoot.findViewById(R.id.mcq_gif);
-                            zoomImg = viewRoot.findViewById(R.id.iv_view_img);
-                            setImage(view, localPath);
+                            if (extension.equalsIgnoreCase("gif")) {
+                                viewRoot = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_gif_item, gridMcq, false);
+                                view = viewRoot.findViewById(R.id.mcq_gif);
+                                zoomImg = viewRoot.findViewById(R.id.iv_view_img);
+                                setImage(view, localPath);
 
-                        } else if (extension.equalsIgnoreCase("PNG") ||
-                                extension.equalsIgnoreCase("JPEG") ||
-                                extension.equalsIgnoreCase("JPG")) {
-                            viewRoot = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_card_image_item, gridMcq, false);
-                            view = viewRoot.findViewById(R.id.mcq_img);
-                            zoomImg = viewRoot.findViewById(R.id.iv_view_img);
-                            setImage(view, localPath);
+                            } else if (extension.equalsIgnoreCase("PNG") ||
+                                    extension.equalsIgnoreCase("JPEG") ||
+                                    extension.equalsIgnoreCase("JPG")) {
+                                viewRoot = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_card_image_item, gridMcq, false);
+                                view = viewRoot.findViewById(R.id.mcq_img);
+                                zoomImg = viewRoot.findViewById(R.id.iv_view_img);
+                                setImage(view, localPath);
 
 
-                        } else {
-                            viewRoot = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_audio_item, gridMcq, false);
-                            view = viewRoot.findViewById(R.id.ll_play);
-                            zoomImg = viewRoot.findViewById(R.id.mcq_audio);
-                            zoomImg.setVisibility(View.VISIBLE);
-                        }
-                        rl_mcq = viewRoot.findViewById(R.id.rl_mcq);
-                        tick = viewRoot.findViewById(R.id.iv_tick);
-                        final int finalR = r;
-                        view.setOnClickListener(v -> {
-
-                            for (int g = 0; g < gridMcq.getChildCount(); g++) {
-                                gridMcq.getChildAt(g).setBackgroundDrawable(getActivity().getResources().getDrawable(R.drawable.custom_radio_button));
-                                if (options.get(g).getChoiceurl() != null && !options.get(g).getChoiceurl().equalsIgnoreCase(""))
-                                    ((CardView) ((RelativeLayout) gridMcq.getChildAt(g)).getChildAt(0)).getChildAt(1).setVisibility(View.GONE);
-                                else
-                                    ((TextView) gridMcq.getChildAt(g)).setTextColor(Color.WHITE);
+                            } else {
+                                viewRoot = LayoutInflater.from(getActivity()).inflate(R.layout.layout_mcq_audio_item, gridMcq, false);
+                                view = viewRoot.findViewById(R.id.ll_play);
+                                zoomImg = viewRoot.findViewById(R.id.mcq_audio);
+                                zoomImg.setVisibility(View.VISIBLE);
                             }
-                            rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
-                            tick.setVisibility(View.VISIBLE);
-                            List<ScienceQuestionChoice> ans1 = new ArrayList<>();
-                            ans1.add(options.get(finalR));
-                            scienceQuestion.setMatchingNameList(ans1);
-                            assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), ans1, 0);
-                            if (!extension.equalsIgnoreCase("PNG") &&
-                                    !extension.equalsIgnoreCase("gif") &&
-                                    !extension.equalsIgnoreCase("JPEG") &&
-                                    !extension.equalsIgnoreCase("JPG")) {
-                                showZoomDialog(getActivity(), localPath, "");
-                            }
+                            rl_mcq = viewRoot.findViewById(R.id.rl_mcq);
+                            tick = viewRoot.findViewById(R.id.iv_tick);
+                            final int finalR = r;
+                            view.setOnClickListener(v -> {
+
+                                for (int g = 0; g < gridMcq.getChildCount(); g++) {
+                                    gridMcq.getChildAt(g).setBackgroundDrawable(getActivity().getResources().getDrawable(R.drawable.custom_radio_button));
+                                    if (options.get(g).getChoiceurl() != null && !options.get(g).getChoiceurl().equalsIgnoreCase(""))
+                                        ((CardView) ((RelativeLayout) gridMcq.getChildAt(g)).getChildAt(0)).getChildAt(1).setVisibility(View.GONE);
+                                    else
+                                        ((TextView) gridMcq.getChildAt(g)).setTextColor(Color.WHITE);
+                                }
+                                rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
+                                tick.setVisibility(View.VISIBLE);
+                                List<ScienceQuestionChoice> ans1 = new ArrayList<>();
+                                ans1.add(options.get(finalR));
+                                scienceQuestion.setMatchingNameList(ans1);
+                                assessmentAnswerListener.setAnswerInActivity("", scienceQuestion.getQid(), ans1, 0);
+                                if (!extension.equalsIgnoreCase("PNG") &&
+                                        !extension.equalsIgnoreCase("gif") &&
+                                        !extension.equalsIgnoreCase("JPEG") &&
+                                        !extension.equalsIgnoreCase("JPG")) {
+                                    showZoomDialog(getActivity(), localPath, "");
+                                }
 //                                }
-                        });
+                            });
 
-                        zoomImg.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
+                            zoomImg.setOnClickListener(v -> showZoomDialog(getActivity(), localPath, ""));
 
 
-                        if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
-                            rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
-                            tick.setVisibility(View.VISIBLE);
+                            if (scienceQuestion.getUserAnswerId().equalsIgnoreCase(options.get(r).getQcid())) {
+                                rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_edit_text));
+                                tick.setVisibility(View.VISIBLE);
 
+                            } else {
+                                rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_radio_button));
+                                tick.setVisibility(View.GONE);
+
+                            }
+                            gridMcq.addView(viewRoot);
                         } else {
-                            rl_mcq.setBackground(getActivity().getResources().getDrawable(R.drawable.custom_radio_button));
-                            tick.setVisibility(View.GONE);
-
+                            Log.d("localPath", "localPath: " + localPath);
+                            assessmentAnswerListener.reDownloadExam();
                         }
-                        gridMcq.addView(viewRoot);
-
                     } else if (options.get(r).getChoiceurl() != null && !options.get(r).getChoiceurl().trim().equalsIgnoreCase("")
                             && !options.get(r).getChoicename().trim().equalsIgnoreCase("")) {
 
@@ -399,7 +407,12 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                             String fileName = Assessment_Utility.getFileName(scienceQuestion.getQid(), options.get(finalR).getChoiceurl());
 //                                String localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
                             String localPath = Assessment_Utility.getOptionLocalPath(options.get(finalR2), scienceQuestion.getIsQuestionFromSDCard());
-                            showZoomDialog(getActivity(), localPath, "");
+                            if (new File(localPath).exists()) {
+                                showZoomDialog(getActivity(), localPath, "");
+                            } else {
+                                Log.d("localPath", "localPath: " + localPath);
+                                assessmentAnswerListener.reDownloadExam();
+                            }
 
                         });
 
@@ -500,8 +513,8 @@ public class McqFillInTheBlanksFragment extends Fragment implements AudioPlayerI
                     }*/
 
             }
-        } else {//todo
-            Toast.makeText(getActivity(), R.string.error_in_loading_check_internet_connection, Toast.LENGTH_LONG).show();
+        } else {
+            assessmentAnswerListener.reDownloadExam();
         }
         radioGroupMcq.setOnCheckedChangeListener((group, checkedId) -> {
             //((RadioButton) radioGroupMcq.getChildAt(checkedId)).setChecked(true);
