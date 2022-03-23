@@ -28,23 +28,12 @@ public class AssessmentPatternDetails {
 
     private String keyworddetail;
 
-// <<<<<<< HEAD
+    // <<<<<<< HEAD
     @NonNull
     @PrimaryKey(autoGenerate = true)
     private int patternId;
 
     private String qtid;
-    public String getExamId() {
-        return examId;
-    }
-
-    public void setExamId(String examId) {
-        this.examId = examId;
-    }
-
-// =======
-// >>>>>>> feature_branch
-
 
 
     public int getPatternId() {

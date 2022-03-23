@@ -206,6 +206,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                 if (student.getProgramId() != null && student.getState() != null) {
                     assessView.clearContentList();
                     contentTableList.clear();
+                    //this code is only for CHHATTISGARH program
                     if (student.getProgramId().equalsIgnoreCase(CHHATTISGARH_PROGRAM_ID)
                             && student.getState().trim().equalsIgnoreCase(Assessment_Constants.CHHATTISGARH)) {
 //todo show subject Exam etc

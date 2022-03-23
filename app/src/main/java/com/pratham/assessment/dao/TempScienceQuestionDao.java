@@ -20,6 +20,9 @@ public interface TempScienceQuestionDao {
     @Query("SELECT * FROM TempScienceQuestion where StudentID=:currentStudentID and subjectid=:subjectId and examid=:selectedExamId and languageid=:selectedLang")
     public List<TempScienceQuestion> getAlreadyAttemptedPaper(String currentStudentID, String subjectId, String selectedExamId, String selectedLang);
 
+    @Query("DELETE FROM TempScienceQuestion where StudentID=:currentStudentID and subjectid=:subjectId and examid=:selectedExamId and languageid=:selectedLang")
+    public int deleteAlreadyAttemptedPaper(String currentStudentID, String subjectId, String selectedExamId, String selectedLang);
+
     @Query("DELETE FROM TempScienceQuestion WHERE paperId=:paperId and qid=:qid")
     public void deleteQuestionByPaperIdQid(String paperId, String qid);
 
@@ -39,12 +42,11 @@ public interface TempScienceQuestionDao {
     @Query("UPDATE TempScienceQuestion SET languageid=:langId, subjectid=:subId,topicid=:topicId," +
             " lessonid=:lessonId,qtid=:qtId,qname=:qName,answer=:answer,ansdesc=:ansDesc,qlevel=:qLevel," +
             "hint=:hint, addedby=:addedBy,addedtime=:addedTime, updatedby=:updatedBy ,updatedtime=:updatedTime," +
-            " IsParaQuestion=:isParaQ , RefParaID=:refParaId , photourl=:photoUrl,AppVersion=:appVersion where qid=:qid")
+            " IsParaQuestion=:isParaQ , RefParaID=:refParaId , photourl=:photoUrl,AppVersion=:appVersion, IsQuestionFromSDCard=:isQFromSD where qid=:qid")
     public int updateQuestionForVersion(String langId, String subId, String topicId, String lessonId,
                                         String qtId, String qName, String answer, String ansDesc, String qLevel, String hint, String addedBy,
                                         String addedTime, String updatedBy, String updatedTime, String appVersion, String photoUrl,
-                                        boolean isParaQ, String refParaId, String qid
-    );
+                                        boolean isParaQ, String refParaId, String qid, boolean isQFromSD);
 
 
     @Query("DELETE FROM TempScienceQuestion WHERE examid=:examId and languageid=:langId and subjectid=:subId and paperId=:paperId and StudentID=:studId")

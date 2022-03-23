@@ -4,12 +4,15 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDelegate;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.isupatches.wisefy.WiseFy;
@@ -342,7 +345,6 @@ public class AssessmentApplication extends Application {
     public static void setLocaleByLanguageId(Context context, String langCode) {
 // =======
 
-    public static void setLocaleByLanguageId(Context context, String langCode) {
 // >>>>>>> feature_branch
 
         if (langCode.equalsIgnoreCase(Assessment_Constants.ENGLISH_ID))
@@ -366,15 +368,15 @@ public class AssessmentApplication extends Application {
         if (langCode.equalsIgnoreCase(Assessment_Constants.ODIA_ID))
             langCode = "or";
         //todo add Malayalam id
-     *//*   if (langCode.equalsIgnoreCase(Assessment_Constants.))
-            langCode = "ml";*//*
+     /*   if (langCode.equalsIgnoreCase(Assessment_Constants.))
+            langCode = "ml";*/
         if (langCode.equalsIgnoreCase(Assessment_Constants.ASSAMESE_ID))
             langCode = "as";
         if (langCode.equalsIgnoreCase(Assessment_Constants.URDU_ID))
             langCode = "ur";
 
-     *//*   Locale myLocale = new Locale(lang);
-        Locale.setDefault(myLocale);*//*
+     /*   Locale myLocale = new Locale(lang);
+        Locale.setDefault(myLocale);*/
         Locale myLocale = new Locale(langCode);
         Locale.setDefault(myLocale);
         Resources resources = context.getResources();

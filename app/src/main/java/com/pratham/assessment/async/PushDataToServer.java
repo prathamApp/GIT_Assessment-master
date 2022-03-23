@@ -1047,11 +1047,6 @@ public class PushDataToServer {
             String jsonPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_PUSH_JSON_PATH;
             if (!new File(jsonPath).exists())
                 new File(jsonPath).mkdirs();
-// <<<<<<< HEAD
-            filepathstr = AssessmentApplication.assessPath + Assessment_Constants.STORE_PUSH_JSON_PATH + "/" + uuID;
-// =======
-            filepathstr = AssessmentApplication.assessPath + Assessment_Constants.STORE_PUSH_JSON_PATH + "/" + "AS_" + uuID;
-// >>>>>>> feature_branch
             filepathstr = AssessmentApplication.assessPath + Assessment_Constants.STORE_PUSH_JSON_PATH + "/" + "AS_" + uuID;
 
            /* String filepathstr = Environment.getStoragePath().toString()
