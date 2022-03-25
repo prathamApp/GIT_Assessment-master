@@ -45,23 +45,12 @@ public interface CertificateKeywordRatingDao {
     @Query("select distinct languageId from CertificateKeywordRating where examId=:examId and studentId=:studentId")
     public List<String> getDistinctLangByExamIdStudentId(String studentId, String examId);
 
-    @Query("select distinct subjectId from CertificateKeywordRating where languageId=:langId")
-    public List<String> getDistinctSubjectsByLangId(String langId);
-    
-    @Query("select distinct languageId from CertificateKeywordRating where examId=:examId")
-    public List<String> getDistinctLangByExamId(String examId);
-
     @Query("select distinct subjectId from CertificateKeywordRating where studentId=:studentId and languageId=:langId")
     public List<String> getDistinctSubjectsByStudentIdLangId(String studentId, String langId);
 
     @Query("select distinct subjectId from CertificateKeywordRating where languageId=:langId")
     public List<String> getDistinctSubjectsByLangId(String langId);
 
-    @Query("select distinct examId from CertificateKeywordRating where studentId=:studentId")
-    public List<String> getQuestionsByExamIdBySubId(String studentId);
-
-    @Query("select distinct examId from CertificateKeywordRating")
-    public List<String> getQuestionsByExamId();
 
     @Query("select distinct examId from CertificateKeywordRating where studentId=:studentId")
     public List<String> getQuestionsByExamIdBySubId(String studentId);
