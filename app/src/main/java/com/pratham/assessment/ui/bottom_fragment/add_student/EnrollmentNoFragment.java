@@ -28,7 +28,7 @@ import com.pratham.assessment.constants.APIs;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.Student;
-import com.pratham.assessment.interfaces.SplashInterface;
+import com.pratham.assessment.interfaces.OnChildAddedListener;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.json.JSONArray;
@@ -74,7 +74,7 @@ public class EnrollmentNoFragment extends DialogFragment {
 
     Student newEnrolledStudent;
 
-    static SplashInterface splashInterface;
+    static OnChildAddedListener onChildAddedListener;
 
     public EnrollmentNoFragment() {
 
@@ -94,11 +94,11 @@ public class EnrollmentNoFragment extends DialogFragment {
     }
 
 
-    public static EnrollmentNoFragment newInstance(SplashInterface splashInter) {
+    public static EnrollmentNoFragment newInstance(OnChildAddedListener splashInter) {
         EnrollmentNoFragment frag = new EnrollmentNoFragment();
         Bundle args = new Bundle();
         args.putString("title", "Create Profile");
-        splashInterface = splashInter;
+        onChildAddedListener = splashInter;
         frag.setArguments(args);
         return frag;
     }
@@ -191,7 +191,7 @@ public class EnrollmentNoFragment extends DialogFragment {
         BackupDatabase.backup(getActivity());
 //            Toast.makeText(getActivity(), R.string.profile_created_successfully, Toast.LENGTH_SHORT).show();
         Toast.makeText(getActivity(), "Profile created Successfully..", Toast.LENGTH_SHORT).show();
-        splashInterface.onChildAdded();
+        onChildAddedListener.onChildAdded();
         dismiss();
 //        }
     }

@@ -1,6 +1,6 @@
 package com.pratham.assessment.interfaces;
 
-public interface SplashInterface {
+public interface OnChildAddedListener {
 
 
     public void onChildAdded();
