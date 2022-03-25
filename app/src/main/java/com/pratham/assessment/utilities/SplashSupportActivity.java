@@ -21,7 +21,7 @@ import java.util.List;
 
 
 /**
- * Created by Ameya on 15-Mar-18.
+ * Activity is used for permissions
  */
 
 public class SplashSupportActivity extends BaseActivity implements MediaPlayer.OnCompletionListener {

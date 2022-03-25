@@ -66,7 +66,9 @@ public class ExamStatusActivity extends BaseActivity implements ExamStatusContra
         // date picker dialog
         DatePickerDialog picker = new DatePickerDialog(ExamStatusActivity.this,
                 (view, year1, monthOfYear, dayOfMonth) -> {
-                    btn_date.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year1);
+//                    btn_date.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year1);
+                    btn_date.setText(String.format("%02d-%02d-%02d",
+                            dayOfMonth, (monthOfYear + 1), year1));
                     examStatusPresenter.getAllPapers(btn_date.getText().toString());
                 }, year, month, day);
         picker.show();

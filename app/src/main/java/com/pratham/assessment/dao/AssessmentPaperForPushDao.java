@@ -88,6 +88,9 @@ public interface AssessmentPaperForPushDao {
     @Query("update AssessmentPaperForPush set sentFlag=1 where sentFlag=0")
     public void setSentFlag();
 
+    @Query("select distinct studentId from AssessmentPaperForPush where examid=:examId")
+    public List<String> getDistinctStudentIdsByExamId(String examId);
+
     @Query("update AssessmentPaperForPush set recommendedLevel=:level where paperId=:paperId")
     public long setRecommendedLevel(String paperId, int level);
 

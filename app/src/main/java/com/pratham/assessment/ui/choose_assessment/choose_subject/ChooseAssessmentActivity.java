@@ -131,7 +131,7 @@ public class ChooseAssessmentActivity extends BaseActivity implements
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
 //        String studentName = AppDatabase.getDatabaseInstance(this).getStudentDao().getFullName(Assessment_Constants.currentStudentID);
         Student student = AppDatabase.getDatabaseInstance(this).getStudentDao().getStudent(currentStudentID);
-        String studentEnrollmentId = student.getLastName();//enrl id saved in lastName
+        String studentEnrollmentId = student.getLastName();//enrollment id saved in lastName
         String studentName = student.getFullName();
         String avatar = student.getAvatarName();
 

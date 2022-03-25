@@ -57,7 +57,9 @@ public class PushStatusActivity extends BaseActivity implements PushStatusContra
         // date picker dialog
         DatePickerDialog picker = new DatePickerDialog(PushStatusActivity.this,
                 (view, year1, monthOfYear, dayOfMonth) -> {
-                    btn_date.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year1);
+//                    btn_date.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year1);
+                    btn_date.setText(String.format("%02d-%02d-%02d",
+                            dayOfMonth, (monthOfYear + 1), year1));
                     pushStatusPresenter.getAllPushLog(btn_date.getText().toString());
 
                 }, year, month, day);

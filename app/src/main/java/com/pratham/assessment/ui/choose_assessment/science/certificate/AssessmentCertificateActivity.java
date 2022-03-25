@@ -50,6 +50,18 @@ public class AssessmentCertificateActivity extends BaseActivity {
         Assessment_Utility.showFragment(this, new CertificateSummaryFragment_(),
                 R.id.frame_certificate, null, CertificateSummaryFragment.class.getSimpleName());
 
+        Bundle bundle;
+        bundle = this.getIntent().getExtras();
+        String appName = "NA";
+        if (bundle != null) {
+            appName = bundle.getString("appName");
+            if (appName == null)
+                appName = "NA";
+            bundle.putString("appName", appName);
+        }
+        Assessment_Utility.showFragment(this, new CertificateSummaryFragment_(),
+                R.id.frame_certificate, bundle, CertificateSummaryFragment.class.getSimpleName());
+
      /*   presenter = new AssessmentCertificatePresenterImpl(this);
         presenter.getStudent(Assessment_Constants.currentStudentID);
         presenter.getSubjectData();*/

@@ -44,14 +44,14 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
     int subjectCnt = 0;
     List<String> langIds;
     List<AssessmentLanguages> assessmentLanguagesList;
-
+    String schoolAppName = "PraDigi for School";
 
     public SubjectPresenter(Context context) {
         this.context = context;
     }
 
     @Override
-    public void getSubjectsFromDB(String selectedLang) {
+    public void getSubjectsFromDB(String selectedLang, String appName) {
         String langId = AppDatabase.getDatabaseInstance(context).getLanguageDao().getLangIdByName(selectedLang.toUpperCase());
         List<AssessmentSubjects> subjects = new ArrayList<>();
         List<AssessmentSubjects> AllSubjects = new ArrayList<>();
@@ -74,7 +74,12 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
         }
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
 //        List<String> attemptedSubjectIds = AppDatabase.getDatabaseInstance(context).getAssessmentPaperForPushDao().getAssessmentPapersByUniqueSubId(langId, currentStudentID);
-        List<String> attemptedSubjectIds = AppDatabase.getDatabaseInstance(context).getCertificateKeywordRatingDao().getDistinctSubjectsByStudentIdLangId(currentStudentID, langId);
+        List<String> attemptedSubjectIds;
+        if (!appName.equalsIgnoreCase(schoolAppName)) {
+            attemptedSubjectIds = AppDatabase.getDatabaseInstance(context).getCertificateKeywordRatingDao().getDistinctSubjectsByStudentIdLangId(currentStudentID, langId);
+        } else {
+            attemptedSubjectIds = AppDatabase.getDatabaseInstance(context).getCertificateKeywordRatingDao().getDistinctSubjectsByLangId(langId);
+        }
         for (int j = 0; j < AllSubjects.size(); j++) {
             for (int i = 0; i < attemptedSubjectIds.size(); i++) {
                 if (attemptedSubjectIds.get(i).equalsIgnoreCase(AllSubjects.get(j).getSubjectid()))
@@ -90,7 +95,12 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
             for (int i = 0; i < paperPatterns.size(); i++) {
                 if (!examIds.contains(paperPatterns.get(i).getExamid())) {
 //                    if (paperPatterns.get(i).getExammode() == null || paperPatterns.get(i).getExammode().equalsIgnoreCase(Assessment_Constants.PRACTICE))
-                    examIds.add(paperPatterns.get(i).getExamid());
+                    if (!appName.equalsIgnoreCase(schoolAppName)) {
+                        examIds.add(paperPatterns.get(i).getExamid());
+                    } else {
+                        if (paperPatterns.get(i).isDiagnosticTest())
+                            examIds.add(paperPatterns.get(i).getExamid());
+                    }
                 }
             }
 
@@ -102,15 +112,27 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
                     boolean isDiagnostic = AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().getIsDiagnosticExam(examIds.get(i));
                     if (isDiagnostic) {
                         String examMode = AppDatabase.getDatabaseInstance(context).getAssessmentPaperPatternDao().getExamMode(examIds.get(i));
-                        if (examMode.equalsIgnoreCase(Assessment_Constants.SUPERVISED))
+                        if (examMode.equalsIgnoreCase(Assessment_Constants.SUPERVISED)) {
+                            if (!appName.equalsIgnoreCase(schoolAppName)) {
+                                assessmentPaperForPush.addAll(AppDatabase.getDatabaseInstance(context)
+                                        .getAssessmentPaperForPushDao()
+                                        .getLatestPaperByStudIdExamId(currentStudentID, examIds.get(i)));
+                            } else {
+                                List<String> students = AppDatabase.getDatabaseInstance(context)
+                                        .getAssessmentPaperForPushDao().getDistinctStudentIdsByExamId(examIds.get(i));
+                                for (int j = 0; j < students.size(); j++) {
+                                    assessmentPaperForPush.addAll(AppDatabase.getDatabaseInstance(context)
+                                            .getAssessmentPaperForPushDao()
+                                            .getLatestPaperByStudIdExamId(students.get(j), examIds.get(i)));
+                                }
+                            }
+                        }
+                    } else {
+                        if (!appName.equalsIgnoreCase(schoolAppName)) {
                             assessmentPaperForPush.addAll(AppDatabase.getDatabaseInstance(context)
                                     .getAssessmentPaperForPushDao()
-                                    .getLatestPaperByStudIdExamId(currentStudentID, examIds.get(i)));
-
-                    } else {
-                        assessmentPaperForPush.addAll(AppDatabase.getDatabaseInstance(context)
-                                .getAssessmentPaperForPushDao()
-                                .getAssessmentPaperBySubIdAndLangIdExamId(assessmentSubjects.getSubjectid(), currentStudentID, langId, examIds.get(i)));
+                                    .getAssessmentPaperBySubIdAndLangIdExamId(assessmentSubjects.getSubjectid(), currentStudentID, langId, examIds.get(i)));
+                        }
                     }
                 }
 

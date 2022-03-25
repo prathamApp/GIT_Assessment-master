@@ -8,7 +8,7 @@ public interface SubjectContract {
 
     public interface SubjectPresenter {
 
-        public void getSubjectsFromDB(String selectedLang);
+        public void getSubjectsFromDB(String selectedLang, String appName);
 
         void pullCertificates();
 
@@ -16,8 +16,9 @@ public interface SubjectContract {
     }
 
     public interface SubjectView {
-       void setSubjects(List<AssessmentSubjectsExpandable> subjects);
-       void setSubjectToSpinner();
+        void setSubjects(List<AssessmentSubjectsExpandable> subjects);
+
+        void setSubjectToSpinner();
     }
 
 }

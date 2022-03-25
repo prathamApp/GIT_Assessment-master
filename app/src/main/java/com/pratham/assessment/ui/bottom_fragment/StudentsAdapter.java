@@ -62,7 +62,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.MyView
             if (studentAvatar.getIsniosstudent().equalsIgnoreCase("1")) {
                 if (studentAvatar.getLastName() != null && !studentAvatar.getLastName().equalsIgnoreCase(""))
                     holder.studentName.setText(Html.fromHtml("<b>" +
-                            studentAvatar.getFullName() + "</b>\n" + studentAvatar.getLastName()));//enrollment id saved in last name
+                            studentAvatar.getFullName() + "</b>\n" + studentAvatar.getLastName()));//enrollment id saved in last name field
                 else
                     holder.studentName.setText(Html.fromHtml("<b>" + studentAvatar.getFullName() + "</b>"));
             } else
