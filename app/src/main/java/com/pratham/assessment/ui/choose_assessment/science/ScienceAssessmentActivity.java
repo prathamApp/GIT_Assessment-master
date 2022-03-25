@@ -322,14 +322,15 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             bundle = this.getIntent().getExtras();
             assert bundle != null;
 
-            String studId = (bundle.getString("studentId"));
-            redirectedFromApp = (bundle.getString("appName"));
-            String studName = (bundle.getString("studentName"));
-            String subject = (bundle.getString("subjectName"));
-            String language = (bundle.getString("subjectLanguage"));
-            String subLevel = (bundle.getString("subjectLevel"));
-            String examId = (bundle.getString("examId"));
-            redirectedAppSessionId = (bundle.getString("currentSessionId"));
+            String studId = String.valueOf(bundle.getString("studentId"));
+            redirectedFromApp = String.valueOf(bundle.getString("appName"));
+            String studName = String.valueOf(bundle.getString("studentName"));
+            String subject = String.valueOf(bundle.getString("subjectName"));
+            String language = String.valueOf(bundle.getString("subjectLanguage"));
+            String subLevel = String.valueOf(bundle.getString("subjectLevel"));
+            String examId = String.valueOf(bundle.getString("examId"));
+            redirectedAppSessionId = String.valueOf(bundle.getString("currentSessionId"));
+            studentGroupId = String.valueOf(bundle.getString("studentGroupId"));
 
             String currentSession = UUID.randomUUID().toString();
             Session startSession = new Session();
@@ -352,8 +353,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             attendance.setDate(Assessment_Utility.getCurrentDateTime());
             attendance.setSessionID(currentSession);
             attendance.setSentFlag(0);
-            if (studentGroupId != null && !studentGroupId.equalsIgnoreCase("NA")
-                    && !studentGroupId.equalsIgnoreCase(""))
+
+            if (studentGroupId != null && !studentGroupId.equalsIgnoreCase("NA") && !studentGroupId.equalsIgnoreCase(""))
                 attendance.setGroupID(studentGroupId);
             else
                 attendance.setGroupID(redirectedFromApp);
@@ -390,9 +391,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             if (studentGroupId != null && !studentGroupId.equalsIgnoreCase(""))
                 student.setGroupId(studentGroupId);
             AppDatabase.getDatabaseInstance(context).getStudentDao().insert(student);
+           
             BackupDatabase.backup(context);
 
             SplashPresenter.doInitialEntries(context);
+            BackupDatabase.backup(this);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -454,7 +457,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         if (reDownload) {
             AppDatabase.getDatabaseInstance(this).getTempScienceQuestionDao().deleteAlreadyAttemptedPaper(currentStudentID, subjectId, selectedExamId, selectedLang);
             return false;
-        } else return attemptedList.size() > 0;
+        } else
+            return attemptedList.size() > 0;
     }
 
     private void createNewQuestionList(List<TempScienceQuestion> attemptedList) {
@@ -568,6 +572,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         else
             questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + selectedLang + "&subjectid=" + subjectId + "&topicid=" + topicId;
 //        String questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + selectedLang + "&subjectid=" + subjectId + "&topicid=" + topicId; progressDialog.show();
+
         if (!progressDialog.isShowing())
             progressDialog.show();
         progressDialog.setMessage(getString(R.string.loading_please_wait));
@@ -1060,6 +1065,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                     downloadMedia.setPaperId(assessmentSession);
                                     downloadMediaList.add(downloadMedia);
                                 }
+
                             }
                         }
                         if (question.getLstquestionchoice().size() > 0) {
@@ -1072,7 +1078,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                     if (scienceQuestionChoice == null || !scienceQuestionChoice
                                             .getAppVersionChoice().equalsIgnoreCase(choice.getAppVersionChoice())) {
                                         mediaDownloaded = true;
-
                                         if (isRPI) {
                                             if (!choiceList.get(j).getLocalChoiceUrl().equalsIgnoreCase("")) {
                                                 DownloadMedia downloadMedia = new DownloadMedia();
@@ -1182,7 +1187,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
     }
 
-    private void downloadMedia(String photoUrl) {
+    private void downloadAllMedia(String photoUrl) {
 
         try {
 //        String dirPath = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Downloaded";
@@ -1198,8 +1203,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             File fullFile = new File(dirPath + "/" + FName);
             if (fullFile.exists())
                 Log.d("deletedownloadMedia", "downloadMedia: " + FName + "_" + fullFile.delete());
-            Log.d("deletedownloadMedia", "downloadMedia: " + FName);
 
+            Log.d("deletedownloadMedia", "downloadMedia: " + FName);
             AndroidNetworking.download(photoUrl, dirPath, FName)
                     //                .setTag("downloadTest")
                     //                .setPriority(Priority.MEDIUM)
@@ -1220,7 +1225,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             mediaDownloadCnt++;
 
                             if (mediaDownloadCnt < downloadMediaList.size())
-                                downloadMedia(downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
+                                downloadAllMedia(downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
                             else {
                                 if (mediaProgressDialog != null && isActivityRunning) {
                                     mediaProgressDialog.dismiss();
@@ -1251,6 +1256,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 title.setText(getResources().getString(R.string.Media_download_failed) + " \n no internet");
                             else
                                 title.setText(getResources().getString(R.string.Media_download_failed) + " \n File not found on server");
+
                             restart_btn.setVisibility(View.GONE);
 //                            restart_btn.setText(R.string.skip_all);
 //                            skip_btn.setText(R.string.skip_this);
@@ -1277,7 +1283,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                                 mediaRetryCount--;
                                 if (mediaRetryCount >= 0) {
                                     if (mediaDownloadCnt < downloadMediaList.size()) {
-                                        downloadMedia(downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
+                                        downloadAllMedia(downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
                                         mediaDownloadCnt++;
                                         failedDialog.dismiss();
 
@@ -1507,7 +1513,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 //                        }
                     }
 
-
 //        if (!assessmentPaperPatterns.getSubjectid().equalsI gnoreCase("30") || !assessmentPaperPatterns.getSubjectname().equalsIgnoreCase("aser"))
             for (int i = 0; i < scienceQuestionList.size(); i++) {
                 Log.d("onDoneClicks", i + " : " + scienceQuestionList.get(i).getOutofmarks());
@@ -1520,6 +1525,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     scienceQuestionList.get(i).setIsQuestionFromSDCard(false);
                 if (scienceQuestionList.get(i).getPhotourl() != null
                         && !scienceQuestionList.get(i).getPhotourl().equalsIgnoreCase("")) {
+
                     String path = getQuestionLocalPath(scienceQuestionList.get(i));
                     if (!new File(path).exists()) {
                         errorInDownload = true;
@@ -1577,7 +1583,6 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 reDownloadExam();
             }
 
-
             if (scienceQuestionList.size() <= 0) {
                 finish();
                 if (!AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork())
@@ -1593,6 +1598,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                     showSupervisedPracticeExam();
                 }
             }
+//            }
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -1741,6 +1747,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         saveTempPaper(scienceQuestionList);
 //        assessmentPaperPatterns.setExammode("both");
         /*if (reDownload) {
+
             final Dialog dialog = new Dialog(context);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -1750,6 +1757,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             Button exit_btn = dialog.findViewById(R.id.dia_btn_exit);
             Button restart_btn = dialog.findViewById(R.id.dia_btn_restart);
             Button dia_btn_cancel = dialog.findViewById(R.id.dia_btn_cancel);
+
 //        title.setText(R.string.do_you_want_to_exit);
 //        restart_btn.setText(R.string.yes);
 //        exit_btn.setText(R.string.no);
@@ -1758,10 +1766,12 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             exit_btn.setText("cancel");
             dia_btn_cancel.setVisibility(View.GONE);
             dialog.show();
+
             exit_btn.setOnClickListener(v -> {
                 dialog.dismiss();
                 finish();
             });
+
             restart_btn.setOnClickListener(v -> {
                 dialog.dismiss();
                 finish();
@@ -1769,6 +1779,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                 FastSave.getInstance().saveBoolean("EXAM_REOPENED", true);
                 startActivity(intent);
             });
+
         } else {*/
         if (assessmentPaperPatterns.getExammode() != null) {
             if (assessmentPaperPatterns.getExammode().equalsIgnoreCase(Assessment_Constants.SUPERVISED)) {
@@ -1810,6 +1821,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         } else {
             callPracticeExam();
         }
+//        }
     }
 
     private void callPracticeExam() {
@@ -1928,7 +1940,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             if (!direct.exists())
                 direct.mkdirs();
             if (direct.exists())
-                downloadMedia(downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
+                downloadAllMedia(downloadMediaList.get(mediaDownloadCnt).getPhotoUrl());
             else {
                 Toast.makeText(this, R.string.media_download_failed, Toast.LENGTH_SHORT).show();
                 finish();
@@ -2708,6 +2720,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
         cancel_btn.setVisibility(View.VISIBLE);
         title.setText("Error in loading paper");
         cancel_btn.setVisibility(View.GONE);
+
         restart_btn.setText("Download again");
         exit_btn.setText("cancel");
         if (!isDownloadAgainDialogVisible)
@@ -2719,19 +2732,24 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             if (mCountDownTimer != null)
                 mCountDownTimer.cancel();
             finish();
+
         });
+
         restart_btn.setOnClickListener(v -> {
             if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                 downloadAgainDialog.dismiss();
                 reDownload = true;
                 startFetchingData();
+
             } else {
                 downloadAgainDialog.dismiss();
                 showToast(getResources().getString(R.string.error_in_loading_check_internet_connection));
                 finish();
             }
         });
+
     }
+
 
    /* @Override
     public void setParagraph(String para, boolean isParaQuestion) {
@@ -3810,6 +3828,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         Toast.makeText(context, "ATTEMPT ERROR", Toast.LENGTH_SHORT).show();
                 score.setQname(scienceQuestionList.get(i).getQname());
                 score.setAppVersion(scienceQuestionList.get(i).getAppVersion());
+                score.setStudentGroupId(studentGroupId);
                 if (scienceQuestionList.get(i).getLstquestionchoice() != null
                         && scienceQuestionList.get(i).getLstquestionchoice().size() > 0) {
                     score.setAppVersionChoice(scienceQuestionList.get(i).getLstquestionchoice().get(0).getAppVersionChoice());
@@ -4038,12 +4057,12 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             }
         }
         if (scienceQuestionList != null && scienceQuestionList.size() > 0)
-            if (scienceQuestionList.get(queCnt) != null)
+            if (scienceQuestionList.get(queCnt) != null) {
                 if (scienceQuestionList.get(queCnt).getUserAnswer() != null
                         && !scienceQuestionList.get(queCnt).getUserAnswer().equalsIgnoreCase(""))
                     if (!scienceQuestionList.get(queCnt).getIsAttempted())
                         scienceQuestionList.get(queCnt).setIsAttempted(true);
-
+            }
 //todo        resetSpeechRecognizer(); remove speech=null from onStop
         if (mediaProgressDialog != null && isActivityRunning && mediaProgressDialog.isShowing())
             if (mediaDownloadCnt >= downloadMediaList.size()) {

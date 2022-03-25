@@ -34,6 +34,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -143,7 +144,9 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment
             else
                 localPath = AssessmentApplication.assessPath + Assessment_Constants.STORE_DOWNLOADED_MEDIA_PATH + "/" + fileName;
 */
-            String extension = getFileExtension(localPath);
+            if (new File(localPath).exists()) {
+
+                String extension = getFileExtension(localPath);
 
             if (extension.equalsIgnoreCase("PNG") ||
                     extension.equalsIgnoreCase("gif") ||
@@ -191,27 +194,30 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment
                                 .placeholder(Drawable.createFromPath(localPath)))
                         .into(questionImage);
             }*/
-        } else questionImage.setVisibility(View.GONE);
+        } else assessmentAnswerListener.reDownloadExam();
+    } else questionImage.setVisibility(View.GONE);
 
-        etAnswer.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+        etAnswer.addTextChangedListener(new
+
+    TextWatcher() {
+        @Override
+        public void onTextChanged (CharSequence s,int start, int before, int count){
 
 
-            }
+        }
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        @Override
+        public void beforeTextChanged (CharSequence s,int start, int count, int after){
 
-            }
+        }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+        @Override
+        public void afterTextChanged (Editable s){
 //                Log.d("@@@"+scienceQuestion.getQid(), s+"");
-                assessmentAnswerListener.setAnswerInActivity(s.toString(), scienceQuestion.getQid(), null,0 );
-            }
-        });
-    }
+            assessmentAnswerListener.setAnswerInActivity(s.toString(), scienceQuestion.getQid(), null, 0);
+        }
+    });
+}
 
 
     @Click({R.id.iv_question_image, R.id.iv_question_gif})
@@ -315,7 +321,7 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment
             ScienceQuestion scienceQuestion = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getQuestionByQID(this.scienceQuestion.getQid());
             if (scienceQuestion.isParaQuestion()) {
                 String para = AppDatabase.getDatabaseInstance(getActivity()).getScienceQuestionDao().getParabyRefId(scienceQuestion.getRefParaID());
-                showZoomDialog(getActivity(),  "", para);
+                showZoomDialog(getActivity(), "", para);
             }
         }
     }

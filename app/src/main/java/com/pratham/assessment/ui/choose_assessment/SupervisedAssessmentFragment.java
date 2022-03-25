@@ -23,6 +23,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.R;
+import com.pratham.assessment.constants.Assessment_Constants;
 import com.pratham.assessment.custom.FastSave;
 import com.pratham.assessment.database.AppDatabase;
 import com.pratham.assessment.database.BackupDatabase;
@@ -31,7 +32,6 @@ import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.SupervisorData;
 import com.pratham.assessment.ui.choose_assessment.science.ScienceAssessmentActivity;
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
-import com.pratham.assessment.constants.Assessment_Constants;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -172,7 +172,7 @@ public class SupervisedAssessmentFragment extends Fragment {
 
     @Click(R.id.submitBtn)
     public void submitSupervisorData() {
-        sName = "" + supervisor_name.getText().toString();
+        sName = "" + supervisor_name.getText().toString().trim();
         if (isPhotoSaved) {
             if (sName.length() > 0) {
                 Assessment_Constants.ASSESSMENT_TYPE = Assessment_Constants.SUPERVISED;

@@ -26,6 +26,7 @@ import com.pratham.assessment.ui.choose_assessment.science.interfaces.StartDragL
 import com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.arrange_sequence.ArrangeSequenceFragment;
 import com.pratham.assessment.utilities.Assessment_Utility;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -107,26 +108,27 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
                     scienceQuestionChoice.getIsQuestionFromSDCard());
 
             if (scienceQuestionChoice.getChoiceurl() != null && !scienceQuestionChoice.getChoiceurl().equalsIgnoreCase("")) {
+                if (new File(localPath).exists()) {
 
 
-                String extension = getFileExtension(localPath);
-                if (extension.equalsIgnoreCase("PNG") ||
-                        extension.equalsIgnoreCase("gif") ||
-                        extension.equalsIgnoreCase("JPEG") ||
-                        extension.equalsIgnoreCase("JPG")) {
-                    Assessment_Utility.setQuestionImageToImageView(holder.iv_choice_image, holder.iv_choice_gif, localPath, context);
-                } else {
-                    if (extension.equalsIgnoreCase("mp4") ||
-                            extension.equalsIgnoreCase("3gp")) {
-                        Assessment_Utility.setThumbnailForVideo(localPath, context, holder.iv_choice_image);
+                    String extension = getFileExtension(localPath);
+                    if (extension.equalsIgnoreCase("PNG") ||
+                            extension.equalsIgnoreCase("gif") ||
+                            extension.equalsIgnoreCase("JPEG") ||
+                            extension.equalsIgnoreCase("JPG")) {
+                        Assessment_Utility.setQuestionImageToImageView(holder.iv_choice_image, holder.iv_choice_gif, localPath, context);
+                    } else {
+                        if (extension.equalsIgnoreCase("mp4") ||
+                                extension.equalsIgnoreCase("3gp")) {
+                            Assessment_Utility.setThumbnailForVideo(localPath, context, holder.iv_choice_image);
+                        }
+                        holder.iv_choice_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_play_circle));
+                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250, 250);
+                        param.gravity = Gravity.CENTER;
+                        holder.iv_choice_image.setLayoutParams(param);
                     }
-                    holder.iv_choice_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_play_circle));
-                    LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(250, 250);
-                    param.gravity = Gravity.CENTER;
-                    holder.iv_choice_image.setLayoutParams(param);
-                }
 
-
+                } else assessmentAnswerListener.reDownloadExam();
             } else
                 holder.mTitle.setText(Html.fromHtml(scienceQuestionChoice.getChoicename()));
 

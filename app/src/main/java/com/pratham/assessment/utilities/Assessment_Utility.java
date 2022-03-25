@@ -230,7 +230,6 @@ public class Assessment_Utility {
                 Glide.with(context)
                         .load(localPath)
                         .apply(new RequestOptions()
-
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .skipMemoryCache(true)
                                 .placeholder(Drawable.createFromPath(localPath)))

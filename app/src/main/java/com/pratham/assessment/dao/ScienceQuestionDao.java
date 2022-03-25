@@ -16,7 +16,7 @@ public interface ScienceQuestionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAllQuestions(List<ScienceQuestion> questionList);
 
-   @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insert(ScienceQuestion question);
 
     @Query("DELETE FROM ScienceQuestion")
@@ -36,7 +36,7 @@ public interface ScienceQuestionDao {
     //    public List<Groups> GetGroups(int vID);
 
     @Query("DELETE FROM ScienceQuestion WHERE qid=:qid")
-    public void deleteQuestionByQID(String qid);
+    public int deleteQuestionByQID(String qid);
 
     @Query("DELETE FROM ScienceQuestion WHERE examid=:examId")
     public void deleteQuestionByExamId(String examId);

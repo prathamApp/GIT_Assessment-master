@@ -588,8 +588,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 database.execSQL("ALTER TABLE ScienceQuestion add localPhotoUrl TEXT");
                 database.execSQL("ALTER TABLE ScienceQuestionChoice add localChoiceUrl TEXT");
                 database.execSQL("ALTER TABLE ScienceQuestionChoice add localMatchUrl TEXT");
-
-
+                database.execSQL("ALTER TABLE Score add studentGroupId TEXT");
                 Log.d("$$$", "after MIGRATION_19_20");
             } catch (Exception e) {
                 e.printStackTrace();

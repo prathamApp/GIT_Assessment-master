@@ -45,6 +45,7 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -161,44 +162,47 @@ public class VideoFragment extends Fragment implements VideoContract.VideoView {
         }
 
         if (scienceQuestion.getPhotourl() != null && !scienceQuestion.getPhotourl().equalsIgnoreCase("")) {
+
             questionImage.setVisibility(View.VISIBLE);
 
             fileName = getFileName(scienceQuestion.getQid(), scienceQuestion.getPhotourl());
 //            path = Environment.getExternalStorageDirectory().toString() + "/.Assessment/Content/Downloaded" + "/" + fileName;
             final String localPath = Assessment_Utility.getQuestionLocalPath(scienceQuestion);
+            if (new File(localPath).exists()) {
 
-            String extension = getFileExtension(localPath);
+                String extension = getFileExtension(localPath);
 
-            if (extension.equalsIgnoreCase("gif") ||
-                    extension.equalsIgnoreCase("PNG") ||
-                    extension.equalsIgnoreCase("JPEG") ||
-                    extension.equalsIgnoreCase("JPG")) {
-                Assessment_Utility.setQuestionImageToImageView(questionImage, questionGif, localPath, getActivity());
-            } else {
+                if (extension.equalsIgnoreCase("gif") ||
+                        extension.equalsIgnoreCase("PNG") ||
+                        extension.equalsIgnoreCase("JPEG") ||
+                        extension.equalsIgnoreCase("JPG")) {
+                    Assessment_Utility.setQuestionImageToImageView(questionImage, questionGif, localPath, getActivity());
+                } else {
 
-                if (extension.equalsIgnoreCase("mp4") ||
-                        extension.equalsIgnoreCase("3gp")) {
-                    Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
+                    if (extension.equalsIgnoreCase("mp4") ||
+                            extension.equalsIgnoreCase("3gp")) {
+                        Assessment_Utility.setThumbnailForVideo(localPath, getActivity(), questionImage);
+                    }
+                    questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
+                    RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(
+                            250, 250);
+                    param.addRule(RelativeLayout.CENTER_IN_PARENT);
+                    questionImage.setLayoutParams(param);
                 }
-                questionImage.setImageDrawable(getActivity().getResources().getDrawable(R.drawable.ic_play_circle));
-                RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(
-                        250, 250);
-                param.addRule(RelativeLayout.CENTER_IN_PARENT);
-                questionImage.setLayoutParams(param);
-            }
 
-            questionImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showZoomDialog(getActivity(), localPath, "");
-                }
-            });
-            questionGif.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showZoomDialog(getActivity(), localPath, "");
-                }
-            });
+                questionImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showZoomDialog(getActivity(), localPath, "");
+                    }
+                });
+                questionGif.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showZoomDialog(getActivity(), localPath, "");
+                    }
+                });
+            } else assessmentAnswerListener.reDownloadExam();
         }
     }
 
@@ -378,7 +382,6 @@ public class VideoFragment extends Fragment implements VideoContract.VideoView {
          }
      }
  */
-
 
 
     @Override

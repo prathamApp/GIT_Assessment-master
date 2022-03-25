@@ -61,6 +61,7 @@ public class Score implements Serializable {
     private String correctAns;
     private String AppVersion;
     private String AppVersionChoice;
+    private String studentGroupId;
 
 
     @Override
@@ -78,6 +79,14 @@ public class Score implements Serializable {
                 ", EndDateTime='" + EndDateTime + '\'' +
                 ", Level=" + Level +
                 '}';
+    }
+
+    public String getStudentGroupId() {
+        return studentGroupId;
+    }
+
+    public void setStudentGroupId(String studentGroupId) {
+        this.studentGroupId = studentGroupId;
     }
 
     public String getQname() {
