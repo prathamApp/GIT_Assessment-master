@@ -32,7 +32,7 @@ import com.pratham.assessment.domain.ContentTable;
 import com.pratham.assessment.domain.Session;
 import com.pratham.assessment.domain.Status;
 import com.pratham.assessment.domain.Student;
-import com.pratham.assessment.interfaces.SplashInterface;
+import com.pratham.assessment.interfaces.OnChildAddedListener;
 import com.pratham.assessment.services.AppExitService;
 import com.pratham.assessment.ui.bottom_fragment.add_student.EnrollmentNoFragment;
 import com.pratham.assessment.ui.bottom_fragment.add_student.create_profile.AddStudentFragment;
@@ -60,7 +60,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;*/
 
 @EFragment(R.layout.student_list_fragment)
-public class BottomStudentsFragment extends BottomSheetDialogFragment implements StudentClickListener, SplashInterface {
+public class BottomStudentsFragment extends BottomSheetDialogFragment implements StudentClickListener, OnChildAddedListener {
 
 
     @ViewById(R.id.students_recyclerView)

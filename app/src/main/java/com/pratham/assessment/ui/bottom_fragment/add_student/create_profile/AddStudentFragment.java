@@ -44,7 +44,7 @@ import com.pratham.assessment.domain.AvatarModal;
 import com.pratham.assessment.domain.ModalProgram;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.domain.Village;
-import com.pratham.assessment.interfaces.SplashInterface;
+import com.pratham.assessment.interfaces.OnChildAddedListener;
 import com.pratham.assessment.ui.bottom_fragment.add_student.AvatarAdapter;
 import com.pratham.assessment.ui.bottom_fragment.add_student.AvatarClickListener;
 import com.pratham.assessment.ui.choose_assessment.choose_subject.ChooseAssessmentActivity;
@@ -126,7 +126,7 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
     }
 
     ArrayList<AvatarModal> avatarList = new ArrayList<>();
-    static SplashInterface splashInterface;
+    static OnChildAddedListener onChildAddedListener;
     AvatarAdapter avatarAdapter;
 
     @Override
@@ -166,12 +166,12 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
         );
     }
 
-    public static AddStudentFragment newInstance(SplashInterface splashInter) {
+    public static AddStudentFragment newInstance(OnChildAddedListener splashInter) {
         AddStudentFragment frag = new AddStudentFragment();
         Bundle args = new Bundle();
         args.putString("title", "Create Profile");
         frag.setArguments(args);
-        splashInterface = splashInter;
+        onChildAddedListener = splashInter;
         return frag;
     }
 
@@ -536,7 +536,7 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
         AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().insert(student);
         BackupDatabase.backup(getActivity());
         Toast.makeText(getActivity(), "Profile created Successfully..", Toast.LENGTH_SHORT).show();
-        splashInterface.onChildAdded();
+        onChildAddedListener.onChildAdded();
         dismiss();
 
 
