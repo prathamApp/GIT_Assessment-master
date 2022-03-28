@@ -22,12 +22,7 @@ public class VideoPlayer extends Activity implements MediaPlayer.OnCompletionLis
 
 
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        // todo setContentView(R.layout.activity_play_video);
-
-        // todo myVideoView = (VideoView) findViewById(R.id.videoView1);
-
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //todo playVideo(Uri.parse(groupId));
 
     }
 

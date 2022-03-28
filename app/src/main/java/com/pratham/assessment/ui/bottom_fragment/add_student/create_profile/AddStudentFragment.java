@@ -65,12 +65,7 @@ import static com.pratham.assessment.constants.Assessment_Constants.CHHATTISGARH
 import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
 import static com.pratham.assessment.utilities.Assessment_Utility.checkConnectedToRPI;
 
-/*
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-*/
 
 public class AddStudentFragment extends DialogFragment implements AvatarClickListener, AddStudentContract.AddStudentView {
 
@@ -434,23 +429,9 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
         }
     }
 
-    /* @OnClick(R.id.rb_male)
-     public void maleGenderClicked() {
-         //ButtonClickSound.start();
-         // rb_male.setBackground(getResources().getDrawable(R.drawable.correct_bg));
-         // rb_female.setBackground(getResources().getDrawable(R.drawable.ripple_rectangle));
-         gender = "Male";
-     }
-
-     @OnClick(R.id.rb_female)
-     public void femaleGenderClicked() {
-         //ButtonClickSound.start();
-         //rb_female.setBackground(getResources().getDrawable(R.drawable.correct_bg));
-         //rb_male.setBackground(getResources().getDrawable(R.drawable.ripple_rectangle));
-         gender = "Female";
-     }
- */
-//    @OnClick(R.id.btn_add_new_student)
+/**
+ * check validations
+ * */
     public void onAddNewClick() {
         //ButtonClickSound.start();
         if (selectedProgram.equalsIgnoreCase(""))
@@ -503,6 +484,10 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
         }
     }
 
+
+    /**
+     * Add new student to db with Isniosstudent to 0 because create profile student
+     * */
     private void addStudentToDB() {
         Student student = new Student();
         student.setStudentID(AssessmentApplication.getUniqueID().toString());
@@ -556,6 +541,9 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
     }
 
 
+    /**
+     * load languages from server
+     * */
     private void getLanguageData() {
 //        progressDialog.setMessage(getString(R.string.loading));
         String url = "";

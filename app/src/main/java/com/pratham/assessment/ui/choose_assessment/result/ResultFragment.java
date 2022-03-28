@@ -36,6 +36,10 @@ import java.util.Objects;
 /*import butterknife.ButterKnife;
 import butterknife.OnClick;*/
 
+
+/**
+ * Display result correct, wrong, skipped
+ * */
 @EFragment(R.layout.fragment_result)
 public class ResultFragment extends Fragment implements ResultListener {
 
@@ -133,76 +137,6 @@ public class ResultFragment extends Fragment implements ResultListener {
 */
         }
     }
-  /*  @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_result, container, false);
-    }
-*/
-/*    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        final Toolbar mToolbar = view.findViewById(R.id.toolbar);
-        ButterKnife.bind(this, view);
-//        resultList = (List<ResultModalClass>) getIntent().getSerializableExtra("result");
-        outerModalClass = (ResultOuterModalClass) getActivity().getIntent().getSerializableExtra("result");
-        resultList = outerModalClass.getResultList();
-        outOfMarks = outerModalClass.getOutOfMarks();
-        marksObtained = outerModalClass.getMarksObtained();
-        studentId = outerModalClass.getStudentId();
-        examStartTime = outerModalClass.getExamStartTime();
-        examEndTime = outerModalClass.getExamEndTime();
-        examId = outerModalClass.getExamId();
-        subjectId = outerModalClass.getSubjectId();
-        paperId = outerModalClass.getPaperId();
-        tv_marks_obtained.setText(marksObtained);
-        tv_out_of_marks.setText(outOfMarks);
-
-   *//*     Bundle bundle = new Bundle();
-        bundle.putSerializable("result", outerModalClass);
-        Assessment_Utility.showFragment(getActivity(), new CertificateFragment(), R.id.certificate_frame, bundle, CertificateFragment.class.getSimpleName());
-*//*
-        btn_done.setVisibility(View.GONE);
-
-        presenter = new ResultPresenter(getActivity());
-        String studentName = presenter.getStudent(studentId);
-        mToolbar.setTitle(studentName);
-        mToolbar.setTitleTextColor(Color.WHITE);
-        mToolbar.setSubtitleTextColor(Color.WHITE);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-
-        String subName = presenter.getSubjectName(examId);
-        String topicName = presenter.getTopicName(examId);
-        tv_topic.setText(topicName);
-        tv_subject.setText(subName);
-        ResultAdapter resultAdapter = new ResultAdapter(getActivity(), resultList, this);
-        rv_question_answers.setAdapter(resultAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        rv_question_answers.setLayoutManager(linearLayoutManager);
-        resultAdapter.notifyDataSetChanged();
-
-        AppBarLayout mAppBarLayout = view.findViewById(R.id.app_bar);
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            //            boolean isShow = false;
-            int scrollRange = -1;
-
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.getTotalScrollRange();
-                }
-            }
-        });
-    }*/
-
 
     @Click({R.id.btn_done, R.id.btn_ok})
     public void onDoneClick() {

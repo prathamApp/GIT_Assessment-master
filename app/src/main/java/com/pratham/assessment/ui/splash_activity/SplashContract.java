@@ -4,15 +4,13 @@ package com.pratham.assessment.ui.splash_activity;
 import com.pratham.assessment.database.AppDatabase;
 
 /**
- * Created by Ameya on 23-Nov-17.
+ * Created by Ankita on 23-Nov-17.
  */
 
 public interface SplashContract {
 
     interface SplashView {
         void startApp();
-
-        void showUpdateDialog();
 
         void showButton();
 
@@ -26,8 +24,6 @@ public interface SplashContract {
     interface SplashPresenter {
         void checkVersion();
 
-//        void doInitialEntries(AppDatabase appDatabase);
-
         void versionObtained(String latestVersion);
 
 
@@ -36,10 +32,6 @@ public interface SplashContract {
 
         void copySDCardDB();
 
-        boolean getSdCardPath();
-
-
-        void updateNewEntriesInStatusTable();
 
     }
 

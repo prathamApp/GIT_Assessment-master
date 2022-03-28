@@ -294,10 +294,7 @@ public class PushDataToServer {
                 else
                     pushDataScienceToServer(context, requestJsonObjectScience, UploadDataJsonZipURL);
 
-            }/* else {//todo raspberry push
-                    pushDataToRaspberry("" + Assessment_Constants.URL.DATASTORE_RASPBERY_URL.toString(),
-                            "" + requestJsonObjectScience, programID, Assessment_Constants.USAGEDATA);
-                }*/
+            }
         } else {
             onPostExecute();
         }
@@ -478,94 +475,6 @@ public class PushDataToServer {
 
     int mediaCnt = 0;
 
-    /* public void pushImagesToServer_PI(List<DownloadMedia> downloadMediaList, final int jsonIndex, String mediaType) {
- //        Log.d("PushData", "Image jsonIndex : " + jsonIndex);
-         if (jsonIndex < downloadMediaList.size()) {
-             switch (mediaType) {
-                 case DOWNLOAD_MEDIA_TYPE_SUPERVISOR:
-                     supervisorCntRPI = jsonIndex;
-                     break;
-                 case DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA:
-                     answerMediaCntRPI = jsonIndex;
-                     break;
-                 case DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING:
-                     videoMonCntRPI = jsonIndex;
-                     break;
-             }
-
-             AndroidNetworking.upload(UploadMediaURLRPI)
-                     .addMultipartFile("uploaded_file", new File(downloadMediaList.get(jsonIndex).getPhotoUrl()))
-                     .setPriority(Priority.HIGH)
-                     .build()
-                     .getAsString(new StringRequestListener() {
-                         @Override
-                         public void onResponse(String response) {
-                             try {
-                                 Log.d("PushData", "Image onResponse_PI : " + response);
- //                                if (response.equalsIgnoreCase("success")) {
-                                 mediaCnt++;
- //                                Log.d("PushData", "imageUploadCnt _PI: " + imageUploadCnt);
-                                 switch (mediaType) {
-                                     case DOWNLOAD_MEDIA_TYPE_SUPERVISOR:
-                                         pushImagesToServer_PI(downloadMediaList, supervisorCntRPI + 1, mediaType);
-                                         downloadMediaList.get(supervisorCntRPI).setDownloadSuccessful(true);
-                                         break;
-                                     case DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA:
-                                         pushImagesToServer_PI(downloadMediaList, answerMediaCntRPI + 1, mediaType);
-                                         downloadMediaList.get(answerMediaCntRPI).setDownloadSuccessful(true);
-                                         break;
-                                     case DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING:
-                                         pushImagesToServer_PI(downloadMediaList, videoMonCntRPI + 1, mediaType);
-                                         downloadMediaList.get(videoMonCnt).setDownloadSuccessful(true);
-                                         onPostExecute();
-                                         break;
-                                 }
- //                                }
-                             } catch (Exception e) {
-                                 e.printStackTrace();
-                             }
-                         }
-
-                         @Override
-                         public void onError(ANError anError) {
- //                            Log.d("PushData", "IMAGE onError _PI: " + imageUploadList.get(jsonIndex).getFileName());
-                             Log.d("PushData", "onError _PI: " + anError.getMessage());
-                             Log.d("PushData", "onError _PI: " + anError.getErrorBody());
-                             Log.d("PushData", "onError _PI: " + anError.getErrorDetail());
-                             switch (mediaType) {
-                                 case DOWNLOAD_MEDIA_TYPE_SUPERVISOR:
-                                     pushImagesToServer_PI(downloadMediaList, supervisorCntRPI + 1, mediaType);
-                                     downloadMediaList.get(supervisorCntRPI).setDownloadSuccessful(true);
-                                     break;
-                                 case DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA:
-                                     pushImagesToServer_PI(downloadMediaList, answerMediaCntRPI + 1, mediaType);
-                                     downloadMediaList.get(answerMediaCntRPI).setDownloadSuccessful(true);
-                                     break;
-                                 case DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING:
-                                     pushImagesToServer_PI(downloadMediaList, videoMonCntRPI + 1, mediaType);
-                                     downloadMediaList.get(videoMonCnt).setDownloadSuccessful(true);
-                                     break;
-                             }
-                         }
-                     });
-         } else {
-             switch (mediaType) {
-                 case DOWNLOAD_MEDIA_TYPE_SUPERVISOR:
- //                    setMediaPushFlagRPI(downloadMediaList, mediaType);
- //                    break;
-                 case DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA:
-                     setMediaPushFlagRPI(downloadMediaList, mediaType);
- //                    pushImagesToServer_PI(videoRecordingList, 0, DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING);
-                     break;
-                 case DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING:
-                     setMediaPushFlagRPI(downloadMediaList, mediaType);
-                     onPostExecute();
-                     Log.d("PushData", "IMAGES COMPLETE");
-                     break;
-             }
-         }
-     }
- */
     int rpiMediaCnt = 0;
 
     public void pushImagesToServer_PI(List<DownloadMedia> downloadMediaList, final int jsonIndex) {

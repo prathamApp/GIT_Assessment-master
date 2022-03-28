@@ -1,5 +1,7 @@
 package com.pratham.assessment.constants;
-
+/**
+ * All the apis used in app are mentioned here.
+ * */
 public class APIs {
     private APIs() {
     }

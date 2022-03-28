@@ -152,7 +152,7 @@ public class ArrangeSeqDragDropAdapter extends RecyclerView.Adapter<ArrangeSeqDr
                 return false;
             });
 
-            //todo add bubbleshowcase
+            //todo add bubbleshowcase if required
        /* if (!Assessment_Constants.isShowcaseDisplayed)
             if (position == 0) {
                 Assessment_Constants.isShowcaseDisplayed = true;

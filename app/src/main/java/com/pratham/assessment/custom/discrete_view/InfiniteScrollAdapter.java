@@ -137,7 +137,6 @@ public class InfiniteScrollAdapter<T extends RecyclerView.ViewHolder> extends Re
         }
     }
 
-    //TODO: handle proper data set change notifications
     private class DataSetChangeDelegate extends RecyclerView.AdapterDataObserver {
 
         @Override

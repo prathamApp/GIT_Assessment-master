@@ -46,6 +46,11 @@ import static com.pratham.assessment.utilities.Assessment_Utility.checkConnected
 /*import butterknife.BindView;
 import butterknife.ButterKnife;*/
 
+
+/**
+ * fragment is used to display the all the exams of selected subjects
+ */
+
 @EFragment(R.layout.fragment_topic)
 public class TopicFragment extends Fragment {
     List<AssessmentTestModal> assessmentTestModals;
@@ -70,18 +75,6 @@ public class TopicFragment extends Fragment {
         langId = FastSave.getInstance().getString(LANGUAGE, "1");
         tv_no_exams.setText(R.string.no_exams);
         if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-           /* if (subjectId.equalsIgnoreCase(CHHATTISGARH_SUBJECT_ID) && langId.equalsIgnoreCase(CHHATTISGARH_LANGUAGE_ID)) {
-                AssessmentTest test = new AssessmentTest();
-                test.setLanguageId(CHHATTISGARH_LANGUAGE_ID);
-                test.setSubjectname(CHHATTISGARH_SUBJECT_NAME);
-                test.setSubjectid(CHHATTISGARH_SUBJECT_ID);
-                test.setExamname(CHHATTISGARH_EXAM_NAME);
-                test.setExamid(CHHATTISGARH_EXAM_ID);
-                assessmentTests.add(test);
-                AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
-                AppDatabase.getDatabaseInstance(getActivity()).getTestDao().insertAllTest(assessmentTests);
-                setTopicsToRecyclerView(assessmentTests);
-            } else*/
             if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
                 getNIOSExams();
             else
@@ -94,6 +87,11 @@ public class TopicFragment extends Fragment {
         }
     }
 
+
+    /**
+     * for enrollment login, exams are already stored in db when subjects are stored.
+     * so here exams are fetched from db by checking the whether the exam is assigned to that student.
+     */
     private void getNIOSExams() {
         String currentStudentID = FastSave.getInstance().getString("currentStudentID", "");
         langId = FastSave.getInstance().getString(LANGUAGE, "1");
@@ -149,127 +147,10 @@ public class TopicFragment extends Fragment {
         return exists;
     }
 
-    /*private void getNIOSTest() {
-        try {
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Loading Exams");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-            AndroidNetworking.get(APIs.AssessmentEnrollmentNoExamAPI + FastSave.getInstance().getString("currentStudentID", ""))
-                    .build()
-                    .getAsString(new StringRequestListener() {
-                        @Override
-                        public void onResponse(String response) {
-                         *//*   Gson gson = new Gson();
-                            Type listType = new TypeToken<List<AssessmentTestModal>>() {
-                            }.getType();
-                            assessmentTestModals = gson.fromJson(response, listType);
-                            assessmentTests.clear();*//*
-                            assessmentTestModals = new ArrayList<>();
-                            JSONArray jsonArray = null;
-                            try {
-                                jsonArray = new JSONArray(response);
-                                for (int j = 0; j < jsonArray.length(); j++) {
-                                    Log.d("onResponse", "onResponse: " + jsonArray.length());
-                                    JSONObject outer = jsonArray.getJSONObject(j);
-//                                    for (int i = 0; i < outer.length(); i++) {
-                                    Log.d("onResponse", "onResponse outer: " + outer.length());
-                                    AssessmentTestModal testModal = new AssessmentTestModal();
-                                    AssessmentTest test = new AssessmentTest();
-                                    JSONArray lststudentexamtopic = outer.getJSONArray("lststudentexamtopic");
-                                    JSONObject jsonObject = new JSONObject(lststudentexamtopic.getJSONObject(0).toString());
-                                    testModal.setSubjectid(jsonObject.getString("subjectid"));
-                                    testModal.setSubjectname(jsonObject.getString("subjectname"));
-                                    assessmentTestModals.add(testModal);
-                                    test.setExamid(jsonObject.getString("examid"));
-                                    test.setSubjectid(jsonObject.getString("subjectid"));
-                                    test.setExamname(jsonObject.getString("examname"));
-                                    test.setSubjectname(jsonObject.getString("subjectname"));
-                                    test.setLanguageId(jsonObject.getString("languageid"));
-                                    assessmentTests.add(test);
-//                                    }
-                                }
 
-
-                             *//*   AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
-                                AppDatabase.getDatabaseInstance(getActivity()).getTestDao().insertAllTest(assessmentTests);
-*//*
-
-
-
-     *//* for (int i = 0; i < assessmentTestModals.size(); i++) {
-                                assessmentTests.addAll(assessmentTestModals.get(i).getLstsubjectexam());
-                                for (int j = 0; j < assessmentTests.size(); j++) {
-                                    assessmentTests.get(j).setSubjectid(assessmentTestModals.get(i).getSubjectid());
-                                    assessmentTests.get(j).setSubjectname(assessmentTestModals.get(i).getSubjectname());
-                                    assessmentTests.get(j).setLanguageId(Assessment_Constants.SELECTED_LANGUAGE);
-                                }
-                            }*//*
-                                if (assessmentTests.size() > 0) {
-                                    AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
-                                    AppDatabase.getDatabaseInstance(getActivity()).getTestDao().insertAllTest(assessmentTests);
-                                    if (progressDialog != null && progressDialog.isShowing() && isVisible()) {
-                                        progressDialog.dismiss();
-                                    }
-
-                                    setTopicsToRecyclerView(assessmentTests);
-                               *//* flowLayout.removeAllViews();
-                                setTopicsToCheckBox(assessmentTests);*//*
-                                } else {
-                                    if (progressDialog != null && progressDialog.isShowing()) {
-                                        progressDialog.dismiss();
-                                    }
-                              *//*  ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
-                                ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
-                                getActivity().getSupportFragmentManager().popBackStack();
-                                Toast.makeText(getActivity(), "No Exams..", Toast.LENGTH_SHORT).show();
-    *//*
-                                    //                            getOfflineTests();
-
-                                    //                           btnOk.setEnabled(false);
-
-                                    AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
-                                    Toast.makeText(getActivity(), "No exams", Toast.LENGTH_SHORT).show();
-
-                                }
-                            } catch (
-                                    JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onError(ANError anError) {
-                            if (progressDialog != null && progressDialog.isShowing() && isVisible()) {
-                                progressDialog.dismiss();
-                            }
-                            ((ChooseAssessmentActivity) getActivity()).frameLayout.setVisibility(View.GONE);
-                            ((ChooseAssessmentActivity) getActivity()).rlSubject.setVisibility(View.VISIBLE);
-                            getActivity().getSupportFragmentManager().popBackStack();
-
-                            Toast.makeText(getActivity(), "" + anError, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-        } catch (
-                Exception e) {
-            e.printStackTrace();
-        }
-
-    }*/
-
-   /* @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        subjectId = FastSave.getInstance().getString("SELECTED_SUBJECT_ID", "1");
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_topic, container, false);
-    }*/
-
+    /****
+     * for create profile login there is different api for loading exams.
+     */
     private void getExamData() {
         String url = "";
         boolean isRPI = checkConnectedToRPI();
@@ -348,18 +229,9 @@ public class TopicFragment extends Fragment {
                             }
 //                            Toast.makeText(getActivity(), R.string.no_exams, Toast.LENGTH_SHORT).show();
                             Assessment_Utility.showDialog(getActivity(), getActivity().getString(R.string.no_exams));
-                            /*rl_no_exams.setVisibility(View.VISIBLE);
-                            rv_topics.setVisibility(View.GONE);*/
 
-//                            getOfflineTests();
-
-//                           btnOk.setEnabled(false);
 
                             AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
-//                            Toast.makeText(getActivity(), R.string.no_exams, Toast.LENGTH_SHORT).show();
-//                            Assessment_Utility.showDialog(getActivity(), getActivity().getString(R.string.no_exams));
-                           /* rl_no_exams.setVisibility(View.VISIBLE);
-                            rv_topics.setVisibility(View.GONE);*/
 
                         }
                     }
@@ -393,18 +265,10 @@ public class TopicFragment extends Fragment {
         }
     }
 
-  /*  @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
-        if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-            getExamData();
-        } else {
-            getOfflineTests();
-        }
 
-    }*/
-
+    /**
+     * get list of exams from db for selected subject.
+     */
     private void getOfflineTests() {
         assessmentTests = AppDatabase.getDatabaseInstance(getContext()).getTestDao().getTopicBySubIdAndLangId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
         List<AssessmentTest> assessmentPublicTests = new ArrayList<>();
@@ -416,14 +280,8 @@ public class TopicFragment extends Fragment {
         }
         if (assessmentPublicTests.size() > 0) {
             setTopicsToRecyclerView(assessmentPublicTests);
-          /*  else
-                Toast.makeText(getActivity(), "No exams", Toast.LENGTH_SHORT).show();
-*/
 
         } else {
-           /* if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
-                getExamData();
-            } else*/
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }

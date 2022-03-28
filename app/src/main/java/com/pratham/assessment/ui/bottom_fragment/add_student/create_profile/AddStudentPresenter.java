@@ -47,6 +47,7 @@ public class AddStudentPresenter implements AddStudentContract.AddStudentPresent
         this.addStudentView = addStudentFragment;
     }
 
+    /** mainly used for CHHATTISGARH program */
     @Override
     public void loadPrograms() {
         AndroidNetworking.get(Assessment_Constants.URL.PULL_PROGRAMS.toString())
@@ -80,6 +81,7 @@ public class AddStudentPresenter implements AddStudentContract.AddStudentPresent
 
     }
 
+    /** mainly used for CHHATTISGARH program */
     @Override
     public void pullStates(String selectedProgram) {
         ArrayList states = new ArrayList();
@@ -117,6 +119,7 @@ public class AddStudentPresenter implements AddStudentContract.AddStudentPresent
 
     }
 
+    /** mainly used for CHHATTISGARH program */
     @Override
     public void loadDistrictSpinner(int pos, String selectedProgram) {
 
@@ -132,6 +135,8 @@ public class AddStudentPresenter implements AddStudentContract.AddStudentPresent
         api_content.pullFromInternet(Assessment_Constants.SERVER_BLOCK, url);
 
     }
+
+    /** mainly used for CHHATTISGARH program */
 
     @Override
     public void loadBlocks(String district) {
@@ -153,6 +158,8 @@ public class AddStudentPresenter implements AddStudentContract.AddStudentPresent
             addStudentView.showBlockSpinner(blockList);
         }
     }
+
+    /** mainly used for CHHATTISGARH program */
 
     @Override
     public void loadVillages(String block) {

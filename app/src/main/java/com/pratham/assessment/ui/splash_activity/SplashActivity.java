@@ -38,7 +38,6 @@ import com.pratham.assessment.database.BackupDatabase;
 import com.pratham.assessment.domain.AssessmentPaperForPush;
 import com.pratham.assessment.domain.Student;
 import com.pratham.assessment.interfaces.DataPushListener;
-import com.pratham.assessment.interfaces.Interface_copying;
 import com.pratham.assessment.interfaces.PermissionResult;
 import com.pratham.assessment.services.AppExitService;
 import com.pratham.assessment.ui.bottom_fragment.BottomStudentsFragment_;
@@ -65,7 +64,7 @@ import static com.pratham.assessment.utilities.Assessment_Utility.copyFileUsingS
 import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
 
 @EActivity(R.layout.activity_splash)
-public class SplashActivity extends SplashSupportActivity implements SplashContract.SplashView, PermissionResult, Interface_copying, DataPushListener {
+public class SplashActivity extends SplashSupportActivity implements SplashContract.SplashView, PermissionResult, DataPushListener {
 
     @ViewById(R.id.btn_start)
     Button btn_start_game;
@@ -148,27 +147,6 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         }, 2000);
     }
 
-    @Override
-    public void showUpdateDialog() {
-   /*     final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Upgrade to radio_button_bg better version !");
-        builder.setCancelable(false);
-        builder.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //Click button action
-                dialog.dismiss();
-                if (Assessment_Utility.isDataConnectionAvailable(SplashActivity.this)) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.pratham.cityofstories")));
-                    finish();
-                } else {
-                    Assessment_Utility.showAlertDialogue(SplashActivity.this, "No internet connection! Try updating later.");
-                    startApp();
-                }
-            }
-        });
-        builder.show();*/
-    }
 
     @Override
     public void startApp() {
@@ -182,64 +160,6 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         }
     }
 
-    /*public void getSdCardPath() {
-        CharSequence c = "";
-        ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
-        List l = am.getRunningAppProcesses();
-        Iterator i = l.iterator();
-        PackageManager pm = this.getPackageManager();
-        ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo) (i.next());
-
-        try {
-            c = pm.getApplicationLabel(pm.getApplicationInfo(info.processName, PackageManager.GET_META_DATA));
-            appname = c.toString();
-            Log.w("LABEL", c.toString());
-        } catch (Exception e) {//Name Not FOund Exception
-        }
-        if (appname.equals("City of Stories")) {
-            ArrayList<String> base_path = SDCardUtil.getExtSdCardPaths(this);
-            if (base_path.size() > 0) {
-                String path = base_path.get(0).replace("[", "");
-                path = path.replace("]", "");
-                fpath = path;
-            } else
-                fpath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            fpath = fpath + "/.LLA/English/";
-            File file = new File(fpath);
-            Assessment_Constants.ext_path = fpath;
-            Log.d("getSD", "getSdCardPath: " + Assessment_Constants.ext_path);
-            if (file.exists())
-                updateSdCardPath(fpath);
-            else {
-                File direct = new File(Environment.getExternalStorageDirectory().toString() + ".LLA");
-                if (!direct.exists()) direct.mkdirs();
-                direct = new File(Environment.getExternalStorageDirectory().toString() + ".LLA/English");
-                if (!direct.exists()) direct.mkdirs();
-                file = new File(Environment.getExternalStorageDirectory().toString() + ".LLA/English/");
-                if (file.exists())
-                    updateSdCardPath("" + Environment.getExternalStorageDirectory().toString() + "/.LLA/English/");
-            }
-        }
-    }
-
-    public void updateSdCardPath(final String path) {
-        new AsyncTask<Object, Void, Object>() {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                try {
-                    Assessment_Constants.ext_path = path;
-                    Log.d("$path", "\n\n\n\n\n\n\n\n\n\nPATH: " + Assessment_Constants.ext_path + "\n\n\n\n\n\n\\n\n\n\n");
-                    appDatabase.getStatusDao().updateValue("SdCardPath", "" + path);
-                    BackupDatabase.backup(SplashActivity.this);
-                    return null;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-        }.execute();
-    }
-*/
     @Override
     public void showProgressDialog() {
         progressDialog = new ProgressDialog(SplashActivity.this);
@@ -375,6 +295,10 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         Log.d("permissionForeverDenied", "permissionForeverDenied");
     }
 
+    /**
+     * this function creates backup db
+     * if db exist, copy backup db to app db
+     */
     public void createDataBase() {
 //        Log.d("$$$", "createDataBase");
 
@@ -438,7 +362,9 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         }
     }
 
-
+    /**
+     * check if db exist
+     */
     private boolean checkDataBase() {
         SQLiteDatabase checkDB = null;
         try {
@@ -469,13 +395,16 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         }
     }
 
+    /**
+     * bottom student fragment is list of students from db
+     */
     public void showBottomFragment() {
         try {
             fragmentBottomOpenFlg = true;
             firstPause = false;
             if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                 if (!AssessmentApplication.isTablet) {
-                    if (!FastSave.getInstance().getBoolean("STUDENTS_DOWNLOADED", false))
+                    if (!FastSave.getInstance().getBoolean("STUDENTS_DOWNLOADED", false)) // pull students only first time
                         pullOldStudentsCertificates();
                     else {
                         BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
@@ -500,6 +429,9 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 
     }
 
+    /**
+     * pull student certificate, exam details from server and save it in db.
+     */
     private void pullOldStudentsCertificates() {
         String url = APIs.pullCertificateByDeviceIdAPI + Assessment_Utility.getDeviceId(this);
         progressDialog = new ProgressDialog(context);
@@ -664,18 +596,6 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     }
 
     @Override
-    public void copyingExisting() {
-    }
-
-    @Override
-    public void successCopyingExisting(String path) {
-    }
-
-    @Override
-    public void failedCopyingExisting() {
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         isActivityRunning = false;
@@ -688,6 +608,10 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
         isActivityRunning = true;
     }
 
+
+    /**
+     * dialog for downloading offline language pack
+     */
     private void show_STT_Dialog() {
         STTDialog = new Dialog(this);
         STTDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

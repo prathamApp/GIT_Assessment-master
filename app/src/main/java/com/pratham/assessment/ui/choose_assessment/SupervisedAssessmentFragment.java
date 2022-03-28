@@ -2,7 +2,6 @@ package com.pratham.assessment.ui.choose_assessment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -39,10 +38,12 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * This fragment is used if exam is supervised.
+ */
 @EFragment(R.layout.activity_supervised_assessment)
 public class SupervisedAssessmentFragment extends Fragment {
     @ViewById(R.id.submitBtn)
@@ -296,31 +297,6 @@ public class SupervisedAssessmentFragment extends Fragment {
         }
     }
 
-
-    public void createDirectoryAndSaveFile(Bitmap imageToSave, String fileName) {
-        try {
-
-         /*   File direct = new File(Environment.getExternalStorageDirectory().toString() + "/.assessmentInternal");
-            if (!direct.exists()) direct.mkdirs();
-            direct = new File(Environment.getExternalStorageDirectory().toString() + "/.assessmentInternal/supervisorImages");
-            if (!direct.exists()) direct.mkdirs();
-*/
-            File direct = new File(AssessmentApplication.assessPath + Assessment_Constants.ASSESSMENT_FOLDER_PATH);
-            if (!direct.exists()) direct.mkdirs();
-            direct = new File(AssessmentApplication.assessPath + Assessment_Constants.STORE_SUPERVISOR_IMAGE_PATH);
-            if (!direct.exists()) direct.mkdirs();
-
-            File file = new File(direct, fileName);
-
-            FileOutputStream out = new FileOutputStream(file);
-            imageToSave.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 
     @Override
     public void onAttach(Context context) {

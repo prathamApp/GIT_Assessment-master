@@ -33,12 +33,6 @@ import com.pratham.assessment.utilities.Assessment_Utility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-/*
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-*/
 
 public class EnrollmentNoFragment extends DialogFragment {
 
@@ -147,7 +141,9 @@ public class EnrollmentNoFragment extends DialogFragment {
 
     }
 
-    //    @OnClick(R.id.btn_check_enrollment_no)
+    /**
+     * load student details form server if available else check in db.
+     */
     public void checkNo() {
         hideKeyboard(form_root);
         if (!enrollmentNo.getText().toString().trim().equalsIgnoreCase("")) {
@@ -171,7 +167,9 @@ public class EnrollmentNoFragment extends DialogFragment {
             }
     }
 
-    //    @OnClick(R.id.btn_add_new_student_enroll)
+    /**
+     * save student to db with Isniosstudent= 1 because it is enrollment id student
+     */
     public void onAddNewClick() {
         //ButtonClickSound.start();
         if (newEnrolledStudent.getGender() != null) {

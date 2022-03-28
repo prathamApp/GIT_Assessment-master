@@ -4,8 +4,6 @@ import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath
 // <<<<<<< HEAD
 
 import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
-// =======
-// >>>>>>> feature_branch
 
 public class Assessment_Constants {
     public static final String INITIAL_ENTRIES = "initial_entries";
@@ -184,7 +182,7 @@ public class Assessment_Constants {
     public static final String KEYWORDS_QUESTION = "11";
     public static final String IMAGE_ANSWER = "12";
     public static final String TEXT_PARAGRAPH = "13";
-    public static final String PARAGRAPH_BASED_QUESTION = "14";
+    public static final String PARAGRAPH_FOR_PARA_BASED_QUESTION = "14";
 
 
     public static String StudentPhotoPath = "";

@@ -55,9 +55,6 @@ import java.util.UUID;
 
 import static com.pratham.assessment.ui.splash_activity.SplashPresenter.doInitialEntries;
 
-/*import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;*/
 
 @EFragment(R.layout.student_list_fragment)
 public class BottomStudentsFragment extends BottomSheetDialogFragment implements StudentClickListener, OnChildAddedListener {
@@ -369,6 +366,9 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
     }
 
+    /**
+     * get students from db and set to recyclerView
+     */
     private void showStudents() {
         try {
 
@@ -427,6 +427,9 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
         }
     }
 
+    /**
+     * for outside pratham students
+     * */
     @Click(R.id.add_student)
     public void addStudent() {
         SplashActivity.fragmentAddStudentOpenFlg = true;
@@ -435,6 +438,9 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
 
     }
 
+    /**
+     * for  pratham program students having enrollment ids
+     * */
     @Click(R.id.enter_enrollment_no)
     public void addStudentByEnrollmentNo() {
         EnrollmentNoFragment enrollmentNoFragment = EnrollmentNoFragment.newInstance(this);
@@ -499,6 +505,9 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
     }
 
 
+    /**
+     * when user clicks on some profile, save it in attendance table and start new session.
+     */
     @Override
     public void onStudentClick(final String studentName, final String studentId, String
             groupId, String isniosstudent) {
@@ -586,155 +595,10 @@ public class BottomStudentsFragment extends BottomSheetDialogFragment implements
     }
 
 
-    /* private void getStudentData(final String requestType, String url, String studentID) {
-         try {
-             String url_id;
-             url_id = url + studentID;
-             AndroidNetworking.get(url_id)
-                     .addHeaders("Content-Type", "application/json")
-                     .build()
-                     .getAsString(new StringRequestListener() {
-                         @Override
-                         public void onResponse(String response) {
-                             receivedContent(requestType, response);
-                         }
-
-                         @Override
-                         public void onError(ANError anError) {
-                             try {
-                                 Log.d("Error:", anError.getErrorDetail());
-                             } catch (Exception e) {
-                                 e.printStackTrace();
-                             }
-                             receivedError();
-                         }
-                     });
-         } catch (Exception e) {
-             e.printStackTrace();
-         }
-     }
- */
-    private void receivedError() {
-//        startActivity(new Intent(getActivity(), HomeActivity.class));
-//        getActivity().finish();
-    }
-
-    /*@SuppressLint("StaticFieldLeak")
-    private void receivedContent(String requestType, String response) {
-        if (requestType.equalsIgnoreCase(Assessment_Constants.STUDENT_PROGRESS_INTERNET)) {
-//            new AsyncTask<Object, Void, Object>() {
-//                @Override
-//                protected Object doInBackground(Object[] objects) {
-            try {
-                Type listType = new TypeToken<ArrayList<ContentProgress>>() {
-                }.getType();
-                List<ContentProgress> contentProgressList = gson.fromJson(response, listType);
-                if (contentProgressList != null && contentProgressList.size() > 0) {
-                    for (int i = 0; i < contentProgressList.size(); i++) {
-                        contentProgressList.get(i).setSentFlag(1);
-                        contentProgressList.get(i).setLabel("" + Assessment_Constants.RESOURCE_PROGRESS);
-                    }
-                    AppDatabase.appDatabase.getContentProgressDao().addContentProgressList(contentProgressList);
-                    BackupDatabase.backup(getActivity());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-//                    return null;
-//                }
-//
-//                @Override
-//                protected void onPostExecute(Object o) {
-//                    super.onPostExecute(o);
-            getStudentData(Assessment_Constants.LEARNT_WORDS_INTERNET, Assessment_Constants.LEARNT_WORDS_API, Assessment_Constants.currentStudentID);
-//                }
-//            }.execute();
-        } else if (requestType.equalsIgnoreCase(Assessment_Constants.LEARNT_WORDS_INTERNET)) {
-//            new AsyncTask<Object, Void, Object>() {
-//                @Override
-//                protected Object doInBackground(Object[] objects) {
-//
-            try {
-                Type listType = new TypeToken<ArrayList<LearntWords>>() {
-                }.getType();
-                List<LearntWords> learntWordsList = gson.fromJson(response, listType);
-                if (learntWordsList != null && learntWordsList.size() > 0) {
-                    for (int i = 0; i < learntWordsList.size(); i++) {
-                        learntWordsList.get(i).setSentFlag(1);
-                        learntWordsList.get(i).setWord("" + learntWordsList.get(i).getWord().toLowerCase());
-                        if (!checkWord(learntWordsList.get(i).getStudentId(), learntWordsList.get(i).getWordUUId(), learntWordsList.get(i).getWord(), learntWordsList.get(i).getWordType()))
-                            AppDatabase.appDatabase.getLearntWordDao().insert(learntWordsList.get(i));
-                    }
-                    BackupDatabase.backup(getActivity());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-//                    return null;
-//                }
-//
-//                @Override
-//                protected void onPostExecute(Object o) {
-//                    super.onPostExecute(o);
-//                    startActivity(new Intent(getActivity(), HomeActivity.class));
-//                    getActivity().finish();
-//                }
-//            }.execute();
-        }
-    }
-*/
-   /* private boolean checkWord(String studentId, String wordUUId, String wordCheck, String wordType) {
-        try {
-            String word = AppDatabase.appDatabase.getLearntWordDao().checkLearntData(studentId, "" + wordUUId, wordCheck.toLowerCase(), wordType);
-            if (word != null)
-                return true;
-            else
-                return false;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-*/
     @Override
     public void onChildAdded() {
         showStudents();
     }
 
-    /*public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
-
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + avatar) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
-                }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + avatar) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
-                }
-            }
-        }
-    }
-*/
 
 }

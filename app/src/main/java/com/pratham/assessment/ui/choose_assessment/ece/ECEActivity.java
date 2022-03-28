@@ -39,7 +39,9 @@ import org.json.JSONException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * not used
+ * */
 @EActivity(R.layout.activity_ece)
 public class ECEActivity extends BaseActivity implements DiscreteScrollView.OnItemChangedListener, AnswerClickedListener {
     @ViewById(R.id.attendance_recycler_view)

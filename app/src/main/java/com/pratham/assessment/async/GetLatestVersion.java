@@ -11,7 +11,9 @@ import com.pratham.assessment.ui.splash_activity.SplashContract;
 
 import org.jsoup.Jsoup;
 
-
+/**
+ * Async task to get the latest version of app from playstore
+ * */
 public class GetLatestVersion extends AsyncTask<String, String, String> {
 
     String latestVersion;

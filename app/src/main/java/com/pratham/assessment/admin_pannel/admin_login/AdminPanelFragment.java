@@ -25,7 +25,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;*/
 
 /**
- * Created by PEF on 19/11/2018.
+ * Created by Ankita on 19/11/2018.
+ * for tablets
  */
 @EFragment(R.layout.admin_panel_login)
 public class AdminPanelFragment extends Fragment implements AdminPanelContract.AdminPanelView {

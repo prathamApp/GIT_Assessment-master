@@ -91,7 +91,6 @@ public class FillInTheBlanksWithoutOptionFragment extends Fragment
         setFillInTheBlanksQuestion();
     }
 
-    //TODO MAYBE UTILITY
     public static FillInTheBlanksWithoutOptionFragment newInstance(int pos, ScienceQuestion scienceQuestion) {
         FillInTheBlanksWithoutOptionFragment_ fragment = new FillInTheBlanksWithoutOptionFragment_();
         Bundle args = new Bundle();

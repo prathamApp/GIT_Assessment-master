@@ -75,125 +75,8 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
     public void copyListData() {
         getListData();
 
-/*        new AsyncTask<Object, Void, Object>() {
-            String currentSession;
-
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                *//*try {
-
-//                    if(!COS_Constants.SD_CARD_Content) {
-
-                        AssetManager assetManager = context.getAssets();
-                        try {
-                            InputStream in = assetManager.open("cos_database");
-                            OutputStream out = new FileOutputStream(AssessmentApplication.pradigiPath + "/.LLA/cos_database");
-                            byte[] buffer = new byte[1024];
-                            int read = in.read(buffer);
-                            while (read != -1) {
-                                out.write(buffer, 0, read);
-                                read = in.read(buffer);
-                            }
-                            File folder_file, db_file;
-                            if (!PreferenceManager.getDefaultSharedPreferences(context).getBoolean(COS_Constants.KEY_MENU_COPIED, false)) {
-                                try {
-                                    if (!COS_Constants.SMART_PHONE)
-                                        folder_file = new File(COS_Constants.ext_path);
-                                    else
-                                        folder_file = new File(AssessmentApplication.pradigiPath + "/.LLA/English/");
-                                    if (folder_file.exists()) {
-                                        Log.d("-CT-", "doInBackground COS_Constants.ext_path: " + COS_Constants.ext_path);
-                                        db_file = new File(folder_file.getAbsolutePath() + "/" + AppDatabase.DB_NAME);
-                                        if (db_file.exists()) {
-                                            SQLiteDatabase db = SQLiteDatabase.openDatabase(db_file.getAbsolutePath(), null, SQLiteDatabase.OPEN_READONLY);
-                                            if (db != null) {
-                                                Cursor content_cursor;
-                                                try {
-                                                    content_cursor = db.rawQuery("SELECT * FROM ContentTable", null);
-                                                    //populate contents
-                                                    List<ContentTable> contents = new ArrayList<>();
-                                                    if (content_cursor.moveToFirst()) {
-                                                        while (!content_cursor.isAfterLast()) {
-                                                            ContentTable detail = new ContentTable();
-                                                            detail.setNodeId(content_cursor.getString(content_cursor.getColumnIndex("subId")));
-                                                            detail.setNodeType(content_cursor.getString(content_cursor.getColumnIndex("nodeType")));
-                                                            detail.setNodeTitle(content_cursor.getString(content_cursor.getColumnIndex("nodeTitle")));
-                                                            detail.setNodeKeywords(content_cursor.getString(content_cursor.getColumnIndex("nodeKeywords")));
-                                                            detail.setNodeAge(content_cursor.getString(content_cursor.getColumnIndex("nodeAge")));
-                                                            detail.setNodeDesc(content_cursor.getString(content_cursor.getColumnIndex("nodeDesc")));
-                                                            detail.setNodeServerImage(content_cursor.getString(content_cursor.getColumnIndex("nodeServerImage")));
-                                                            detail.setNodeImage(content_cursor.getString(content_cursor.getColumnIndex("nodeImage")));
-                                                            detail.setResourceId(content_cursor.getString(content_cursor.getColumnIndex("resourceId")));
-                                                            detail.setResourceType(content_cursor.getString(content_cursor.getColumnIndex("resourceType")));
-                                                            detail.setResourcePath(content_cursor.getString(content_cursor.getColumnIndex("resourcePath")));
-                                                            detail.setLevel("" + content_cursor.getInt(content_cursor.getColumnIndex("level")));
-                                                            detail.setContentLanguage(content_cursor.getString(content_cursor.getColumnIndex("contentLanguage")));
-                                                            detail.setParentId(content_cursor.getString(content_cursor.getColumnIndex("parentId")));
-                                                            detail.setContentType(content_cursor.getString(content_cursor.getColumnIndex("contentType")));
-                                                            if (!COS_Constants.SMART_PHONE)
-                                                                detail.setOnSDCard(true);
-                                                            else
-                                                                detail.setOnSDCard(false);
-                                                            contents.add(detail);
-                                                            content_cursor.moveToNext();
-                                                        }
-                                                    }
-                                                    appDatabase.getContentTableDao().addContentList(contents);
-                                                    content_cursor.close();
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        }
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        } catch (Exception e) {
-                            e.getMessage();
-                        }
- //                   }
-                    return null;
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }*//*
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                super.onPostExecute(o);
-                getListData();
-            }
-        }.execute();*/
     }
 
-  /*  @Override
-    public void startAssessSession() {
-
-        new AsyncTask<Object, Void, Object>() {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                try {
-                    Session startSesion = new Session();
-                    String assessmentSession = FastSave.getInstance().getString("assessmentSession", "");
-
-//                    startSesion.setSessionID("" + Assessment_Constants.assessmentSession);
-                    startSesion.setSessionID("" + assessmentSession);
-                    String timerTime = AssessmentApplication.getCurrentDateTime(false, AssessmentApplication.getCurrentDateTime());
-                    startSesion.setFromDate(timerTime);
-                    startSesion.setToDate("NA");
-                    startSesion.setSentFlag(0);
-                    AppDatabase.getDatabaseInstance(context).getSessionDao().insert(startSesion);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        }.execute();
-    }*/
 
     private void getListData() {
         getLanguageData();
@@ -206,10 +89,10 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                 if (student.getProgramId() != null && student.getState() != null) {
                     assessView.clearContentList();
                     contentTableList.clear();
-                    //this code is only for CHHATTISGARH program
+                    //this code is only for CHHATTISGARH program.
+                    // if program is CHHATTISGARH show only specific exams saved in constant. no other exams to be displayed.
                     if (student.getProgramId().equalsIgnoreCase(CHHATTISGARH_PROGRAM_ID)
                             && student.getState().trim().equalsIgnoreCase(Assessment_Constants.CHHATTISGARH)) {
-//todo show subject Exam etc
                         AssessmentSubjects subjects = new AssessmentSubjects();
                         subjects.setLanguageid(CHHATTISGARH_LANGUAGE_ID);
                         subjects.setSubjectid(CHHATTISGARH_SUBJECT_ID);
@@ -237,7 +120,6 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                 if (student.getProgramId() != null && student.getState() != null) {
                     if (student.getProgramId().equalsIgnoreCase(CHHATTISGARH_PROGRAM_ID)
                             && student.getState().trim().equalsIgnoreCase(Assessment_Constants.CHHATTISGARH)) {
-//todo show subject Exam etc
                         downloadedContentTableList = (ArrayList<AssessmentSubjects>) AppDatabase.getDatabaseInstance(context).getSubjectDao().getChhattisgarhSubject(CHHATTISGARH_SUBJECT_ID);
                     } else {
                         if (FastSave.getInstance().getBoolean("enrollmentNoLogin", false))
@@ -329,6 +211,11 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
         }
     }
 
+    /**
+     * for enrollment login, exams and subjects are assigned to enrollment ids from server side.
+     *  subjects and exams are saved in NIOSExam and NIOSExamTopics tables.
+     * **** when app is updated on play store, this api is updated on server with new playstore version.***
+     */
     private void getNIOSSubjects() {
         NIOSSubjectList.clear();
         contentTableList.clear();
@@ -351,41 +238,6 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 //                        contentTableList = new ArrayList<>();
                         JSONArray jsonArray = null;
                         try {
-
-                           /* jsonArray = new JSONArray(response);
-                            for (int j = 0; j < jsonArray.length(); j++) {
-                                Log.d("onResponse", "onResponse: " + jsonArray.length());
-                                JSONObject outer = jsonArray.getJSONObject(j);
-//                                    for (int i = 0; i < outer.length(); i++) {
-                                Log.d("onResponse", "onResponse outer: " + outer.length());
-                                AssessmentTestModal testModal = new AssessmentTestModal();
-                                AssessmentSubjects subjects = new AssessmentSubjects();
-                                JSONArray lststudentexamtopic = outer.getJSONArray("lststudentexamtopic");
-                                JSONObject jsonObject = new JSONObject(lststudentexamtopic.getJSONObject(0).toString());
-                                subjects.setSubjectid(jsonObject.getString("subjectid"));
-                                subjects.setSubjectname(jsonObject.getString("subjectname"));
-                                subjects.setLanguageid(jsonObject.getString("languageid"));
-
-                                if (!containsName(contentTableList, subjects.getSubjectid()))
-                                    contentTableList.add(subjects);
-//                                    }
-                            }*/
-
-
-                             /*   AppDatabase.getDatabaseInstance(getActivity()).getTestDao().deleteTestsByLangIdAndSubId(subjectId, Assessment_Constants.SELECTED_LANGUAGE);
-                                AppDatabase.getDatabaseInstance(getActivity()).getTestDao().insertAllTest(assessmentTests);
-*/
-
-
-
-                           /* for (int i = 0; i < assessmentTestModals.size(); i++) {
-                                assessmentTests.addAll(assessmentTestModals.get(i).getLstsubjectexam());
-                                for (int j = 0; j < assessmentTests.size(); j++) {
-                                    assessmentTests.get(j).setSubjectid(assessmentTestModals.get(i).getSubjectid());
-                                    assessmentTests.get(j).setSubjectname(assessmentTestModals.get(i).getSubjectname());
-                                    assessmentTests.get(j).setLanguageId(Assessment_Constants.SELECTED_LANGUAGE);
-                                }
-                            }*/
                             if (NIOSSubjectList.size() > 0) {
                                 AppDatabase.getDatabaseInstance(context).getNiosExamDao().deleteByStudId(Assessment_Constants.currentStudentID);
                                 List<NIOSExamTopics> NIOSTopics;
@@ -475,6 +327,10 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
         return false;
     }
 
+
+    /**
+     * if create profile login, Subjects will be loaded from server.
+     */
     private void getSubjectData() {
         String url = "";
         boolean isRPI = checkConnectedToRPI();
@@ -666,6 +522,11 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
     }
 
+
+    /***
+     * check latest version if error in loading api
+     */
+
     private void checkVersion() {
         String latestVersion = "";
         String currentVersion = Assessment_Utility.getCurrentVersion(context);
@@ -707,32 +568,7 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
                     Toast.makeText(context, R.string.update, Toast.LENGTH_SHORT).show();
                 });
                 pushDialog.show();
-           /* AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Light_Dialog);
-            dialogBuilder.setCancelable(false);*/
-//            dialogBuilder.setIcon(R.drawable.ic_warning);
-//            dialogBuilder.setTitle("Upgrade app");
-         /*   dialogBuilder.setMessage("This app version is older. Please update the app");
-            dialogBuilder.setPositiveButton("Update", new android.content.DialogInterface.OnClickListener() {
-                public void onClick(android.content.DialogInterface dialog, int whichButton) {
-//                    pushNewData();
-                    dialog.dismiss();
-//                    isUpdateClicked = true;
-                    updateApp();
-                }
-            });
-*/
- /*           dialogBuilder.setNegativeButton("Cancel", new android.content.DialogInterface.OnClickListener() {
-                public void onClick(android.content.DialogInterface dialog, int whichButton) {
-                    try {
-                        dialog.dismiss();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
 
-            AlertDialog b = dialogBuilder.create();
-            b.show();*/
             } else
                 Toast.makeText(context, R.string.error_in_loading_check_internet_connection, Toast.LENGTH_SHORT).show();
 
@@ -743,88 +579,3 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
 
 }
 
-/*    public void getAPIContent(final String requestType, String url) {
-        try {
-            AndroidNetworking.get(url + "" + nodeIds.get(nodeIds.size() - 1))
-                    .addHeaders("Content-Type", "application/json")
-                    .build()
-                    .getAsString(new StringRequestListener() {
-                        @Override
-                        public void onResponse(String response) {
-                            recievedContent(requestType, response);
-                        }
-
-                        @Override
-                        public void onError(ANError anError) {
-                            recievedError(requestType);
-                            Log.d("Error:", anError.getErrorDetail());
-                        }
-                    });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void recievedContent(String header, String response) {
-        try {
-            if (header.equalsIgnoreCase(COS_Constants.INTERNET_DOWNLOAD)) {
-                JSONArray jsonArray = new JSONArray(response);
-                JSONObject jsonObject = new JSONObject(jsonArray.getJSONObject(0).toString());
-                //               ContentTable contentData = gson.fromJson(response, ContentTable.class);
-                Type listType = new TypeToken<ArrayList<ContentTable>>() {
-                }.getType();
-                List<ContentTable> serverContentList = gson.fromJson(response, listType);
-                //JSONArray returnStoryNavigate = jsonObject.getJSONArray("storyList");
-                String sName, nId, sId, sThumbnail, sDesc;
-                boolean downloadedFlg = false, contentFound = false;
-
-                for (int i = 0; i < serverContentList.size(); i++) {
-                    ContentTable contentTableTemp = new ContentTable();
-                    contentFound = false;
-                    for (int j = 0; j < downloadedContentTableList.size(); j++) {
-                        if (serverContentList.get(i).getNodeId().equalsIgnoreCase(downloadedContentTableList.get(j).getNodeId())) {
-                            contentFound = true;
-                            downloadedFlg = true;
-                            break;
-                        }
-                    }
-                    if (!contentFound) {
-                        contentTableTemp = new ContentTable();
-                        contentTableTemp.setNodeId("" + serverContentList.get(i).getNodeId());
-                        contentTableTemp.setNodeType("" + serverContentList.get(i).getNodeType());
-                        contentTableTemp.setNodeTitle("" + serverContentList.get(i).getNodeTitle());
-                        contentTableTemp.setNodeKeywords("" + serverContentList.get(i).getNodeKeywords());
-                        contentTableTemp.setNodeAge("" + serverContentList.get(i).getNodeAge());
-                        contentTableTemp.setNodeDesc("" + serverContentList.get(i).getNodeDesc());
-                        contentTableTemp.setNodeServerImage("" + serverContentList.get(i).getNodeServerImage());
-                        contentTableTemp.setNodeImage("" + serverContentList.get(i).getNodeImage());
-                        contentTableTemp.setResourceId("" + serverContentList.get(i).getResourceId());
-                        contentTableTemp.setResourceType("" + serverContentList.get(i).getResourceType());
-                        contentTableTemp.setResourcePath("" + serverContentList.get(i).getResourcePath());
-                        contentTableTemp.setParentId("" + serverContentList.get(i).getParentId());
-                        contentTableTemp.setLevel("" + serverContentList.get(i).getLevel());
-                        contentTableTemp.setContentType("" + serverContentList.get(i).getContentType());
-                        contentTableTemp.setIsDownloaded("false");
-                        contentTableTemp.setOnSDCard(false);
-                        contentViewList.add(contentTableTemp);
-                    }
-                }
-                Collections.sort(contentViewList);
-                Collections.sort(contentViewList, new Comparator<ContentTable>() {
-                    @Override
-                    public int compare(ContentTable o1, ContentTable o2) {
-                        return o1.getNodeId().compareTo(o2.getNodeId());
-                    }
-                });
-                Log.d("sorted", contentViewList.toString());
-                levelAdapter.notifyDataSetChanged();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void recievedError(String header) {
-        levelAdapter.notifyDataSetChanged();
-        Log.d("API_Error", "recievedError: "+header);
-    }*/

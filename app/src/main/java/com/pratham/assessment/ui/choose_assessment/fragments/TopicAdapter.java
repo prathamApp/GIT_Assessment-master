@@ -18,6 +18,10 @@ import com.pratham.assessment.utilities.Assessment_Utility;
 
 import java.util.List;
 
+
+/**
+ * exam selection adapter
+ * */
 public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.MyViewHolder> {
     Context context;
     private List<AssessmentTest> assessmentTests;
