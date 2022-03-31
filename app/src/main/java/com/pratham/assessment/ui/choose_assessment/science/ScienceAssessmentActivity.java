@@ -48,6 +48,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.DownloadListener;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.pratham.assessment.AssessmentApplication;
 import com.pratham.assessment.BaseActivity;
@@ -683,7 +684,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                         JSONArray jsonArray;
                         AssessmentPaperPattern assessmentPaperPattern = new AssessmentPaperPattern();
                         if (!isRPI)
-                            assessmentPaperPattern = gson.fromJson(response, AssessmentPaperPattern.class);
+                            try {
+                                assessmentPaperPattern = gson.fromJson(response, AssessmentPaperPattern.class);
+                            } catch (JsonSyntaxException e) {
+                                e.printStackTrace();
+                            }
                         else {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);

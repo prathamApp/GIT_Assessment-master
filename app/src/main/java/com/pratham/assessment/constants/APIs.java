@@ -1,7 +1,8 @@
 package com.pratham.assessment.constants;
+
 /**
  * All the apis used in app are mentioned here.
- * */
+ */
 public class APIs {
     private APIs() {
     }
@@ -215,15 +216,19 @@ public class APIs {
     //Azure APIs live og
     public static String baseAzureURL = "http://www.prathamassessment.org:8085/";
 
-    //New Azure APIs live
+    //NEW Azure APIs live
 //    public static String baseAzureURL = "https://posuat.prathamopenschool.org/";
+
+    //NEW Azure APIs dev
 //    public static String baseAzureURL = "https://dev.prathamopenschool.org/";
+
     //dev API
 //    public static String baseAzureURL = "http://www.apiassessment.openiscool.org/";
 
     public static String AssessmentLanguageAPI = baseAzureURL + "api/language/GetLanguage";
     public static String AssessmentSubjectAPI = baseAzureURL + "api/subject/GetSubjectv2?languageid=";
     public static String AssessmentQuestionAPI = baseAzureURL + "api/question/GetQuestion?";
+    public static String AssessmentQuestionAPINEWAPI = baseAzureURL + "api/question/GetAppQuestion?";    //This api url is different for new api.replace this when new azure api is used
     public static String AssessmentExamAPI = baseAzureURL + "api/subjectexam/GetExamV2?subjectid=";
     public static String AssessmentEnrollmentNoExamAPI = baseAzureURL + "api/exampaper/GetStudentExamListV2?studentid=";
     public static String AssessmentPaperPatternAPI = baseAzureURL + "api/exampattern/GetExamPattern?examid=";
@@ -248,8 +253,6 @@ public class APIs {
     public static String UploadDataJsonZipURLRPI = APIs.baseAzureURLRPI + "api/usagedata/";      //rpi data push
     public static String UploadDBZipURLRPI = APIs.baseAzureURLRPI + "api/dbpushdata/";      //rpi db push
     public static String UploadMediaURLRPI = APIs.baseAzureURLRPI + "api/channel/FileUpload/";      //rpi media push
-
-
 
 
     //kolibri

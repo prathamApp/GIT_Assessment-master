@@ -122,7 +122,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/rl_nav"
         android:background="@color/green"
-        android:visibility="visible"
+        android:visibility="gone"
         tools:context=".ui.choose_assessment.science.ScienceAssessmentActivity">
 
 
