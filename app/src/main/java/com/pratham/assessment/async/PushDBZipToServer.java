@@ -119,8 +119,9 @@ public class PushDBZipToServer {
                     if (db_files[i].exists() && db_files[i].isFile() && db_files[i].getName().contains("assessment"))
                         fileNameListStrings.add(db_files[i].getAbsolutePath());
 
+                String uuID = "" + Assessment_Utility.getUUID();
                 String filePathStr = Assessment_Utility.getStoragePath()
-                        + "/PrathamBackups/" + AppDatabase.DB_NAME; // file path to save
+                        + "/PrathamBackups/" + "AS_" + uuID+AppDatabase.DB_NAME; // file path to save
 
                 String fileName = Assessment_Utility.getUUID() + "_" +
                         Assessment_Utility.getDeviceId(context) + "_" + FastSave.getInstance().getString("currentStudentID", "");

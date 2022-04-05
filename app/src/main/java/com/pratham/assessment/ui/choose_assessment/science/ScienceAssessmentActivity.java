@@ -329,15 +329,16 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             assert bundle != null;
 
             //get data when opened from other apps and save student and mark attendance.
-            String studId = String.valueOf(bundle.getString("studentId"));
-            redirectedFromApp = String.valueOf(bundle.getString("appName"));
-            String studName = String.valueOf(bundle.getString("studentName"));
-            String subject = String.valueOf(bundle.getString("subjectName"));
-            String language = String.valueOf(bundle.getString("subjectLanguage"));
-            String subLevel = String.valueOf(bundle.getString("subjectLevel"));
-            String examId = String.valueOf(bundle.getString("examId"));
-            redirectedAppSessionId = String.valueOf(bundle.getString("currentSessionId"));
-            studentGroupId = String.valueOf(bundle.getString("studentGroupId"));
+
+            String studId = bundle!=null&&bundle.containsKey("studentId")?String.valueOf(bundle.getString("studentId")):"";
+            redirectedFromApp = bundle!=null&&bundle.containsKey("appName")?String.valueOf(bundle.getString("appName")):"";
+            String studName = bundle!=null&&bundle.containsKey("studentName")?String.valueOf(bundle.getString("studentName")):"";
+            String subject = bundle!=null&&bundle.containsKey("subjectName")?String.valueOf(bundle.getString("subjectName")):"";
+            String language = bundle!=null&&bundle.containsKey("subjectLanguage")?String.valueOf(bundle.getString("subjectLanguage")):"";
+            String subLevel = bundle!=null&&bundle.containsKey("subjectLevel")?String.valueOf(bundle.getString("subjectLevel")):"";
+            String examId = bundle!=null&&bundle.containsKey("examId")?String.valueOf(bundle.getString("examId")):"";
+            redirectedAppSessionId = bundle!=null&&bundle.containsKey("currentSessionId")?String.valueOf(bundle.getString("currentSessionId")):"";
+            studentGroupId = bundle!=null&&bundle.containsKey("studentGroupId")?String.valueOf(bundle.getString("studentGroupId")):"";
 
             String currentSession = UUID.randomUUID().toString();
             Session startSession = new Session();
@@ -377,32 +378,34 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             setLocaleByLanguageId(context, langCode);
 
             Student student = new Student();
-
             if (!studId.equalsIgnoreCase("")) {
-                Assessment_Constants.currentStudentID = studId;
-                student.setStudentID(studId);
-                FastSave.getInstance().saveString("currentStudentID", studId);
-                currentStudentID = studId;
-                createDataBase();
-            }
-            if (!studName.equalsIgnoreCase("")) {
-                Assessment_Constants.currentStudentName = studName;
-                FastSave.getInstance().saveString("currentStudentName", studName);
-            }
-            if (!studName.equalsIgnoreCase("")) {
+
+                if (!studId.equalsIgnoreCase("")) {
+                    Assessment_Constants.currentStudentID = studId;
+                    student.setStudentID(studId);
+                    FastSave.getInstance().saveString("currentStudentID", studId);
+                    currentStudentID = studId;
+                    createDataBase();
+                }
+                if (!studName.equalsIgnoreCase("")) {
+                    Assessment_Constants.currentStudentName = studName;
+                    FastSave.getInstance().saveString("currentStudentName", studName);
+                }
+                if (!studName.equalsIgnoreCase("")) {
 //                Assessment_Constants. = studName;
-                student.setFullName(studName);
-                FastSave.getInstance().saveString("EXAMID", examId);
-                selectedExamId = examId;
+                    student.setFullName(studName);
+                    FastSave.getInstance().saveString("EXAMID", examId);
+                    selectedExamId = examId;
+                }
+                if (studentGroupId != null && !studentGroupId.equalsIgnoreCase(""))
+                    student.setGroupId(studentGroupId);
+                AppDatabase.getDatabaseInstance(context).getStudentDao().insert(student);
+
+                BackupDatabase.backup(context);
+
+                SplashPresenter.doInitialEntries(context);
+                BackupDatabase.backup(this);
             }
-            if (studentGroupId != null && !studentGroupId.equalsIgnoreCase(""))
-                student.setGroupId(studentGroupId);
-            AppDatabase.getDatabaseInstance(context).getStudentDao().insert(student);
-
-            BackupDatabase.backup(context);
-
-            SplashPresenter.doInitialEntries(context);
-            BackupDatabase.backup(this);
 
         } catch (Exception e) {
             e.printStackTrace();
