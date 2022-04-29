@@ -584,6 +584,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + selectedLang + "&subjectid=" + subjectId + "&topicid=" + topicId;
 //        String questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + selectedLang + "&subjectid=" + subjectId + "&topicid=" + topicId; progressDialog.show();
 
+        Log.i("url12345_555",questionUrl);
         if (!progressDialog.isShowing())
             progressDialog.show();
         progressDialog.setMessage(getString(R.string.loading_please_wait));
@@ -671,6 +672,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             url = APIs.AssessmentPaperPatternAPIRPI + selectedExamId;
         else
             url = APIs.AssessmentPaperPatternAPI + selectedExamId;
+
+        Log.i("url12345_2",url);
         progressDialog = new ProgressDialog(context);
         progressDialog.show();
         progressDialog.setMessage(getString(R.string.downloading_paper_pattern));
@@ -720,6 +723,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
                             AssessmentPaperPattern assessmentPaperPatterns = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPaperPatternDao().getAssessmentPaperPatternsByExamId(selectedExamId);
                             if (assessmentPaperPatterns != null) {
                                 generatePaperPattern();
+
 //                showQuestions();
                             }
                         }
@@ -1497,7 +1501,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
                 ArrayList<ScienceQuestionChoice> scienceQuestionChoiceList = (ArrayList<ScienceQuestionChoice>) AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this)
                         .getScienceQuestionChoicesDao().getQuestionChoicesByQIDAndVersion(qid, version);
-                Log.d("insertQuestionsToDB", "insertQuestionsToDBzz : " + qid);
+                Log.d("insertQuestionsToDB", "insertQuestionsToDBzz : " + qid +" : Size : "+scienceQuestionChoiceList.size());
                 scienceQuestionList.get(i).setLstquestionchoice(scienceQuestionChoiceList);
 
                 /**check if all the media files exist for options*/

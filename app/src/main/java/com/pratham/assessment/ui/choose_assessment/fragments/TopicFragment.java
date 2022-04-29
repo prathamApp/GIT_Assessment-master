@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -158,6 +159,8 @@ public class TopicFragment extends Fragment {
             url = APIs.AssessmentExamAPIRPI + subjectId + "&languageid=" + Assessment_Constants.SELECTED_LANGUAGE;
         else
             url = APIs.AssessmentExamAPI + subjectId + "&languageid=" + Assessment_Constants.SELECTED_LANGUAGE;
+
+        Log.i("url12345_1",url);
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage(getString(R.string.loading_exams));
         progressDialog.setCancelable(false);

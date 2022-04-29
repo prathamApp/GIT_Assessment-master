@@ -404,9 +404,9 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             firstPause = false;
             if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                 if (!AssessmentApplication.isTablet) {
-                    if (!FastSave.getInstance().getBoolean("STUDENTS_DOWNLOADED", false)) // pull students only first time
+                    /*if (!FastSave.getInstance().getBoolean("STUDENTS_DOWNLOADED", false)) // pull students only first time
                         pullOldStudentsCertificates();
-                    else {
+                    else*/ {
                         BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
                         if (isActivityRunning && !bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
                             bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
@@ -434,6 +434,7 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
      */
     private void pullOldStudentsCertificates() {
         String url = APIs.pullCertificateByDeviceIdAPI + Assessment_Utility.getDeviceId(this);
+        Log.i("url",url);
         progressDialog = new ProgressDialog(context);
         progressDialog.show();
         progressDialog.setCancelable(false);

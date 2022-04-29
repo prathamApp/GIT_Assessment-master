@@ -220,7 +220,7 @@ public class APIs {
 //    public static String baseAzureURL = "https://posuat.prathamopenschool.org/";
 
     //NEW Azure APIs dev
-//    public static String baseAzureURL = "https://dev.prathamopenschool.org/";
+    //public static String baseAzureURL = "https://dev.prathamopenschool.org/";
 
     //dev API
 //    public static String baseAzureURL = "http://www.apiassessment.openiscool.org/";

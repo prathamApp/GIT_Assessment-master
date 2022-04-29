@@ -521,7 +521,7 @@ public class AddStudentFragment extends DialogFragment implements AvatarClickLis
         AppDatabase.getDatabaseInstance(getActivity()).getStudentDao().insert(student);
         BackupDatabase.backup(getActivity());
         Toast.makeText(getActivity(), "Profile created Successfully..", Toast.LENGTH_SHORT).show();
-        onChildAddedListener.onChildAdded();
+            onChildAddedListener.onChildAdded();
         dismiss();
 
 

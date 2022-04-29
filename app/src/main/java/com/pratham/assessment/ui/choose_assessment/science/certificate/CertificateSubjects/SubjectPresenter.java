@@ -2,6 +2,7 @@ package com.pratham.assessment.ui.choose_assessment.science.certificate.Certific
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
@@ -343,6 +344,8 @@ public class SubjectPresenter implements SubjectContract.SubjectPresenter {
         if (isRPI)
             url = APIs.AssessmentSubjectAPIRPI + languageId;
         else url = APIs.AssessmentSubjectAPI + languageId;
+
+        Log.i("url12345_",url);
         final List<AssessmentSubjects> subjects = new ArrayList<>();
 //        final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage(context.getString(R.string.loading_subjects));

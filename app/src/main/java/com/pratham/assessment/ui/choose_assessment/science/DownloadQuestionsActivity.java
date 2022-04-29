@@ -239,6 +239,9 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
         if (isRPI)
             url = APIs.AssessmentPaperPatternAPIRPI + examId;
         else url = APIs.AssessmentPaperPatternAPI + examId;
+
+
+        Log.i("url12345_3",url);
         progressDialog.show();
         progressDialog.setMessage("Downloading paper pattern...");
         progressDialog.setCancelable(false);
@@ -336,6 +339,8 @@ public class DownloadQuestionsActivity extends AppCompatActivity implements Asse
             questionUrl = APIs.AssessmentQuestionAPIRPI + "languageid=" + Assessment_Constants.SELECTED_LANGUAGE + "&subjectid=" + subjectId + "&topicid=" + topicId;
         else
             questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + Assessment_Constants.SELECTED_LANGUAGE + "&subjectid=" + subjectId + "&topicid=" + topicId;
+
+        Log.i("url12345_4",questionUrl);
         progressDialog.show();
         progressDialog.setMessage("Downloading questions...");
         AndroidNetworking.get(questionUrl)
