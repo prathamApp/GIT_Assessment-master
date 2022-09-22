@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -209,6 +210,7 @@ public class EnrollmentNoFragment extends DialogFragment {
                     .getAsJSONArray(new JSONArrayRequestListener() {
                         @Override
                         public void onResponse(JSONArray response) {
+                            Log.i("onResponse",response.toString());
                             if (response.length() > 0) {
                                 try {
                                     newEnrolledStudent.setLastName(enrollmentNo.toUpperCase());

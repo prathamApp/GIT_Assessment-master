@@ -221,6 +221,8 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
         contentTableList.clear();
         String url = APIs.AssessmentEnrollmentNoExamAPI + FastSave.getInstance()
                 .getString("currentStudentID", "") + "&appversion=" + /*"1.2.0"*/Assessment_Utility.getCurrentVersion(context);
+
+        Log.i("getNIOSSubjects",url);
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage(context.getString(R.string.loading_subjects));
         progressDialog.show();
@@ -337,6 +339,8 @@ public class ChooseAssessmentPresenter implements ChooseAssessmentContract.Choos
         if (isRPI)
             url = APIs.AssessmentSubjectAPIRPI + Assessment_Constants.SELECTED_LANGUAGE;
         else url = APIs.AssessmentSubjectAPI + Assessment_Constants.SELECTED_LANGUAGE;
+
+        Log.i("getSubjectData",url);
         contentTableList.clear();
         final ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage(context.getString(R.string.loading_subjects));

@@ -275,9 +275,11 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
 
     private static final String[] requiredPermissions = {
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.CAMERA,
+            PermissionUtils.Manifest_CAMERA,
+            PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
             PermissionUtils.Manifest_RECORD_AUDIO,
+            PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
+            PermissionUtils.Manifest_ACCESS_FINE_LOCATION,
     };
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_CODE = 1;
     private APictureCapturingClass pictureService;
@@ -327,6 +329,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             Bundle bundle;
             bundle = this.getIntent().getExtras();
             assert bundle != null;
+            Log.i("getlang",bundle.getString("subjectLanguage")+"-"+bundle.getString("subjectName"));
 
             //get data when opened from other apps and save student and mark attendance.
             String studId = String.valueOf(bundle.getString("studentId"));
@@ -338,7 +341,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             String examId = String.valueOf(bundle.getString("examId"));
             redirectedAppSessionId = String.valueOf(bundle.getString("currentSessionId"));
             studentGroupId = String.valueOf(bundle.getString("studentGroupId"));
-
+            Log.i("language",language);
             String currentSession = UUID.randomUUID().toString();
             Session startSession = new Session();
             startSession.setSessionID(currentSession);
@@ -375,7 +378,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             FastSave.getInstance().saveString("language", langCode);
             selectedLang = langCode;
             setLocaleByLanguageId(context, langCode);
-
+Log.i("selectedLang",selectedLang+"-"+language);
             Student student = new Student();
 
             if (!studId.equalsIgnoreCase("")) {
@@ -449,6 +452,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             } else
                 downloadPaperPattern();
         } else {
+
             AssessmentPaperPattern assessmentPaperPatterns = AppDatabase.getDatabaseInstance(ScienceAssessmentActivity.this).getAssessmentPaperPatternDao().getAssessmentPaperPatternsByExamId(selectedExamId);
             if (assessmentPaperPatterns != null) {
                 generatePaperPattern();
@@ -582,6 +586,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + selectedLang + "&subjectid=" + subjectId + "&topicid=" + topicId;
 //        String questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + selectedLang + "&subjectid=" + subjectId + "&topicid=" + topicId; progressDialog.show();
 
+        Log.i("downloadQuestions",questionUrl);
         if (!progressDialog.isShowing())
             progressDialog.show();
         progressDialog.setMessage(getString(R.string.loading_please_wait));
@@ -665,10 +670,13 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     private void downloadPaperPattern() {
         String url = "";
         boolean isRPI = checkConnectedToRPI();
+
         if (isRPI)
             url = APIs.AssessmentPaperPatternAPIRPI + selectedExamId;
         else
             url = APIs.AssessmentPaperPatternAPI + selectedExamId;
+
+        Log.i("isRPI",isRPI+"--"+url);
         progressDialog = new ProgressDialog(context);
         progressDialog.show();
         progressDialog.setMessage(getString(R.string.downloading_paper_pattern));
@@ -759,8 +767,10 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
                     @Override
                     public void onError(ANError anError) {
+Log.i("anError",anError.getErrorDetail()+anError.getErrorBody().toString()+anError.toString());
                         downloadFailedExamList.add(AppDatabase.getDatabaseInstance
                                 (ScienceAssessmentActivity.this).getTestDao().getExamNameById(selectedExamId));
+                       // Toast.makeText(context,anError.getErrorBody().toString()+"-"+downloadFailedExamList.size(),Toast.LENGTH_LONG).show();
                         paperPatternCnt++;
                       /*  if (paperPatternCnt < examIDList.size()) {
                             downloadPaperPattern(examIDList.get(paperPatternCnt), langId, subId);
@@ -3963,7 +3973,8 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
                 appDatabase = AppDatabase.getDatabaseInstance(this);
 
-                Log.d("$$$", "createDataBaseAfter");
+                Log.d("$$$", "." +
+                        "");
 
                           /*  Room.databaseBuilder(this,
                             AppDatabase.class, AppDatabase.DB_NAME)

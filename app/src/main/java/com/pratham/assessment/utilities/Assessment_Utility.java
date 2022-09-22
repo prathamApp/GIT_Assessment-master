@@ -967,6 +967,7 @@ public class Assessment_Utility {
 
     public static boolean checkConnectedToRPI() {
         boolean isRPI = false;
+        Log.i("israpi1",AssessmentApplication.wiseF.isDeviceConnectedToWifiNetwork()+"-"+AssessmentApplication.wiseF.getCurrentNetwork().getSSID());
         if (AssessmentApplication.wiseF.isDeviceConnectedToWifiNetwork()) {
             if (AssessmentApplication.wiseF.isDeviceConnectedToSSID(Assessment_Constants.PRATHAM_RPI_HOTSPOT)) {
                 try {

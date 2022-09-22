@@ -404,9 +404,10 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
             firstPause = false;
             if (AssessmentApplication.wiseF.isDeviceConnectedToMobileOrWifiNetwork()) {
                 if (!AssessmentApplication.isTablet) {
-                    if (!FastSave.getInstance().getBoolean("STUDENTS_DOWNLOADED", false)) // pull students only first time
+                    //pull old students data realted to device id
+                 /*   if (!FastSave.getInstance().getBoolean("STUDENTS_DOWNLOADED", false)) // pull students only first time
                         pullOldStudentsCertificates();
-                    else {
+                    else*/ {
                         BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
                         if (isActivityRunning && !bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
                             bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
