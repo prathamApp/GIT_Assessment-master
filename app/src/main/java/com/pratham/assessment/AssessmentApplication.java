@@ -43,7 +43,7 @@ public class AssessmentApplication extends Application {
     public static final boolean isTablet = false;
 
     public static String cosPath = "", networkSSID = "PrathamHotSpot-" + Build.SERIAL;
-    public static String uploadDataUrl = "http://swap.prathamcms.org/api/Assessment/AssesmentPushData";
+    public static String uploadDataUrl = "https://swap.prathamcms.org/api/Assessment/AssesmentPushData";
     public static String uploadScienceUrl = APIs.baseAzureURL + "api/pushassessment/AssessmentPushData";
     public static String uploadScienceFilesUrl = APIs.baseAzureURL + "api/question/pushFiles";
     public static String uploadLargeFilesUrl = APIs.baseAzureURL + "api/uploadfile/UploadFile";

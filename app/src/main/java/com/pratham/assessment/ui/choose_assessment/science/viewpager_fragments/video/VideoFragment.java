@@ -37,6 +37,7 @@ import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ImageL
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.PermissionUtils;
+import com.pratham.assessment.utilities.RealPathUpdated;
 import com.pratham.assessment.utilities.RealPathUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -226,8 +227,12 @@ public class VideoFragment extends Fragment implements VideoContract.VideoView {
             public void onClick(View v) {
                 chooseImageDialog.dismiss();
                 if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                    String[] permissionArray = new String[]{PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE};
-
+                    String[] permissionArray;
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+                        permissionArray = new String[]{PermissionUtils.Manifest_READ_EXTERNAL_STORAGE};
+                    } else {
+                        permissionArray = new String[]{PermissionUtils.Manifest_READ_MEDIA_VIDEO};
+                    }
                     if (!((ScienceAssessmentActivity) getActivity()).isPermissionsGranted(getActivity(), permissionArray)) {
                         Toast.makeText(getActivity(), R.string.give_storage_permissions, Toast.LENGTH_SHORT).show();
                     } else {
@@ -394,7 +399,7 @@ public class VideoFragment extends Fragment implements VideoContract.VideoView {
 
                 path = RealPathUtil.getUriRealPathAboveKitkat(getActivity(), selectedImage);
                 if (path.equalsIgnoreCase("")) {
-                    path = RealPathUtil.getRealPathFromURI_API19New(getActivity(), selectedImage);
+                    path = RealPathUpdated.getRealPathFromURI_API19New(getActivity(), selectedImage);
                 }
                 videoList.add(selectedImage);
                 scienceQuestion.setUserAnswer(path);
@@ -452,7 +457,7 @@ public class VideoFragment extends Fragment implements VideoContract.VideoView {
                                 String path;
                                 path = RealPathUtil.getUriRealPathAboveKitkat(getActivity(), (Uri) vidList.get(i));
                                 if (path.equalsIgnoreCase("")) {
-                                    path = RealPathUtil.getRealPathFromURI_API19New(getActivity(), (Uri) vidList.get(i));
+                                    path = RealPathUpdated.getRealPathFromURI_API19New(getActivity(), (Uri) vidList.get(i));
                                 }
 //                                answer.setQcid(imageList.get(i).toString());
                                 answer.setQcid(path);

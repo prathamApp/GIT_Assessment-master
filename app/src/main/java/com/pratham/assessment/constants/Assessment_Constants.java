@@ -60,7 +60,7 @@ public class Assessment_Constants {
     public static final String PRATHAM_RPI_HOTSPOT = "prathamDigital";
     public static String FACILITY_ID = "facility_id";
     public static final String USAGEDATA = "USAGEDATA";
-    public static final String BASE_URL = "http://prodigi.openiscool.org/api/pos/";
+    public static final String BASE_URL = "https://prodigi.openiscool.org/api/pos/";
     public static String RASP_IP = "http://192.168.4.1:8080";
     public static final String SCORE_COUNT = "ScoreCount";
     public static final String STUDENTS = "students";
@@ -187,7 +187,7 @@ public class Assessment_Constants {
 
     public static String StudentPhotoPath = "";
 
-    public static final String APP_BUILD_DATE = "19-11-2021";
+    public static final String APP_BUILD_DATE = "30-Nov-2023";
 
 
     public static enum URL {
@@ -202,7 +202,7 @@ public class Assessment_Constants {
         POST_TAB_INTERNET_URL("http://www.rpi.prathamskills.org/api/pushdatapradigi/post/"),
         DATASTORE_RASPBERY_PROGRAM_STATE_URL(RASP_IP + "/pratham/datastore/?table_name=ProgramState"),
         DOWNLOAD_RESOURCE(BASE_URL + "DownloadResource?resid="),
-        PULL_PROGRAMS("http://swap.prathamcms.org/api/program");
+        PULL_PROGRAMS("https://swap.prathamcms.org/api/program");
 
         public static final String SCORE_COUNT = "ScoreCount";
         public static final String EXAM_STATUS = "ExamStatus";

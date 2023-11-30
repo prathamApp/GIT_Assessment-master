@@ -26,6 +26,9 @@ public class PermissionUtils {
     public static final String Manifest_USE_SIP = Manifest.permission.USE_SIP;
     public static final String Manifest_PROCESS_OUTGOING_CALLS = Manifest.permission.PROCESS_OUTGOING_CALLS;
     public static final String Manifest_CAMERA = Manifest.permission.CAMERA;
+    public static final String Manifest_READ_MEDIA_IMAGES = Manifest.permission.READ_MEDIA_IMAGES;
+    public static final String Manifest_READ_MEDIA_VIDEO = Manifest.permission.READ_MEDIA_VIDEO;
+    public static final String Manifest_READ_MEDIA_AUDIO = Manifest.permission.READ_MEDIA_AUDIO;
     public static final String Manifest_SEND_SMS = Manifest.permission.SEND_SMS;
     public static final String Manifest_RECEIVE_SMS = Manifest.permission.RECEIVE_SMS;
     public static final String Manifest_READ_SMS = Manifest.permission.READ_SMS;

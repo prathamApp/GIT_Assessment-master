@@ -12,6 +12,8 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
 
+import java.io.File;
+
 public class RealPathUtil {
 
     public static String getRealPathFromURI_API19(Context context, Uri uri) {
@@ -86,6 +88,22 @@ public class RealPathUtil {
 
                 if ("primary".equalsIgnoreCase(type)) {
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }else{
+                    String filePath="";
+                    if (Build.VERSION.SDK_INT > 20) {
+                        //getExternalMediaDirs() added in API 21
+                        File extenal[] = context.getExternalMediaDirs();
+                        for (File f : extenal) {
+                            filePath = f.getAbsolutePath();
+                            if (filePath.contains(type)) {
+                                int endIndex = filePath.indexOf("Android");
+                                filePath = filePath.substring(0, endIndex) + split[1];
+                            }
+                        }
+                    }else{
+                        filePath = "/storage/" + type + "/" + split[1];
+                    }
+                    return filePath;
                 }
 
                 // TODO handle non-primary volumes

@@ -1,5 +1,11 @@
 package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.image_answer;
 
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA;
+import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
+import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -34,6 +40,7 @@ import com.pratham.assessment.ui.choose_assessment.science.custom_dialogs.ImageL
 import com.pratham.assessment.ui.choose_assessment.science.interfaces.AssessmentAnswerListener;
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.PermissionUtils;
+import com.pratham.assessment.utilities.RealPathUpdated;
 import com.pratham.assessment.utilities.RealPathUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -45,12 +52,6 @@ import org.androidannotations.annotations.ViewById;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA;
-import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
-import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
-import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
-import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_image_answer_row)
 public class ImageAnswerFragment extends Fragment implements ImageAnswerContract.ImageAnswerView {
@@ -336,31 +337,37 @@ public class ImageAnswerFragment extends Fragment implements ImageAnswerContract
 
 
                 if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                    String[] permissionArray = new String[]{PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE};
-
+                    String[] permissionArray;
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+                        permissionArray = new String[]{PermissionUtils.Manifest_READ_EXTERNAL_STORAGE};
+                    } else {
+                        permissionArray = new String[]{PermissionUtils.Manifest_READ_MEDIA_IMAGES};
+                    }
                     if (!((ScienceAssessmentActivity) context).isPermissionsGranted(context, permissionArray)) {
                         Toast.makeText(context, R.string.give_storage_permissions, Toast.LENGTH_SHORT).show();
                     } else {
 //                        imageName = entryID + "_" + dde_questions.getQuestionId() + ".jpg";
 //                        scienceQuestion.setUserAnswer(fileName);
 //                        selectedImage = selectedImageTemp;
-                        Intent intent = new Intent();
-                        intent.setType("image/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_FROM_GALLERY);
+                        callImagePicker();
                     }
+
                 } else {
 //                    imageName = entryID + "_" + dde_questions.getQuestionId() + ".jpg";
 //                    scienceQuestion.setUserAnswer(fileName);
 //                    selectedImage = selectedImageTemp;
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_FROM_GALLERY);
+                    callImagePicker();
                 }
             }
         });
         chooseImageDialog.show();
+    }
+
+    private void callImagePicker() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_FROM_GALLERY);
     }
 
 
@@ -376,9 +383,14 @@ public class ImageAnswerFragment extends Fragment implements ImageAnswerContract
                 String path;
 
                 path = RealPathUtil.getUriRealPathAboveKitkat(context, selectedImage);
-                if (path.equalsIgnoreCase("")) {
-                    path = RealPathUtil.getRealPathFromURI_API19New(context, selectedImage);
+                try {
+                    if (path.equalsIgnoreCase("")) {
+                        path = RealPathUtil.getRealPathFromURI_API19New(context, selectedImage);
+                    }
+                } catch (Exception e) {
+                    path = RealPathUpdated.getRealPath(context, selectedImage);
                 }
+
                 scienceQuestion.setUserAnswer(path);
                 imageList.add(path);
                 showImageThumbnailDialog(imageList, true);

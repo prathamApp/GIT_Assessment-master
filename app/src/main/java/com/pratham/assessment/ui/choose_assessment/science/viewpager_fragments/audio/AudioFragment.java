@@ -1,5 +1,14 @@
 package com.pratham.assessment.ui.choose_assessment.science.viewpager_fragments.audio;
 
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO;
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA;
+import static com.pratham.assessment.utilities.Assessment_Utility.formatMilliSeccond;
+import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
+import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
+import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
+import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaPlayer;
@@ -38,6 +47,7 @@ import com.pratham.assessment.ui.choose_assessment.science.interfaces.AudioPlaye
 import com.pratham.assessment.utilities.Assessment_Utility;
 import com.pratham.assessment.utilities.AudioUtil;
 import com.pratham.assessment.utilities.PermissionUtils;
+import com.pratham.assessment.utilities.RealPathUpdated;
 import com.pratham.assessment.utilities.RealPathUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -49,15 +59,6 @@ import org.androidannotations.annotations.ViewById;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO;
-import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_MEDIA;
-import static com.pratham.assessment.utilities.Assessment_Utility.formatMilliSeccond;
-import static com.pratham.assessment.utilities.Assessment_Utility.getFileExtension;
-import static com.pratham.assessment.utilities.Assessment_Utility.getFileName;
-import static com.pratham.assessment.utilities.Assessment_Utility.setOdiaFont;
-import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
-import static com.pratham.assessment.utilities.Assessment_Utility.showZoomDialog;
 
 @EFragment(R.layout.layout_audio_row)
 public class AudioFragment extends Fragment implements AudioPlayerInterface, AudioContract.AudioView {
@@ -354,8 +355,12 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface, Aud
             public void onClick(View v) {
                 chooseImageDialog.dismiss();
                 if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
-                    String[] permissionArray = new String[]{PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE};
-
+                    String[] permissionArray;
+                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+                        permissionArray = new String[]{PermissionUtils.Manifest_READ_EXTERNAL_STORAGE};
+                    } else {
+                        permissionArray = new String[]{PermissionUtils.Manifest_READ_MEDIA_AUDIO};
+                    }
                     if (!((ScienceAssessmentActivity) getActivity()).isPermissionsGranted(getActivity(), permissionArray)) {
                         Toast.makeText(getActivity(), R.string.give_storage_permissions, Toast.LENGTH_SHORT).show();
                     } else {
@@ -599,9 +604,16 @@ public class AudioFragment extends Fragment implements AudioPlayerInterface, Aud
                 Uri selectedImage = data.getData();
                 String path;
                 path = RealPathUtil.getUriRealPathAboveKitkat(getActivity(), selectedImage);
-                if (path.equalsIgnoreCase("")) {
-                    path = RealPathUtil.getRealPathFromURI_API19New(getActivity(), selectedImage);
+
+                try {
+                    if (path.equalsIgnoreCase("")) {
+                        path = RealPathUtil.getRealPathFromURI_API19New(getActivity(), selectedImage);
+                    }
+                } catch (Exception e) {
+                    path = RealPathUpdated.getRealPath(getActivity(), selectedImage);
+
                 }
+
 
 //                path = getRealPathFromURI_API19(getActivity(), selectedImage);
                 audioList.add(path);

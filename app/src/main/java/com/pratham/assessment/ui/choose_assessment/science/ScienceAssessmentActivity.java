@@ -1,6 +1,35 @@
 package com.pratham.assessment.ui.choose_assessment.science;
 
-import android.Manifest;
+import static com.pratham.assessment.constants.Assessment_Constants.ARRANGE_SEQUENCE;
+import static com.pratham.assessment.constants.Assessment_Constants.AUDIO;
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO;
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE;
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO;
+import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING;
+import static com.pratham.assessment.constants.Assessment_Constants.EXAMID;
+import static com.pratham.assessment.constants.Assessment_Constants.FILL_IN_THE_BLANK;
+import static com.pratham.assessment.constants.Assessment_Constants.FILL_IN_THE_BLANK_WITH_OPTION;
+import static com.pratham.assessment.constants.Assessment_Constants.IMAGE_ANSWER;
+import static com.pratham.assessment.constants.Assessment_Constants.KEYWORDS_QUESTION;
+import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
+import static com.pratham.assessment.constants.Assessment_Constants.MATCHING_PAIR;
+import static com.pratham.assessment.constants.Assessment_Constants.MULTIPLE_CHOICE;
+import static com.pratham.assessment.constants.Assessment_Constants.MULTIPLE_SELECT;
+import static com.pratham.assessment.constants.Assessment_Constants.PARAGRAPH_FOR_PARA_BASED_QUESTION;
+import static com.pratham.assessment.constants.Assessment_Constants.SDCARD_OFFLINE_PATH_SAVED;
+import static com.pratham.assessment.constants.Assessment_Constants.SUPERVISED;
+import static com.pratham.assessment.constants.Assessment_Constants.TEXT_PARAGRAPH;
+import static com.pratham.assessment.constants.Assessment_Constants.TRUE_FALSE;
+import static com.pratham.assessment.constants.Assessment_Constants.VIDEO;
+import static com.pratham.assessment.constants.Assessment_Constants.VIDEOMONITORING;
+import static com.pratham.assessment.utilities.Assessment_Utility.checkConnectedToRPI;
+import static com.pratham.assessment.utilities.Assessment_Utility.copyFileUsingStream;
+import static com.pratham.assessment.utilities.Assessment_Utility.getOptionLocalPath;
+import static com.pratham.assessment.utilities.Assessment_Utility.getQuestionLocalPath;
+import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
+import static com.pratham.assessment.utilities.Assessment_Utility.setLocaleByLanguageId;
+import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
+
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -126,36 +155,6 @@ import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import static com.pratham.assessment.constants.Assessment_Constants.ARRANGE_SEQUENCE;
-import static com.pratham.assessment.constants.Assessment_Constants.AUDIO;
-import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_AUDIO;
-import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_IMAGE;
-import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_ANSWER_VIDEO;
-import static com.pratham.assessment.constants.Assessment_Constants.DOWNLOAD_MEDIA_TYPE_VIDEO_MONITORING;
-import static com.pratham.assessment.constants.Assessment_Constants.EXAMID;
-import static com.pratham.assessment.constants.Assessment_Constants.FILL_IN_THE_BLANK;
-import static com.pratham.assessment.constants.Assessment_Constants.FILL_IN_THE_BLANK_WITH_OPTION;
-import static com.pratham.assessment.constants.Assessment_Constants.IMAGE_ANSWER;
-import static com.pratham.assessment.constants.Assessment_Constants.KEYWORDS_QUESTION;
-import static com.pratham.assessment.constants.Assessment_Constants.LANGUAGE;
-import static com.pratham.assessment.constants.Assessment_Constants.MATCHING_PAIR;
-import static com.pratham.assessment.constants.Assessment_Constants.MULTIPLE_CHOICE;
-import static com.pratham.assessment.constants.Assessment_Constants.MULTIPLE_SELECT;
-import static com.pratham.assessment.constants.Assessment_Constants.PARAGRAPH_FOR_PARA_BASED_QUESTION;
-import static com.pratham.assessment.constants.Assessment_Constants.SDCARD_OFFLINE_PATH_SAVED;
-import static com.pratham.assessment.constants.Assessment_Constants.SUPERVISED;
-import static com.pratham.assessment.constants.Assessment_Constants.TEXT_PARAGRAPH;
-import static com.pratham.assessment.constants.Assessment_Constants.TRUE_FALSE;
-import static com.pratham.assessment.constants.Assessment_Constants.VIDEO;
-import static com.pratham.assessment.constants.Assessment_Constants.VIDEOMONITORING;
-import static com.pratham.assessment.utilities.Assessment_Utility.checkConnectedToRPI;
-import static com.pratham.assessment.utilities.Assessment_Utility.copyFileUsingStream;
-import static com.pratham.assessment.utilities.Assessment_Utility.getOptionLocalPath;
-import static com.pratham.assessment.utilities.Assessment_Utility.getQuestionLocalPath;
-import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
-import static com.pratham.assessment.utilities.Assessment_Utility.setLocaleByLanguageId;
-import static com.pratham.assessment.utilities.Assessment_Utility.setTamilFont;
-
 //import com.pratham.atm.custom.LockNavigation.PinActivity;
 
 /**
@@ -274,13 +273,13 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
     List<TempScienceQuestion> attemptedList;
 
 
-    private static final String[] requiredPermissions = {
+    private static String[] requiredPermissions; /*= {
             PermissionUtils.Manifest_CAMERA,
-            PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
+          //  PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
             PermissionUtils.Manifest_RECORD_AUDIO,
             PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
-            PermissionUtils.Manifest_ACCESS_FINE_LOCATION,
-    };
+          //  PermissionUtils.Manifest_ACCESS_FINE_LOCATION,
+    };*/
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_CODE = 1;
     private APictureCapturingClass pictureService;
     String redirectedFromApp = "NA";
@@ -289,6 +288,27 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
 
     @AfterViews
     public void init() {
+
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            requiredPermissions = new String[]{PermissionUtils.Manifest_CAMERA,
+                    PermissionUtils.Manifest_RECORD_AUDIO,
+                    PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
+                    PermissionUtils.Manifest_ACCESS_FINE_LOCATION,
+                    PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
+                    PermissionUtils.Manifest_READ_EXTERNAL_STORAGE
+            };
+        } else {
+            requiredPermissions = new String[]{PermissionUtils.Manifest_CAMERA,
+                    PermissionUtils.Manifest_RECORD_AUDIO,
+                    PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
+                    PermissionUtils.Manifest_ACCESS_FINE_LOCATION,
+                    PermissionUtils.Manifest_READ_MEDIA_IMAGES,
+                    PermissionUtils.Manifest_READ_MEDIA_VIDEO,
+                    PermissionUtils.Manifest_READ_MEDIA_AUDIO
+            };
+        }
+
 
         selectedExamId = FastSave.getInstance().getString(EXAMID, "");
         selectedLang = FastSave.getInstance().getString(LANGUAGE, "1");
@@ -329,7 +349,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             Bundle bundle;
             bundle = this.getIntent().getExtras();
             assert bundle != null;
-            Log.i("getlang",bundle.getString("subjectLanguage")+"-"+bundle.getString("subjectName"));
+            Log.i("getlang", bundle.getString("subjectLanguage") + "-" + bundle.getString("subjectName"));
 
             //get data when opened from other apps and save student and mark attendance.
             String studId = String.valueOf(bundle.getString("studentId"));
@@ -341,7 +361,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             String examId = String.valueOf(bundle.getString("examId"));
             redirectedAppSessionId = String.valueOf(bundle.getString("currentSessionId"));
             studentGroupId = String.valueOf(bundle.getString("studentGroupId"));
-            Log.i("language",language);
+            Log.i("language", language);
             String currentSession = UUID.randomUUID().toString();
             Session startSession = new Session();
             startSession.setSessionID(currentSession);
@@ -378,7 +398,7 @@ public class ScienceAssessmentActivity extends BaseActivity implements PictureCa
             FastSave.getInstance().saveString("language", langCode);
             selectedLang = langCode;
             setLocaleByLanguageId(context, langCode);
-Log.i("selectedLang",selectedLang+"-"+language);
+            Log.i("selectedLang", selectedLang + "-" + language);
             Student student = new Student();
 
             if (!studId.equalsIgnoreCase("")) {
@@ -586,7 +606,7 @@ Log.i("selectedLang",selectedLang+"-"+language);
             questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + selectedLang + "&subjectid=" + subjectId + "&topicid=" + topicId;
 //        String questionUrl = APIs.AssessmentQuestionAPI + "languageid=" + selectedLang + "&subjectid=" + subjectId + "&topicid=" + topicId; progressDialog.show();
 
-        Log.i("downloadQuestions",questionUrl);
+        Log.i("downloadQuestions", questionUrl);
         if (!progressDialog.isShowing())
             progressDialog.show();
         progressDialog.setMessage(getString(R.string.loading_please_wait));
@@ -676,7 +696,7 @@ Log.i("selectedLang",selectedLang+"-"+language);
         else
             url = APIs.AssessmentPaperPatternAPI + selectedExamId;
 
-        Log.i("isRPI",isRPI+"--"+url);
+        Log.i("isRPI", isRPI + "--" + url);
         progressDialog = new ProgressDialog(context);
         progressDialog.show();
         progressDialog.setMessage(getString(R.string.downloading_paper_pattern));
@@ -767,10 +787,10 @@ Log.i("selectedLang",selectedLang+"-"+language);
 
                     @Override
                     public void onError(ANError anError) {
-Log.i("anError",anError.getErrorDetail()+anError.getErrorBody().toString()+anError.toString());
+                        Log.i("anError", anError.getErrorDetail() + anError.getErrorBody().toString() + anError.toString());
                         downloadFailedExamList.add(AppDatabase.getDatabaseInstance
                                 (ScienceAssessmentActivity.this).getTestDao().getExamNameById(selectedExamId));
-                       // Toast.makeText(context,anError.getErrorBody().toString()+"-"+downloadFailedExamList.size(),Toast.LENGTH_LONG).show();
+                        // Toast.makeText(context,anError.getErrorBody().toString()+"-"+downloadFailedExamList.size(),Toast.LENGTH_LONG).show();
                         paperPatternCnt++;
                       /*  if (paperPatternCnt < examIDList.size()) {
                             downloadPaperPattern(examIDList.get(paperPatternCnt), langId, subId);
@@ -1686,7 +1706,7 @@ Log.i("anError",anError.getErrorDetail()+anError.getErrorBody().toString()+anErr
         String key = "";
         StringBuilder query = new StringBuilder();
         query.append("SELECT * FROM ScienceQuestion WHERE qtid='"
-                + PARAGRAPH_FOR_PARA_BASED_QUESTION + "' and languageid='")
+                        + PARAGRAPH_FOR_PARA_BASED_QUESTION + "' and languageid='")
                 .append(selectedLang).append("' and subjectid='")
                 .append(subjectId).append("' and topicid='")
                 .append(patternDetails

@@ -215,6 +215,7 @@ public class APIs {
 
     //Azure APIs live og
     public static String baseAzureURL = "http://www.prathamassessment.org:8085/";
+   // public static String baseAzureURL = "https://poa.prathamonline.org/";
 
     //NEW Azure APIs live
 //    public static String baseAzureURL = "https://posuat.prathamopenschool.org/";
@@ -235,8 +236,8 @@ public class APIs {
     public static String pullCertificateByStudIdAPI = baseAzureURL + "api/certificate/GetCertificate?studentid=";
     public static String pullCertificateByDeviceIdAPI = baseAzureURL + "api/certificate/GetCertificateByDeviceID?deviceid=";
 
-    public static String pullStudentByEnrollmentNoAPI = "http://www.devtab.openiscool.org/api/StudentEnrollment?enrollmentno=";
-    public static String pullStateAPI = "http://swap.prathamcms.org/api/state?progid=";
+    public static String pullStudentByEnrollmentNoAPI = "https://devtab.openiscool.org/api/StudentEnrollment?enrollmentno=";
+    public static String pullStateAPI = "https://swap.prathamcms.org/api/state?progid=";
     public static String pushDbZip = baseAzureURL + "api/AssessmentDB/pushFiles";
 
 
@@ -263,13 +264,13 @@ public class APIs {
     public static final String SERVER_VILLAGE = "&villageId=";
     public static final String SERVER_STATECODE = "&statecode=";
     public static final String pullVillagesKolibriURL = "http://192.168.4.1:8080/pratham/datastore/?table_name=village&filter_name=programid:";
-    public static final String pullVillagesServerURL = "http://www.hlearning.openiscool.org/api/village/get?programId=";
+    public static final String pullVillagesServerURL = "https://hlearning.openiscool.org/api/village/get?programId=";
     public static final String pullGroupsKolibriURL = "http://192.168.4.1:8080/pratham/datastore/?table_name=group&filter_name=programid:";
-    public static final String pullGroupsServerURL = "http://www.devtab.openiscool.org/api/Group?programid=";
+    public static final String pullGroupsServerURL = "https://devtab.openiscool.org/api/Group?programid=";
     public static final String pullStudentsKolibriURL = "http://192.168.4.1:8080/pratham/datastore/?table_name=student&filter_name=programid:";
-    public static final String pullStudentsServerURL = "http://www.devtab.openiscool.org/api/student?programid=";
+    public static final String pullStudentsServerURL = "https://devtab.openiscool.org/api/student?programid=";
     public static final String pullCrlsKolibriURL = "http://192.168.4.1:8080/pratham/datastore/?table_name=Crl&filter_name=programid:";
-    public static final String pullCrlsServerURL = "http://www.swap.prathamcms.org/api/UserList?programId=";
+    public static final String pullCrlsServerURL = "https://swap.prathamcms.org/api/UserList?programId=";
 
 
 }

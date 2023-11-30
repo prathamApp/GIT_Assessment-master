@@ -1,5 +1,10 @@
 package com.pratham.assessment.ui.splash_activity;
 
+import static com.pratham.assessment.constants.Assessment_Constants.SDCARD_OFFLINE_PATH_SAVED;
+import static com.pratham.assessment.ui.splash_activity.SplashPresenter.doInitialEntries;
+import static com.pratham.assessment.utilities.Assessment_Utility.copyFileUsingStream;
+import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
+
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
@@ -58,11 +63,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.pratham.assessment.constants.Assessment_Constants.SDCARD_OFFLINE_PATH_SAVED;
-import static com.pratham.assessment.ui.splash_activity.SplashPresenter.doInitialEntries;
-import static com.pratham.assessment.utilities.Assessment_Utility.copyFileUsingStream;
-import static com.pratham.assessment.utilities.Assessment_Utility.getStoragePath;
-
 @EActivity(R.layout.activity_splash)
 public class SplashActivity extends SplashSupportActivity implements SplashContract.SplashView, PermissionResult, DataPushListener {
 
@@ -109,12 +109,24 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
 
     public void initiateApp() {
 
-        permissionArray = new String[]{PermissionUtils.Manifest_CAMERA,
-                PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
-                PermissionUtils.Manifest_RECORD_AUDIO,
-                PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
-                PermissionUtils.Manifest_ACCESS_FINE_LOCATION
-        };
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            permissionArray = new String[]{PermissionUtils.Manifest_CAMERA,
+                    PermissionUtils.Manifest_RECORD_AUDIO,
+                    PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
+                    PermissionUtils.Manifest_ACCESS_FINE_LOCATION,
+                    PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
+                    PermissionUtils.Manifest_READ_EXTERNAL_STORAGE
+            };
+        } else {
+            permissionArray = new String[]{PermissionUtils.Manifest_CAMERA,
+                    PermissionUtils.Manifest_RECORD_AUDIO,
+                    PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
+                    PermissionUtils.Manifest_ACCESS_FINE_LOCATION,
+                    PermissionUtils.Manifest_READ_MEDIA_IMAGES,
+                    PermissionUtils.Manifest_READ_MEDIA_VIDEO,
+                    PermissionUtils.Manifest_READ_MEDIA_AUDIO
+            };
+        }
 
         if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)) {
             if (!isPermissionsGranted(SplashActivity.this, permissionArray)) {
@@ -407,7 +419,8 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
                     //pull old students data realted to device id
                  /*   if (!FastSave.getInstance().getBoolean("STUDENTS_DOWNLOADED", false)) // pull students only first time
                         pullOldStudentsCertificates();
-                    else*/ {
+                    else*/
+                    {
                         BottomStudentsFragment_ bottomStudentsFragment = new BottomStudentsFragment_();
                         if (isActivityRunning && !bottomStudentsFragment.isVisible() && !bottomStudentsFragment.isAdded()) {
                             bottomStudentsFragment.show(getSupportFragmentManager(), BottomStudentsFragment_.class.getSimpleName());
@@ -679,4 +692,10 @@ public class SplashActivity extends SplashSupportActivity implements SplashContr
     public void onResponseGet() {
 
     }
+
+   /* @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }*/
 }

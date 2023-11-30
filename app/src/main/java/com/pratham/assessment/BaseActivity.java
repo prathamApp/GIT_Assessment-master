@@ -760,6 +760,7 @@ public class BaseActivity extends AppCompatActivity implements MediaPlayer.OnCom
                 for (String s : permissionDenied) {
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(this, s)) {
                         permissionResult.permissionForeverDenied();
+                        Log.d("permission:::",s);
                         return;
                     }
                 }

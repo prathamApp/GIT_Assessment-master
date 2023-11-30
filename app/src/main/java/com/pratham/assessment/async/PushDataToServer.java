@@ -978,9 +978,19 @@ public class PushDataToServer {
                 multipartKey = "uploaded_file";
             else multipartKey = uuID;
 
+            File fileToPush = null;
+            try {
+                fileToPush= new File(filepathstr + ".zip");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+
+
             AndroidNetworking.upload(url)
                     .addHeaders("Content-Type", "file/zip")
-                    .addMultipartFile(multipartKey, new File(filepathstr + ".zip"))
+                    .addMultipartFile(multipartKey, fileToPush)
                     .setPriority(Priority.HIGH)
                     .build()
                     /* AndroidNetworking.post(url)
